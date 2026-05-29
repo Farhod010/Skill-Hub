@@ -1,84 +1,38 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block body_class %}panel-body{% endblock %}
-
-{% block site_nav %}
-<nav class="navbar sticky-top panel-navbar border-bottom">
-    <div class="container-fluid panel-navbar-inner">
-        <div class="d-flex align-items-center gap-3">
-            <a href="{% url 'panel:dashboard' %}" class="panel-brand text-decoration-none">
-                <span class="brand-mark shadow-soft">EM</span>
-                <span>
-                    <strong>{{ site_settings.site_name|default:"EduMaster" }}</strong>
-                    <small>{% trans "Admin workspace" %}</small>
-                </span>
-            </a>
-            <button class="btn btn-outline-secondary rounded-pill d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#panelSidebar" aria-controls="panelSidebar">
-                <i class="bi bi-list me-1"></i>{% trans "Menu" %}
-            </button>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-            <a href="{% url 'landing' %}" class="btn btn-outline-secondary rounded-pill px-3">{% trans "View site" %}</a>
-            <a href="{{ request.user.home_url }}" class="btn btn-outline-secondary rounded-pill px-3">{% trans "Dashboard" %}</a>
-        </div>
-    </div>
-</nav>
-{% endblock %}
-
-{% block site_footer %}{% endblock %}
-
 {% block content %}
-<section class="panel-shell py-4 py-xl-5">
-    <div class="container-fluid panel-container">
+<section class="section-padding">
+    <div class="container">
         <div class="row g-4">
-            <div class="col-xl-3 col-xxl-2 d-none d-xl-block">
-                <aside class="panel-sidebar sticky-top">
-                    <div class="panel-sidebar-head">
+            <div class="col-xl-3">
+                <aside class="sidebar glass-card shadow-soft rounded-custom p-4 sticky-top" style="top: 6rem;">
+                    <div class="mb-4">
                         <span class="eyebrow mb-2">{% trans "Admin panel" %}</span>
-                        <h2 class="h4 mb-2">{% trans "Platform control" %}</h2>
-                        <p class="text-secondary mb-0">{% trans "Users, courses and content tools in one simple workspace." %}</p>
+                        <h2 class="h3 mb-2">{% trans "Platform control" %}</h2>
+                        <p class="text-secondary mb-0">{% trans "Users, courses, approvals, content, payments and settings in one place." %}</p>
                     </div>
-                    <nav class="panel-nav">
-                        <a href="{% url 'panel:dashboard' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">{% trans "Overview" %}</a>
-                        <a href="{% url 'panel:user_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_create' or request.resolver_match.url_name == 'user_edit' %}active{% endif %}">{% trans "Users" %}</a>
-                        <a href="{% url 'panel:course_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_create' or request.resolver_match.url_name == 'course_edit' %}active{% endif %}">{% trans "Courses" %}</a>
-                        <a href="{% url 'panel:category_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category_create' or request.resolver_match.url_name == 'category_edit' %}active{% endif %}">{% trans "Categories" %}</a>
-                        <a href="{% url 'panel:section_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'section_list' or request.resolver_match.url_name == 'section_create' or request.resolver_match.url_name == 'section_edit' %}active{% endif %}">{% trans "Sections" %}</a>
-                        <a href="{% url 'panel:lesson_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'lesson_list' or request.resolver_match.url_name == 'lesson_create' or request.resolver_match.url_name == 'lesson_edit' %}active{% endif %}">{% trans "Lessons" %}</a>
-                        <a href="{% url 'panel:quiz_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'quiz_list' or request.resolver_match.url_name == 'quiz_create' or request.resolver_match.url_name == 'quiz_edit' %}active{% endif %}">{% trans "Quizzes" %}</a>
-                        <a href="{% url 'panel:question_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'question_list' or request.resolver_match.url_name == 'question_create' or request.resolver_match.url_name == 'question_edit' %}active{% endif %}">{% trans "Questions" %}</a>
-                        <a href="{% url 'panel:answer_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'answer_list' or request.resolver_match.url_name == 'answer_create' or request.resolver_match.url_name == 'answer_edit' %}active{% endif %}">{% trans "Answers" %}</a>
-                        <a href="{% url 'panel:quiz_result_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'quiz_result_list' %}active{% endif %}">{% trans "Quiz results" %}</a>
-                        <a href="{% url 'panel:certificate_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'certificate_list' %}active{% endif %}">{% trans "Certificates" %}</a>
-                        <a href="{% url 'panel:review_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'review_list' %}active{% endif %}">{% trans "Reviews" %}</a>
-                        <a href="{% url 'panel:payment_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'payment_list' %}active{% endif %}">{% trans "Payments" %}</a>
-                        <a href="{% url 'panel:site_settings' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'site_settings' %}active{% endif %}">{% trans "Site settings" %}</a>
+                    <nav class="nav flex-column gap-2 sidebar-links">
+                        <a href="{% url 'panel:dashboard' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Overview" %}</a>
+                        <a href="{% url 'panel:user_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Users" %}</a>
+                        <a href="{% url 'panel:course_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Courses" %}</a>
+                        <a href="{% url 'panel:category_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Categories" %}</a>
+                        <a href="{% url 'panel:section_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Sections" %}</a>
+                        <a href="{% url 'panel:lesson_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Lessons" %}</a>
+                        <a href="{% url 'panel:quiz_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Quizzes" %}</a>
+                        <a href="{% url 'panel:question_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Questions" %}</a>
+                        <a href="{% url 'panel:answer_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Answers" %}</a>
+                        <a href="{% url 'panel:quiz_result_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Quiz results" %}</a>
+                        <a href="{% url 'panel:certificate_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Certificates" %}</a>
+                        <a href="{% url 'panel:review_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Reviews" %}</a>
+                        <a href="{% url 'panel:payment_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Payments" %}</a>
+                        <a href="{% url 'panel:site_settings' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Site settings" %}</a>
                     </nav>
                 </aside>
             </div>
-            <div class="col-xl-9 col-xxl-10">
+            <div class="col-xl-9">
                 {% block panel_content %}{% endblock %}
             </div>
         </div>
     </div>
 </section>
-
-<div class="offcanvas offcanvas-start offcanvas-modern" tabindex="-1" id="panelSidebar" aria-labelledby="panelSidebarLabel">
-    <div class="offcanvas-header border-bottom border-light-subtle">
-        <h5 class="offcanvas-title" id="panelSidebarLabel">{% trans "Admin menu" %}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{% trans 'Close' %}"></button>
-    </div>
-    <div class="offcanvas-body">
-        <nav class="panel-nav">
-            <a href="{% url 'panel:dashboard' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">{% trans "Overview" %}</a>
-            <a href="{% url 'panel:user_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_create' or request.resolver_match.url_name == 'user_edit' %}active{% endif %}">{% trans "Users" %}</a>
-            <a href="{% url 'panel:course_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_create' or request.resolver_match.url_name == 'course_edit' %}active{% endif %}">{% trans "Courses" %}</a>
-            <a href="{% url 'panel:category_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category_create' or request.resolver_match.url_name == 'category_edit' %}active{% endif %}">{% trans "Categories" %}</a>
-            <a href="{% url 'panel:lesson_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'lesson_list' or request.resolver_match.url_name == 'lesson_create' or request.resolver_match.url_name == 'lesson_edit' %}active{% endif %}">{% trans "Lessons" %}</a>
-            <a href="{% url 'panel:quiz_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'quiz_list' or request.resolver_match.url_name == 'quiz_create' or request.resolver_match.url_name == 'quiz_edit' %}active{% endif %}">{% trans "Quizzes" %}</a>
-            <a href="{% url 'panel:payment_list' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'payment_list' %}active{% endif %}">{% trans "Payments" %}</a>
-            <a href="{% url 'panel:site_settings' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'site_settings' %}active{% endif %}">{% trans "Site settings" %}</a>
-        </nav>
-    </div>
-</div>
 {% endblock %}
