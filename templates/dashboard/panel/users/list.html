@@ -1,0 +1,68 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n %}
+{% block panel_content %}
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 p-lg-5">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+                <span class="eyebrow mb-2">{% trans "User management" %}</span>
+                <h1 class="display-6 mb-0">{% trans "Users" %}</h1>
+            </div>
+            <a href="{% url 'panel:user_create' %}" class="btn gradient-btn text-white rounded-pill px-4">{% trans "Create user" %}</a>
+        </div>
+        <form method="get" class="row g-3">
+            <div class="col-md-9">
+                <div class="input-group">
+                    <span class="input-group-text icon-pill"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0" value="{{ search_query }}" placeholder="{% trans 'Search users' %}">
+                </div>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-outline-secondary rounded-pill">{% trans "Search" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table-responsive table-premium glass-card shadow-soft rounded-custom p-0">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Role" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th class="text-end">{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in page_obj %}
+                <tr>
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td><span class="badge text-bg-light border rounded-pill px-3 py-2">{{ user.get_role_display }}</span></td>
+                    <td>
+                        <span class="badge rounded-pill {% if user.is_blocked %}bg-danger-subtle text-danger{% else %}bg-success-subtle text-success{% endif %} px-3 py-2">
+                            {% if user.is_blocked %}{% trans "Blocked" %}{% else %}{% trans "Active" %}{% endif %}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
+                            <a href="{% url 'panel:user_edit' user.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "Edit" %}</a>
+                            <form method="post" action="{% url 'panel:user_toggle_block' user.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-secondary rounded-pill btn-sm">{% if user.is_blocked %}{% trans "Unblock" %}{% else %}{% trans "Block" %}{% endif %}</button>
+                            </form>
+                            <a href="{% url 'panel:user_delete' user.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">{% trans "Delete" %}</a>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">{% trans "No users found." %}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

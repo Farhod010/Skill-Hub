@@ -1,0 +1,49 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% load course_extras i18n %}
+{% block panel_content %}
+<div class="panel-header">
+    <div>
+        <span class="eyebrow">{% trans "Payment activity" %}</span>
+        <h1>{% trans "Payments" %}</h1>
+    </div>
+</div>
+<form method="get" class="panel-toolbar">
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="{% trans 'Search by reference, user, or course' %}">
+    <select name="status" class="input">
+        <option value="">{% trans "All statuses" %}</option>
+        {% for value, label in payment_statuses %}
+            <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+</form>
+<div class="table-card">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>{% trans "Reference" %}</th>
+                <th>{% trans "User" %}</th>
+                <th>{% trans "Course" %}</th>
+                <th>{% trans "Amount" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Created" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in page_obj %}
+                <tr>
+                    <td>{{ payment.reference }}</td>
+                    <td>{{ payment.user.email }}</td>
+                    <td>{{ payment.course.get_translated_title }}</td>
+                    <td>{{ payment.amount|money }}</td>
+                    <td>{{ payment.get_status_display }}</td>
+                    <td>{{ payment.created_at|date:"M d, Y H:i" }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">{% trans "No payments found." %}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

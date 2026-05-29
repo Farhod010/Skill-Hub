@@ -1,0 +1,247 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: edumaster\n"
+"POT-Creation-Date: 2026-05-27 18:30+0500\n"
+"PO-Revision-Date: 2026-05-27 18:30+0500\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Courses"
+msgstr "Курсы"
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Teachers"
+msgstr "Преподаватели"
+
+msgid "About us"
+msgstr "О нас"
+
+msgid "Login"
+msgstr "Войти"
+
+msgid "Register"
+msgstr "Регистрация"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "Dashboard"
+msgstr "Кабинет"
+
+msgid "View courses"
+msgstr "Смотреть курсы"
+
+msgid "Start free"
+msgstr "Начать бесплатно"
+
+msgid "Buy course"
+msgstr "Купить курс"
+
+msgid "Details"
+msgstr "Подробнее"
+
+msgid "Start lesson"
+msgstr "Начать урок"
+
+msgid "Start quiz"
+msgstr "Начать тест"
+
+msgid "Download certificate"
+msgstr "Скачать сертификат"
+
+msgid "My courses"
+msgstr "Мои курсы"
+
+msgid "Payment history"
+msgstr "История платежей"
+
+msgid "Rating"
+msgstr "Рейтинг"
+
+msgid "Reviews"
+msgstr "Отзывы"
+
+msgid "Students"
+msgstr "Студенты"
+
+msgid "Video lessons"
+msgstr "Видеоуроки"
+
+msgid "Quizzes"
+msgstr "Тесты"
+
+msgid "Certificates"
+msgstr "Сертификаты"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Paid"
+msgstr "Оплачено"
+
+msgid "Pending"
+msgstr "В ожидании"
+
+msgid "Failed"
+msgstr "Ошибка"
+
+msgid "Active"
+msgstr "Активный"
+
+msgid "Rejected"
+msgstr "Отклонено"
+
+msgid "Back to course"
+msgstr "Назад к курсу"
+
+msgid "Previous lesson"
+msgstr "Предыдущий урок"
+
+msgid "Next lesson"
+msgstr "Следующий урок"
+
+msgid "Enroll for free"
+msgstr "Записаться бесплатно"
+
+msgid "Unlock full access"
+msgstr "Открыть полный доступ"
+
+msgid "Course quiz"
+msgstr "Тест курса"
+
+msgid "Submit quiz"
+msgstr "Отправить тест"
+
+msgid "Quiz result"
+msgstr "Результат теста"
+
+msgid "Your score"
+msgstr "Ваш результат"
+
+msgid "Correct answers"
+msgstr "Правильные ответы"
+
+msgid "Passed"
+msgstr "Пройдено"
+
+msgid "Not yet"
+msgstr "Пока нет"
+
+msgid "Submitted"
+msgstr "Отправлено"
+
+msgid "Retake quiz"
+msgstr "Пройти тест заново"
+
+msgid "Certificate of completion"
+msgstr "Сертификат о завершении"
+
+msgid "Download PDF"
+msgstr "Скачать PDF"
+
+msgid "Print certificate"
+msgstr "Распечатать сертификат"
+
+msgid "Back to dashboard"
+msgstr "Назад в кабинет"
+
+msgid "Overview"
+msgstr "Обзор"
+
+msgid "Users"
+msgstr "Пользователи"
+
+msgid "Payments"
+msgstr "Платежи"
+
+msgid "Create user"
+msgstr "Создать пользователя"
+
+msgid "Create course"
+msgstr "Создать курс"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Bosh sahifa"
+msgstr "Главная"
+
+msgid "Kurslar"
+msgstr "Курсы"
+
+msgid "Kategoriyalar"
+msgstr "Категории"
+
+msgid "O'qituvchilar"
+msgstr "Преподаватели"
+
+msgid "Biz haqimizda"
+msgstr "О нас"
+
+msgid "Kabinet"
+msgstr "Кабинет"
+
+msgid "Chiqish"
+msgstr "Выйти"
+
+msgid "Kirish"
+msgstr "Войти"
+
+msgid "Ro'yxatdan o'tish"
+msgstr "Регистрация"
+
+msgid "O'zbekcha"
+msgstr "Узбекский"
+
+msgid "Tema"
+msgstr "Тема"
+
+msgid "Sahifalar"
+msgstr "Страницы"
+
+msgid "Narxlar"
+msgstr "Цены"
+
+msgid "Dasturlash"
+msgstr "Программирование"
+
+msgid "Dizayn"
+msgstr "Дизайн"
+
+msgid "Marketing"
+msgstr "Маркетинг"
+
+msgid "Biznes"
+msgstr "Бизнес"
+
+msgid "Aloqa va yangiliklar"
+msgstr "Контакты и новости"
+
+msgid "Email manzilingiz"
+msgstr "Ваш email"
+
+msgid "Obuna"
+msgstr "Подписаться"

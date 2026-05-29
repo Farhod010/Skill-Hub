@@ -1,0 +1,643 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: edumaster\n"
+"POT-Creation-Date: 2026-05-27 18:30+0500\n"
+"PO-Revision-Date: 2026-05-27 18:30+0500\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Home"
+msgstr "Bosh sahifa"
+
+msgid "Courses"
+msgstr "Kurslar"
+
+msgid "Categories"
+msgstr "Kategoriyalar"
+
+msgid "Teachers"
+msgstr "O'qituvchilar"
+
+msgid "About us"
+msgstr "Biz haqimizda"
+
+msgid "Login"
+msgstr "Kirish"
+
+msgid "Register"
+msgstr "Ro'yxatdan o'tish"
+
+msgid "Logout"
+msgstr "Chiqish"
+
+msgid "Dashboard"
+msgstr "Kabinet"
+
+msgid "View courses"
+msgstr "Kurslarni ko'rish"
+
+msgid "Start free"
+msgstr "Bepul boshlash"
+
+msgid "Buy course"
+msgstr "Kurs sotib olish"
+
+msgid "Details"
+msgstr "Batafsil"
+
+msgid "Start lesson"
+msgstr "Darsni boshlash"
+
+msgid "Start quiz"
+msgstr "Testni boshlash"
+
+msgid "Download certificate"
+msgstr "Sertifikatni yuklab olish"
+
+msgid "My courses"
+msgstr "Mening kurslarim"
+
+msgid "Payment history"
+msgstr "To'lov tarixi"
+
+msgid "Rating"
+msgstr "Reyting"
+
+msgid "Reviews"
+msgstr "Sharhlar"
+
+msgid "Students"
+msgstr "O'quvchilar"
+
+msgid "Video lessons"
+msgstr "Video darslar"
+
+msgid "Quizzes"
+msgstr "Testlar"
+
+msgid "Certificates"
+msgstr "Sertifikatlar"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Settings"
+msgstr "Sozlamalar"
+
+msgid "Search"
+msgstr "Qidirish"
+
+msgid "Search courses"
+msgstr "Kurslarni qidiring"
+
+msgid "Search users"
+msgstr "Foydalanuvchilarni qidiring"
+
+msgid "Search by reference, user, or course"
+msgstr "Referens, foydalanuvchi yoki kurs bo'yicha qidiring"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "All statuses"
+msgstr "Barcha holatlar"
+
+msgid "Status"
+msgstr "Holat"
+
+msgid "Paid"
+msgstr "To'langan"
+
+msgid "Pending"
+msgstr "Kutilmoqda"
+
+msgid "Failed"
+msgstr "Xatolik"
+
+msgid "Refunded"
+msgstr "Qaytarilgan"
+
+msgid "Active"
+msgstr "Faol"
+
+msgid "Rejected"
+msgstr "Rad etilgan"
+
+msgid "Published"
+msgstr "Nashr qilingan"
+
+msgid "Draft"
+msgstr "Qoralama"
+
+msgid "Featured"
+msgstr "Tavsiya etilgan"
+
+msgid "Create user"
+msgstr "Foydalanuvchi yaratish"
+
+msgid "Create course"
+msgstr "Kurs yaratish"
+
+msgid "Create category"
+msgstr "Kategoriya yaratish"
+
+msgid "Create section"
+msgstr "Bo'lim yaratish"
+
+msgid "Create lesson"
+msgstr "Dars yaratish"
+
+msgid "Create quiz"
+msgstr "Test yaratish"
+
+msgid "Create question"
+msgstr "Savol yaratish"
+
+msgid "Create answer"
+msgstr "Javob yaratish"
+
+msgid "Edit"
+msgstr "Tahrirlash"
+
+msgid "Delete"
+msgstr "O'chirish"
+
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+msgid "Block"
+msgstr "Bloklash"
+
+msgid "Unblock"
+msgstr "Blokdan chiqarish"
+
+msgid "Blocked"
+msgstr "Bloklangan"
+
+msgid "Overview"
+msgstr "Umumiy ko'rinish"
+
+msgid "Admin panel"
+msgstr "Admin panel"
+
+msgid "Platform control"
+msgstr "Platforma boshqaruvi"
+
+msgid "Users, courses, approvals, content, payments and settings in one place."
+msgstr "Foydalanuvchilar, kurslar, tasdiqlar, kontent, to'lovlar va sozlamalar bir joyda."
+
+msgid "Platform performance at a glance"
+msgstr "Platforma ko'rsatkichlari bir qarashda"
+
+msgid "Track growth, approvals, content scale and revenue from one premium control room."
+msgstr "O'sish, tasdiqlar, kontent hajmi va daromadni bitta premium boshqaruv oynasidan kuzating."
+
+msgid "Total users"
+msgstr "Jami foydalanuvchilar"
+
+msgid "Total courses"
+msgstr "Jami kurslar"
+
+msgid "Total lessons"
+msgstr "Jami darslar"
+
+msgid "Total earnings"
+msgstr "Jami daromad"
+
+msgid "Enrollments"
+msgstr "Yozilishlar"
+
+msgid "Completed watch stats"
+msgstr "Yakunlangan ko'rishlar"
+
+msgid "Recent users"
+msgstr "So'nggi foydalanuvchilar"
+
+msgid "Popular courses"
+msgstr "Mashhur kurslar"
+
+msgid "Recent reviews and activity"
+msgstr "So'nggi sharhlar va faollik"
+
+msgid "Approved"
+msgstr "Tasdiqlangan"
+
+msgid "No user activity yet."
+msgstr "Hali foydalanuvchi faolligi yo'q."
+
+msgid "Popular course data will appear here."
+msgstr "Mashhur kurslar ma'lumoti shu yerda chiqadi."
+
+msgid "No review activity yet."
+msgstr "Hali sharh faolligi yo'q."
+
+msgid "User management"
+msgstr "Foydalanuvchi boshqaruvi"
+
+msgid "Name"
+msgstr "Ism"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Role"
+msgstr "Rol"
+
+msgid "Actions"
+msgstr "Amallar"
+
+msgid "No users found."
+msgstr "Foydalanuvchilar topilmadi."
+
+msgid "Course management"
+msgstr "Kurs boshqaruvi"
+
+msgid "Title"
+msgstr "Nomi"
+
+msgid "Instructor"
+msgstr "O'qituvchi"
+
+msgid "Category"
+msgstr "Kategoriya"
+
+msgid "Price"
+msgstr "Narx"
+
+msgid "Publish"
+msgstr "Nashr qilish"
+
+msgid "Unpublish"
+msgstr "Nashrdan olish"
+
+msgid "Feature"
+msgstr "Tavsiya qilish"
+
+msgid "Unfeature"
+msgstr "Tavsiyadan olish"
+
+msgid "No courses found."
+msgstr "Kurslar topilmadi."
+
+msgid "Payment activity"
+msgstr "To'lov faolligi"
+
+msgid "Payments"
+msgstr "To'lovlar"
+
+msgid "Reference"
+msgstr "Referens"
+
+msgid "User"
+msgstr "Foydalanuvchi"
+
+msgid "Amount"
+msgstr "Miqdor"
+
+msgid "Created"
+msgstr "Yaratilgan"
+
+msgid "No payments found."
+msgstr "To'lovlar topilmadi."
+
+msgid "Confirm deletion"
+msgstr "O'chirishni tasdiqlash"
+
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Course checkout"
+msgstr "Kurs checkout"
+
+msgid "Total due today"
+msgstr "Bugun to'lanadigan jami summa"
+
+msgid "Lessons unlocked"
+msgstr "Ochiladigan darslar"
+
+msgid "Preview lessons"
+msgstr "Preview darslar"
+
+msgid "What you unlock"
+msgstr "Nimani ochasiz"
+
+msgid "Full access to every section and lesson"
+msgstr "Har bir bo'lim va darsga to'liq kirish"
+
+msgid "Progress tracking across the course"
+msgstr "Kurs bo'ylab progress kuzatuvi"
+
+msgid "Quiz attempts and saved results"
+msgstr "Test urinishlari va saqlangan natijalar"
+
+msgid "Certificate eligibility after completion"
+msgstr "Tugatgandan keyin sertifikat olish imkoni"
+
+msgid "Choose a payment method. For MVP mode, every method resolves into the demo unlock flow."
+msgstr "To'lov usulini tanlang. MVP rejimida har bir usul demo unlock oqimiga olib boradi."
+
+msgid "Payment method"
+msgstr "To'lov usuli"
+
+msgid "Pay now"
+msgstr "To'lov qilish"
+
+msgid "Language"
+msgstr "Til"
+
+msgid "Level"
+msgstr "Daraja"
+
+msgid "Back to course"
+msgstr "Kursga qaytish"
+
+msgid "Current"
+msgstr "Joriy"
+
+msgid "Completed"
+msgstr "Tugallangan"
+
+msgid "Preview"
+msgstr "Preview"
+
+msgid "Locked"
+msgstr "Yopiq"
+
+msgid "Lesson duration"
+msgstr "Dars davomiyligi"
+
+msgid "Course progress"
+msgstr "Kurs progressi"
+
+msgid "Access"
+msgstr "Kirish"
+
+msgid "Unlocked"
+msgstr "Ochiq"
+
+msgid "Your browser does not support the video tag."
+msgstr "Brauzeringiz video tegini qo'llab-quvvatlamaydi."
+
+msgid "No lesson video has been added yet."
+msgstr "Hali dars videosi qo'shilmagan."
+
+msgid "External embeds cannot auto-save watch time, so use the complete button when you finish the lesson."
+msgstr "Tashqi embedlar ko'rish vaqtini avtomatik saqlamaydi, shuning uchun dars tugagach yakunlash tugmasidan foydalaning."
+
+msgid "Previous lesson"
+msgstr "Oldingi dars"
+
+msgid "Next lesson"
+msgstr "Keyingi dars"
+
+msgid "Enroll for free"
+msgstr "Bepul yozilish"
+
+msgid "Unlock full access"
+msgstr "To'liq kirishni ochish"
+
+msgid "Lesson notes"
+msgstr "Dars izohlari"
+
+msgid "Lesson progress"
+msgstr "Dars progressi"
+
+msgid "Comments enabled for enrolled learners"
+msgstr "Izohlar kursga yozilgan o'quvchilar uchun yoqilgan"
+
+msgid "Discussion"
+msgstr "Muhokama"
+
+msgid "Post comment"
+msgstr "Izoh qoldirish"
+
+msgid "Login to join the lesson discussion."
+msgstr "Dars muhokamasiga qo'shilish uchun kiring."
+
+msgid "No comments yet for this lesson."
+msgstr "Bu dars uchun hali izohlar yo'q."
+
+msgid "Course quiz"
+msgstr "Kurs testi"
+
+msgid "Answer every question and submit when you are ready."
+msgstr "Har bir savolga javob bering va tayyor bo'lganda yuboring."
+
+msgid "Course"
+msgstr "Kurs"
+
+msgid "Questions"
+msgstr "Savollar"
+
+msgid "Pass mark"
+msgstr "O'tish bali"
+
+msgid "Progress"
+msgstr "Progress"
+
+msgid "Question by question"
+msgstr "Savolma-savol"
+
+msgid "Choose one answer"
+msgstr "Bitta javobni tanlang"
+
+msgid "Submit quiz"
+msgstr "Testni yuborish"
+
+msgid "Quiz result"
+msgstr "Test natijasi"
+
+msgid "Your score"
+msgstr "Sizning natijangiz"
+
+msgid "Correct answers"
+msgstr "To'g'ri javoblar"
+
+msgid "Passed"
+msgstr "O'tdi"
+
+msgid "Not yet"
+msgstr "Hali emas"
+
+msgid "Submitted"
+msgstr "Yuborilgan"
+
+msgid "Retake quiz"
+msgstr "Testni qayta topshirish"
+
+msgid "Certificate of completion"
+msgstr "Tugatganlik sertifikati"
+
+msgid "has successfully completed"
+msgstr "muvaffaqiyatli yakunladi"
+
+msgid "Issued:"
+msgstr "Berilgan:"
+
+msgid "Verification"
+msgstr "Tekshirish"
+
+msgid "Certificate ID"
+msgstr "Sertifikat ID"
+
+msgid "QR slot"
+msgstr "QR joyi"
+
+msgid "Verification ready"
+msgstr "Tekshirishga tayyor"
+
+msgid "Use this area for future public certificate verification or QR integration."
+msgstr "Kelajakdagi ommaviy sertifikat tekshiruvi yoki QR integratsiyasi uchun shu joydan foydalaning."
+
+msgid "Download PDF"
+msgstr "PDF yuklab olish"
+
+msgid "Print certificate"
+msgstr "Sertifikatni chop etish"
+
+msgid "Back to dashboard"
+msgstr "Kabinetga qaytish"
+
+msgid "Teacher workspace"
+msgstr "O'qituvchi ish maydoni"
+
+msgid "Add Question"
+msgstr "Savol qo'shish"
+
+msgid "Save question"
+msgstr "Savolni saqlash"
+
+msgid "Next step"
+msgstr "Keyingi qadam"
+
+msgid "This lightweight flow adds one answer together with the question. For richer editing, continue in the admin panel or extend the teacher workspace further."
+msgstr "Bu yengil oqim savol bilan birga bitta javobni qo'shadi. Kengroq tahrirlash uchun admin panelda davom eting yoki teacher workspace'ni kengaytiring."
+
+msgid "Back to teacher dashboard"
+msgstr "O'qituvchi kabinetiga qaytish"
+
+msgid "Site settings"
+msgstr "Sayt sozlamalari"
+
+msgid "Beginner"
+msgstr "Boshlang'ich"
+
+msgid "Intermediate"
+msgstr "O'rta"
+
+msgid "Advanced"
+msgstr "Yuqori"
+
+msgid "Only a superuser can manage another superuser."
+msgstr "Faqat superuser boshqa superuser'ni boshqara oladi."
+
+msgid "Course created and sent for review."
+msgstr "Kurs yaratildi va ko'rib chiqish uchun yuborildi."
+
+msgid "Course updated successfully."
+msgstr "Kurs muvaffaqiyatli yangilandi."
+
+msgid "Lesson added successfully."
+msgstr "Dars muvaffaqiyatli qo'shildi."
+
+msgid "Quiz created successfully."
+msgstr "Test muvaffaqiyatli yaratildi."
+
+msgid "Question and answer saved. Add more from the admin panel if needed."
+msgstr "Savol va javob saqlandi. Kerak bo'lsa admin paneldan yana qo'shing."
+
+msgid "User created successfully."
+msgstr "Foydalanuvchi muvaffaqiyatli yaratildi."
+
+msgid "User updated successfully."
+msgstr "Foydalanuvchi muvaffaqiyatli yangilandi."
+
+msgid "User deleted successfully."
+msgstr "Foydalanuvchi muvaffaqiyatli o'chirildi."
+
+msgid "blocked"
+msgstr "bloklandi"
+
+msgid "unblocked"
+msgstr "blokdan chiqarildi"
+
+msgid "User has been %(state)s."
+msgstr "Foydalanuvchi %(state)s."
+
+msgid "Course deleted successfully."
+msgstr "Kurs muvaffaqiyatli o'chirildi."
+
+msgid "Course publish status updated."
+msgstr "Kurs nashr holati yangilandi."
+
+msgid "Course featured status updated."
+msgstr "Kurs featured holati yangilandi."
+
+msgid "Category created successfully."
+msgstr "Kategoriya muvaffaqiyatli yaratildi."
+
+msgid "Category updated successfully."
+msgstr "Kategoriya muvaffaqiyatli yangilandi."
+
+msgid "Category deleted successfully."
+msgstr "Kategoriya muvaffaqiyatli o'chirildi."
+
+msgid "Category availability updated."
+msgstr "Kategoriya mavjudlik holati yangilandi."
+
+msgid "Section created successfully."
+msgstr "Bo'lim muvaffaqiyatli yaratildi."
+
+msgid "Section updated successfully."
+msgstr "Bo'lim muvaffaqiyatli yangilandi."
+
+msgid "Section deleted successfully."
+msgstr "Bo'lim muvaffaqiyatli o'chirildi."
+
+msgid "Lesson created successfully."
+msgstr "Dars muvaffaqiyatli yaratildi."
+
+msgid "Lesson updated successfully."
+msgstr "Dars muvaffaqiyatli yangilandi."
+
+msgid "Lesson deleted successfully."
+msgstr "Dars muvaffaqiyatli o'chirildi."
+
+msgid "Quiz updated successfully."
+msgstr "Test muvaffaqiyatli yangilandi."
+
+msgid "Quiz deleted successfully."
+msgstr "Test muvaffaqiyatli o'chirildi."
+
+msgid "Question created successfully."
+msgstr "Savol muvaffaqiyatli yaratildi."
+
+msgid "Question updated successfully."
+msgstr "Savol muvaffaqiyatli yangilandi."
+
+msgid "Question deleted successfully."
+msgstr "Savol muvaffaqiyatli o'chirildi."
+
+msgid "Answer created successfully."
+msgstr "Javob muvaffaqiyatli yaratildi."
+
+msgid "Answer updated successfully."
+msgstr "Javob muvaffaqiyatli yangilandi."
+
+msgid "Answer deleted successfully."
+msgstr "Javob muvaffaqiyatli o'chirildi."
+
+msgid "Certificate deleted successfully."
+msgstr "Sertifikat muvaffaqiyatli o'chirildi."
+
+msgid "Review moderation status updated."
+msgstr "Sharh moderatsiyasi holati yangilandi."
+
+msgid "Review deleted successfully."
+msgstr "Sharh muvaffaqiyatli o'chirildi."
+
+msgid "Site settings updated successfully."
+msgstr "Sayt sozlamalari muvaffaqiyatli yangilandi."

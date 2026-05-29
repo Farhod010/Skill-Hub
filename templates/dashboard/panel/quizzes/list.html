@@ -1,0 +1,33 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% block panel_content %}
+<div class="panel-header">
+    <div>
+        <span class="eyebrow">Quiz management</span>
+        <h1>Quizzes</h1>
+    </div>
+    <a href="{% url 'panel:quiz_create' %}" class="btn btn-primary">Create quiz</a>
+</div>
+<form method="get" class="panel-toolbar">
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search quizzes">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<div class="table-card">
+    <table class="data-table">
+        <thead><tr><th>Title</th><th>Course</th><th>Pass mark</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+            {% for quiz in page_obj %}
+                <tr>
+                    <td>{{ quiz.title }}</td>
+                    <td>{{ quiz.course.title }}</td>
+                    <td>{{ quiz.pass_percent }}%</td>
+                    <td>{% if quiz.is_active %}Active{% else %}Inactive{% endif %}</td>
+                    <td><div class="table-actions"><a href="{% url 'panel:quiz_edit' quiz.pk %}" class="btn btn-ghost">Edit</a><a href="{% url 'panel:quiz_delete' quiz.pk %}" class="btn btn-danger btn-soft">Delete</a></div></td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">No quizzes found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

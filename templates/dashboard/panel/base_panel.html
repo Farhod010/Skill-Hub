@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-xl-3">
+                <aside class="sidebar glass-card shadow-soft rounded-custom p-4 sticky-top" style="top: 6rem;">
+                    <div class="mb-4">
+                        <span class="eyebrow mb-2">{% trans "Admin panel" %}</span>
+                        <h2 class="h3 mb-2">{% trans "Platform control" %}</h2>
+                        <p class="text-secondary mb-0">{% trans "Users, courses, approvals, content, payments and settings in one place." %}</p>
+                    </div>
+                    <nav class="nav flex-column gap-2 sidebar-links">
+                        <a href="{% url 'panel:dashboard' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Overview" %}</a>
+                        <a href="{% url 'panel:user_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Users" %}</a>
+                        <a href="{% url 'panel:course_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Courses" %}</a>
+                        <a href="{% url 'panel:category_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Categories" %}</a>
+                        <a href="{% url 'panel:section_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Sections" %}</a>
+                        <a href="{% url 'panel:lesson_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Lessons" %}</a>
+                        <a href="{% url 'panel:quiz_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Quizzes" %}</a>
+                        <a href="{% url 'panel:question_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Questions" %}</a>
+                        <a href="{% url 'panel:answer_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Answers" %}</a>
+                        <a href="{% url 'panel:quiz_result_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Quiz results" %}</a>
+                        <a href="{% url 'panel:certificate_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Certificates" %}</a>
+                        <a href="{% url 'panel:review_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Reviews" %}</a>
+                        <a href="{% url 'panel:payment_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Payments" %}</a>
+                        <a href="{% url 'panel:site_settings' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Site settings" %}</a>
+                    </nav>
+                </aside>
+            </div>
+            <div class="col-xl-9">
+                {% block panel_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: edumaster\n"
+"POT-Creation-Date: 2026-05-27 18:30+0500\n"
+"PO-Revision-Date: 2026-05-27 18:30+0500\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Bosh sahifa"
+msgstr "Home"
+
+msgid "Kurslar"
+msgstr "Courses"
+
+msgid "Kategoriyalar"
+msgstr "Categories"
+
+msgid "O'qituvchilar"
+msgstr "Teachers"
+
+msgid "Biz haqimizda"
+msgstr "About us"
+
+msgid "Kabinet"
+msgstr "Dashboard"
+
+msgid "Chiqish"
+msgstr "Logout"
+
+msgid "Kirish"
+msgstr "Login"
+
+msgid "Ro'yxatdan o'tish"
+msgstr "Register"
+
+msgid "O'zbekcha"
+msgstr "Uzbek"
+
+msgid "Tema"
+msgstr "Theme"
+
+msgid "Sahifalar"
+msgstr "Pages"
+
+msgid "Narxlar"
+msgstr "Pricing"
+
+msgid "Dasturlash"
+msgstr "Programming"
+
+msgid "Dizayn"
+msgstr "Design"
+
+msgid "Marketing"
+msgstr "Marketing"
+
+msgid "Biznes"
+msgstr "Business"
+
+msgid "Aloqa va yangiliklar"
+msgstr "Contact and updates"
+
+msgid "Email manzilingiz"
+msgstr "Your email"
+
+msgid "Obuna"
+msgstr "Subscribe"

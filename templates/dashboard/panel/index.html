@@ -1,0 +1,93 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% load course_extras i18n %}
+{% block title %}Panel | EduMaster{% endblock %}
+{% block panel_content %}
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 p-lg-5">
+        <span class="eyebrow mb-2">{% trans "Overview" %}</span>
+        <h1 class="display-6 mb-2">{% trans "Platform performance at a glance" %}</h1>
+        <p class="text-secondary mb-0">{% trans "Track growth, approvals, content scale and revenue from one premium control room." %}</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-4">
+        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100"><div class="card-body"><div class="small text-secondary">{% trans "Total users" %}</div><div class="display-6 fw-bold" data-countup="{{ stats.total_users }}">{{ stats.total_users }}</div></div></div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100"><div class="card-body"><div class="small text-secondary">{% trans "Total courses" %}</div><div class="display-6 fw-bold" data-countup="{{ stats.total_courses }}">{{ stats.total_courses }}</div></div></div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100"><div class="card-body"><div class="small text-secondary">{% trans "Total lessons" %}</div><div class="display-6 fw-bold" data-countup="{{ stats.total_lessons }}">{{ stats.total_lessons }}</div></div></div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100"><div class="card-body"><div class="small text-secondary">{% trans "Total earnings" %}</div><div class="display-6 fw-bold">{{ stats.total_earnings|money }}</div></div></div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100"><div class="card-body"><div class="small text-secondary">{% trans "Enrollments" %}</div><div class="display-6 fw-bold" data-countup="{{ stats.total_enrollments }}">{{ stats.total_enrollments }}</div></div></div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100"><div class="card-body"><div class="small text-secondary">{% trans "Completed watch stats" %}</div><div class="display-6 fw-bold" data-countup="{{ stats.completed_watch_stats }}">{{ stats.completed_watch_stats }}</div></div></div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <section class="card border-0 glass-card shadow-soft rounded-custom h-100">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-4">{% trans "Recent users" %}</h2>
+                <div class="list-group list-group-flush">
+                    {% for user in recent_users %}
+                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                            <div class="fw-semibold">{{ user.full_name }}</div>
+                            <div class="small text-secondary">{{ user.email }} - {{ user.get_role_display }}</div>
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "No user activity yet." %}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-6">
+        <section class="card border-0 glass-card shadow-soft rounded-custom h-100">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-4">{% trans "Popular courses" %}</h2>
+                <div class="list-group list-group-flush">
+                    {% for course in popular_courses %}
+                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                            <div class="fw-semibold">{{ course|translated_title }}</div>
+                            <div class="small text-secondary">{% blocktrans with total=course.total_enrollments %}{{ total }} enrollments{% endblocktrans %}</div>
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Popular course data will appear here." %}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<section class="card border-0 glass-card shadow-soft rounded-custom mt-4">
+    <div class="card-body p-4">
+        <h2 class="h4 mb-4">{% trans "Recent reviews and activity" %}</h2>
+        <div class="list-group list-group-flush">
+            {% for review in recent_reviews %}
+                <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <div class="fw-semibold">{{ review.course.get_translated_title }}</div>
+                            <div class="small text-secondary">{{ review.student.email }} - {{ review.rating }}/5</div>
+                        </div>
+                        <span class="badge rounded-pill {% if review.is_approved %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3 py-2">
+                            {% if review.is_approved %}{% trans "Approved" %}{% else %}{% trans "Pending" %}{% endif %}
+                        </span>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "No review activity yet." %}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

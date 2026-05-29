@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load i18n course_extras %}
+{% block title %}{% trans "EduMaster | Premium Online Learning" %}{% endblock %}
+{% block content %}
+<section class="hero-section">
+    <div class="container hero-surface">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="eyebrow mb-3">{% trans "Premium online education platform" %}</span>
+                <h1 class="hero-display mb-4">{% trans "Kelajagingizni" %} <span class="text-gradient">{% trans "online ta'lim" %}</span> {% trans "bilan boshlang." %}</h1>
+                <p class="lead text-secondary mb-4">
+                    {% blocktrans %}EduMaster / Oqimarkaz kurslarni topish, sotib olish, video dars korish, quiz ishlash va sertifikat olishni bir zamonaviy platformaga jamlaydi.{% endblocktrans %}
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{% url 'courses:course_list' %}" class="btn gradient-btn text-white rounded-pill px-4 py-3">{% trans "Kurslarni ko'rish" %}</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-outline-secondary rounded-pill px-4 py-3">{% trans "Bepul boshlash" %}</a>
+                </div>
+                <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-xl-4">
+                    <div class="col"><div class="stats-card glass-card h-100"><div class="display-6 fw-bold" data-countup="{{ stats.students|default:10000 }}">10000</div><div class="text-secondary">+ {% trans "O'quvchilar" %}</div></div></div>
+                    <div class="col"><div class="stats-card glass-card h-100"><div class="display-6 fw-bold" data-countup="500">500</div><div class="text-secondary">+ {% trans "Video darslar" %}</div></div></div>
+                    <div class="col"><div class="stats-card glass-card h-100"><div class="display-6 fw-bold" data-countup="{{ stats.instructors|default:100 }}">100</div><div class="text-secondary">+ {% trans "Mentorlar" %}</div></div></div>
+                    <div class="col"><div class="stats-card glass-card h-100"><div class="display-6 fw-bold" data-countup="4.9" data-countup-decimals="1">4.9</div><div class="text-secondary">{% trans "Reyting" %}</div></div></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-preview position-relative">
+                    <div class="hero-preview-card p-4 p-xl-5">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="badge rounded-pill bg-white text-dark px-3 py-2">{% trans "Live preview" %}</span>
+                            <span class="small text-white-50">{% trans "Aurora classroom" %}</span>
+                        </div>
+                        <h3 class="h2 mb-3">{% trans "Premium learning dashboard" %}</h3>
+                        <p class="text-white-50 mb-4">{% trans "Video lesson preview, progress tracking, quiz natijalari va sertifikatlar bitta premium oqimda." %}</p>
+                        <div class="row g-3">
+                            <div class="col-sm-4"><div class="glass-card p-3 h-100"><div class="small text-white-50">{% trans "Reyting" %}</div><div class="fs-4 fw-bold text-white">4.9/5</div></div></div>
+                            <div class="col-sm-4"><div class="glass-card p-3 h-100"><div class="small text-white-50">{% trans "O'quvchilar" %}</div><div class="fs-4 fw-bold text-white">10K+</div></div></div>
+                            <div class="col-sm-4"><div class="glass-card p-3 h-100"><div class="small text-white-50">{% trans "Sertifikatlar" %}</div><div class="fs-4 fw-bold text-white">{% trans "Ready" %}</div></div></div>
+                        </div>
+                    </div>
+                    <div class="floating-stat top glass-card p-3 shadow-soft"><div class="small text-secondary">{% trans "Average rating" %}</div><div class="fw-bold fs-5"><i class="bi bi-star-fill text-warning"></i> 4.9</div></div>
+                    <div class="floating-stat middle glass-card p-3 shadow-soft"><div class="small text-secondary">{% trans "Active learners" %}</div><div class="fw-bold fs-5">10K+</div></div>
+                    <div class="floating-stat bottom glass-card p-3 shadow-soft"><div class="small text-secondary">{% trans "Certificate flow" %}</div><div class="fw-bold fs-5">{% trans "Enabled" %}</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-xl-4">
+            <div class="col"><div class="stats-card glass-card h-100"><div class="icon-badge mb-3"><i class="bi bi-people-fill"></i></div><div class="display-6 fw-bold">10K+</div><p class="mb-0 text-secondary">{% trans "O'quvchilar" %}</p></div></div>
+            <div class="col"><div class="stats-card glass-card h-100"><div class="icon-badge mb-3"><i class="bi bi-play-btn-fill"></i></div><div class="display-6 fw-bold">500+</div><p class="mb-0 text-secondary">{% trans "Video darslar" %}</p></div></div>
+            <div class="col"><div class="stats-card glass-card h-100"><div class="icon-badge mb-3"><i class="bi bi-person-workspace"></i></div><div class="display-6 fw-bold">100+</div><p class="mb-0 text-secondary">{% trans "Mentorlar" %}</p></div></div>
+            <div class="col"><div class="stats-card glass-card h-100"><div class="icon-badge mb-3"><i class="bi bi-stars"></i></div><div class="display-6 fw-bold">4.9</div><p class="mb-0 text-secondary">{% trans "Platform rating" %}</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding pt-0" id="categories">
+    <div class="container">
+        <div class="section-title mb-5">
+            <span class="eyebrow mb-2">{% trans "Kategoriyalar" %}</span>
+            <h2 class="display-6 mb-3">{% trans "Turli yo'nalishlarda premium bilim oling" %}</h2>
+            <p class="text-secondary mb-0">{% trans "Bootstrap grid asosidagi kategoriya kartalari foydalanuvchini tez yonaltiradi va kurslar katalogiga olib kiradi." %}</p>
+        </div>
+        <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
+            {% for category in categories %}
+                <div class="col">
+                    <div class="category-card card border-0 h-100 glass-card hover-lift">
+                        <div class="card-body p-4">
+                            <div class="category-icon mb-4">
+                                {% if forloop.counter == 1 %}<i class="bi bi-code-slash"></i>
+                                {% elif forloop.counter == 2 %}<i class="bi bi-palette2"></i>
+                                {% elif forloop.counter == 3 %}<i class="bi bi-megaphone-fill"></i>
+                                {% elif forloop.counter == 4 %}<i class="bi bi-translate"></i>
+                                {% elif forloop.counter == 5 %}<i class="bi bi-briefcase-fill"></i>
+                                {% else %}<i class="bi bi-calculator-fill"></i>{% endif %}
+                            </div>
+                            <h3 class="h4 mb-3">{{ category|translated_title }}</h3>
+                            {% if category.description or category.description_uz or category.description_ru or category.description_en %}
+                                <p class="card-text">{{ category|translated_description }}</p>
+                            {% else %}
+                                <p class="card-text">{% trans "Focused learning paths, mentor support, and premium curriculum blocks." %}</p>
+                            {% endif %}
+                            <a href="{% url 'courses:course_list' %}?category={{ category.slug }}" class="fw-semibold text-primary">{% trans "Ko'rish" %} <i class="bi bi-arrow-right-short"></i></a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col"><div class="category-card card border-0 h-100 glass-card hover-lift"><div class="card-body p-4"><div class="category-icon mb-4"><i class="bi bi-code-slash"></i></div><h3 class="h4 mb-3">{% trans "Dasturlash" %}</h3><p class="card-text">{% trans "Modern development kurslari, project-based amaliyot va mentor komagi." %}</p></div></div></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-body-tertiary">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-5">
+            <div class="section-title mb-0">
+                <span class="eyebrow mb-2">{% trans "Mashhur kurslar" %}</span>
+                <h2 class="display-6 mb-3">{% trans "Eng ko'p tanlanayotgan kurslar" %}</h2>
+                <p class="text-secondary mb-0">{% trans "Bootstrap 5 kartalari, gradient badge va kuchli CTA bilan kurslar darhol ishonch uygotadi." %}</p>
+            </div>
+            <a href="{% url 'courses:course_list' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Barcha kurslar" %}</a>
+        </div>
+        <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
+            {% for course in featured_courses %}
+                <div class="col">{% include 'partials/course_card.html' %}</div>
+            {% empty %}
+                <div class="col-12"><div class="alert alert-primary border-0 rounded-4 shadow-soft mb-0">{% trans "Featured courses will appear here once you publish them." %}</div></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section-padding" id="about">
+    <div class="container">
+        <div class="section-title mb-5">
+            <span class="eyebrow mb-2">{% trans "Platform afzalliklari" %}</span>
+            <h2 class="display-6 mb-3">{% trans "Bootstrap asosidagi toza va professional talim tajribasi" %}</h2>
+        </div>
+        <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
+            <div class="col"><div class="feature-card glass-card h-100 p-4"><div class="feature-icon mb-4"><i class="bi bi-camera-video-fill"></i></div><h3 class="h4 mb-3">{% trans "HD video darslar" %}</h3><p class="text-secondary mb-0">{% trans "Yuqori sifatli video darslar va zamonaviy player sahifasi." %}</p></div></div>
+            <div class="col"><div class="feature-card glass-card h-100 p-4"><div class="feature-icon mb-4"><i class="bi bi-ui-checks-grid"></i></div><h3 class="h4 mb-3">{% trans "Testlar" %}</h3><p class="text-secondary mb-0">{% trans "Quiz va imtihonlar orqali bilimni mustahkamlash." %}</p></div></div>
+            <div class="col"><div class="feature-card glass-card h-100 p-4"><div class="feature-icon mb-4"><i class="bi bi-patch-check-fill"></i></div><h3 class="h4 mb-3">{% trans "Sertifikatlar" %}</h3><p class="text-secondary mb-0">{% trans "Kursni tugatgach professional sertifikat olish imkoniyati." %}</p></div></div>
+            <div class="col"><div class="feature-card glass-card h-100 p-4"><div class="feature-icon mb-4"><i class="bi bi-graph-up-arrow"></i></div><h3 class="h4 mb-3">{% trans "Progress tracking" %}</h3><p class="text-secondary mb-0">{% trans "Har bir darsdagi yutuqlaringizni real vaqt rejimida kuzatish." %}</p></div></div>
+            <div class="col"><div class="feature-card glass-card h-100 p-4"><div class="feature-icon mb-4"><i class="bi bi-phone-fill"></i></div><h3 class="h4 mb-3">{% trans "Mobil qurilmada o'qish" %}</h3><p class="text-secondary mb-0">{% trans "Telefon va planshetda ham mukammal moslashuv." %}</p></div></div>
+            <div class="col"><div class="feature-card glass-card h-100 p-4"><div class="feature-icon mb-4"><i class="bi bi-person-video3"></i></div><h3 class="h4 mb-3">{% trans "Teacher support" %}</h3><p class="text-secondary mb-0">{% trans "O'qituvchi bilan fikr almashish va izohlar tizimi." %}</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-body-tertiary">
+    <div class="container">
+        <div class="section-title mb-5">
+            <span class="eyebrow mb-2">{% trans "Qanday ishlaydi?" %}</span>
+            <h2 class="display-6 mb-3">{% trans "Ro'yxatdan o'tishdan sertifikatgacha bo'lgan yol" %}</h2>
+        </div>
+        <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-xl-5">
+            <div class="col"><div class="step-card glass-card h-100 p-4"><div class="timeline-step mb-3"></div><h3 class="h5">{% trans "Ro'yxatdan o'ting" %}</h3><p class="text-secondary mb-0">{% trans "Student yoki teacher sifatida hisob oching." %}</p></div></div>
+            <div class="col"><div class="step-card glass-card h-100 p-4"><div class="timeline-step mb-3"></div><h3 class="h5">{% trans "Kurs tanlang" %}</h3><p class="text-secondary mb-0">{% trans "Katalogdan sizga mos yonalishni toping." %}</p></div></div>
+            <div class="col"><div class="step-card glass-card h-100 p-4"><div class="timeline-step mb-3"></div><h3 class="h5">{% trans "Darslarni ko'ring" %}</h3><p class="text-secondary mb-0">{% trans "Video darslar orqali bosqichma-bosqich organing." %}</p></div></div>
+            <div class="col"><div class="step-card glass-card h-100 p-4"><div class="timeline-step mb-3"></div><h3 class="h5">{% trans "Testdan o'ting" %}</h3><p class="text-secondary mb-0">{% trans "Quiz va testlar bilan bilimni tekshiring." %}</p></div></div>
+            <div class="col"><div class="step-card glass-card h-100 p-4"><div class="timeline-step mb-3"></div><h3 class="h5">{% trans "Sertifikat oling" %}</h3><p class="text-secondary mb-0">{% trans "Kursni tugatib, premium sertifikatni yuklab oling." %}</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding" id="teachers">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <span class="eyebrow mb-2">{% trans "Teacher section" %}</span>
+                <h2 class="display-6 mb-3">{% trans "O'z kursingizni yarating va daromad qiling" %}</h2>
+                <p class="text-secondary mb-4">{% trans "Teacher dashboard course management, quiz setup, student count, review insight va earnings monitoring bilan creator-friendly tajriba beradi." %}</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'accounts:register' %}" class="btn gradient-btn text-white rounded-pill px-4">{% trans "O'qituvchi bo'lish" %}</a>
+                    <a href="{% url 'landing' %}#pricing" class="btn btn-outline-secondary rounded-pill px-4">{% trans "FAQ va narxlar" %}</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="teacher-preview-window glass-card p-4 rounded-5">
+                    <div class="row g-3">
+                        <div class="col-sm-6"><div class="glass-card p-3 h-100"><div class="small text-white-50">{% trans "Revenue" %}</div><div class="fs-3 fw-bold text-white">$12.4K</div></div></div>
+                        <div class="col-sm-6"><div class="glass-card p-3 h-100"><div class="small text-white-50">{% trans "Students" %}</div><div class="fs-3 fw-bold text-white">1,280</div></div></div>
+                        <div class="col-12"><div class="glass-card p-3"><div class="small text-white-50 mb-3">{% trans "Course analytics" %}</div><div class="progress mb-2" style="height: .75rem;"><div class="progress-bar progress-bar-premium" style="width: 78%"></div></div><div class="progress mb-2" style="height: .75rem;"><div class="progress-bar progress-bar-premium" style="width: 64%"></div></div><div class="progress" style="height: .75rem;"><div class="progress-bar progress-bar-premium" style="width: 92%"></div></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="section-title mb-5">
+            <span class="eyebrow mb-2">{% trans "Testimonials" %}</span>
+            <h2 class="display-6 mb-3">{% trans "Foydalanuvchilar nima deydi?" %}</h2>
+        </div>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for review in testimonials %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="card border-0 glass-card rounded-5 shadow-soft">
+                            <div class="card-body p-4 p-lg-5">
+                                <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 mb-4">
+                                    <span class="testimonial-avatar">{{ review.student.full_name|first|upper }}</span>
+                                    <div class="flex-grow-1">
+                                        <h3 class="h5 mb-1">{{ review.student.full_name }}</h3>
+                                        <p class="text-secondary small mb-0">{{ review.course|translated_title }}</p>
+                                    </div>
+                                    <div class="stars fs-5 text-warning">★★★★★</div>
+                                </div>
+                                <h4 class="h3 mb-3">{% if review.title %}{{ review.title }}{% else %}{% trans "Learner feedback" %}{% endif %}</h4>
+                                <p class="lead mb-0 text-secondary">{{ review.comment }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="carousel-item active"><div class="card border-0 glass-card rounded-5 shadow-soft"><div class="card-body p-5 text-center"><h3 class="h4">{% trans "Reviews will appear here after students submit them." %}</h3></div></div></div>
+                {% endfor %}
+            </div>
+            <div class="d-flex justify-content-center gap-2 mt-4">
+                <button class="btn btn-outline-secondary rounded-circle" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev"><i class="bi bi-arrow-left"></i></button>
+                <button class="btn btn-outline-secondary rounded-circle" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next"><i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-body-tertiary" id="pricing">
+    <div class="container">
+        <div class="section-title mb-5">
+            <span class="eyebrow mb-2">FAQ</span>
+            <h2 class="display-6 mb-3">{% trans "Ko'p so'raladigan savollar" %}</h2>
+        </div>
+        <div class="accordion curriculum-accordion" id="faqAccordion">
+            <div class="accordion-item border-0 glass-card mb-3">
+                <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="true" aria-controls="faqOne">{% trans "Qanday qilib o'qishni boshlayman?" %}</button></h2>
+                <div id="faqOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body text-secondary">{% trans "Ro'yxatdan o'ting, katalogdan kurs tanlang va preview yoki to'liq enrollment orqali darslarni boshlang." %}</div></div>
+            </div>
+            <div class="accordion-item border-0 glass-card mb-3">
+                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">{% trans "Sertifikat qachon beriladi?" %}</button></h2>
+                <div id="faqTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body text-secondary">{% trans "Barcha kerakli darslarni tugatib, quizdan o'tganingizdan keyin sertifikat ochiladi." %}</div></div>
+            </div>
+            <div class="accordion-item border-0 glass-card">
+                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">{% trans "Teacherlar kurslarni boshqara oladimi?" %}</button></h2>
+                <div id="faqThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body text-secondary">{% trans "Ha, teacher dashboard orqali course, lesson, quiz va natijalarni boshqarish mumkin." %}</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding pt-0">
+    <div class="container">
+        <div class="cta-band p-4 p-lg-5 text-white">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="eyebrow text-white-50 mb-2">{% trans "Call to action" %}</span>
+                    <h2 class="display-6 mb-3">{% trans "Bugunoq o'qishni boshlang" %}</h2>
+                    <p class="lead mb-0 text-white-50">{% trans "Ro'yxatdan o'ting, premium kurslarni ko'ring va zamonaviy platformada bilim oling." %}</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="d-grid gap-3">
+                        <a href="{% url 'accounts:register' %}" class="btn btn-light text-dark rounded-pill py-3 fw-semibold">{% trans "Ro'yxatdan o'tish" %}</a>
+                        <a href="{% url 'courses:course_list' %}" class="btn btn-outline-light rounded-pill py-3">{% trans "Kurslarni ko'rish" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

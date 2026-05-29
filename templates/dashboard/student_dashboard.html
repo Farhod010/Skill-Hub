@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% load course_extras i18n %}
+{% block title %}{% trans "Student Dashboard" %} | EduMaster{% endblock %}
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4 dashboard-shell">
+            <div class="col-xl-3">
+                <aside class="sidebar glass-card shadow-soft rounded-custom p-4 sticky-top" style="top: 6rem;">
+                    <div class="text-center mb-4">
+                        <div class="teacher-avatar mx-auto mb-3" style="width:4.5rem;height:4.5rem;">{{ request.user.full_name|first|upper }}</div>
+                        <h2 class="h4 mb-1">{{ request.user.full_name }}</h2>
+                        <p class="text-secondary small mb-3">{{ request.user.email }}</p>
+                        <div class="d-flex justify-content-center flex-wrap gap-2">
+                            <span class="badge premium-badge rounded-pill px-3 py-2">{{ request.user.get_role_display }}</span>
+                            {% if request.user.phone %}
+                                <span class="badge text-bg-light border rounded-pill px-3 py-2">{{ request.user.phone }}</span>
+                            {% else %}
+                                <span class="badge text-bg-light border rounded-pill px-3 py-2">{% trans "No phone yet" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <nav class="nav flex-column gap-2 sidebar-links">
+                        <a href="#overview" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Overview" %}</a>
+                        <a href="#courses" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Mening kurslarim" %}</a>
+                        <a href="#certificates" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Sertifikatlar" %}</a>
+                        <a href="#payments" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "To'lov tarixi" %}</a>
+                    </nav>
+                    <div class="glass-card p-3 mt-4">
+                        <span class="eyebrow mb-2">{% trans "Momentum" %}</span>
+                        <h3 class="h5">{% blocktrans with count=stats.completed_lessons %}{{ count }} lessons done{% endblocktrans %}</h3>
+                        <p class="small text-secondary mb-3">{% trans "Keep moving with consistent daily progress and focused course completion." %}</p>
+                        <a href="{% url 'courses:course_list' %}" class="btn gradient-btn text-white rounded-pill w-100">{% trans "Explore more courses" %}</a>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="col-xl-9">
+                <div class="card border-0 glass-card shadow-soft rounded-custom mb-4" id="overview">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                            <div>
+                                <span class="eyebrow mb-2">{% trans "Student dashboard" %}</span>
+                                <h1 class="display-6 mb-2">{% blocktrans with name=request.user.full_name %}{{ name }} learning dashboard{% endblocktrans %}</h1>
+                                <p class="text-secondary mb-0">{% trans "Courses, quizzes, certificates, wishlist va payment history bitta premium workspace ichida." %}</p>
+                            </div>
+                            <a href="{% url 'courses:course_list' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Browse catalog" %}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Mening kurslarim" %}</div>
+                                <div class="display-6 fw-bold" data-countup="{{ stats.enrolled_courses }}">{{ stats.enrolled_courses }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Finished lessons" %}</div>
+                                <div class="display-6 fw-bold" data-countup="{{ stats.completed_lessons }}">{{ stats.completed_lessons }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Sertifikatlar" %}</div>
+                                <div class="display-6 fw-bold" data-countup="{{ stats.certificates }}">{{ stats.certificates }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Quiz passes" %}</div>
+                                <div class="display-6 fw-bold" data-countup="{{ stats.quiz_passes }}">{{ stats.quiz_passes }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if featured_course %}
+                    <div class="hero-preview-card p-4 p-lg-5 mb-4">
+                        <div class="row align-items-center g-4">
+                            <div class="col-lg-8">
+                                <span class="eyebrow text-white-50 mb-2">{% trans "Continue learning" %}</span>
+                                <h2 class="h1 mb-3">{{ featured_course.course.title }}</h2>
+                                <p class="text-white-50 mb-4">{{ featured_course.course.short_description }}</p>
+                                <div class="progress mb-2" style="height: .85rem;" data-progress>
+                                    <div class="progress-bar progress-bar-premium" style="width: {{ featured_course.progress_percent }}%"></div>
+                                </div>
+                                <div class="small text-white-50">{% blocktrans with done=featured_course.completed_lessons total=featured_course.total_lessons %}{{ done }}/{{ total }} lessons completed{% endblocktrans %}</div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="d-grid gap-3">
+                                    {% if featured_course.next_lesson %}
+                                        <a href="{{ featured_course.next_lesson.get_absolute_url }}" class="btn btn-light text-dark rounded-pill">{% trans "Open next lesson" %}</a>
+                                    {% endif %}
+                                    <a href="{{ featured_course.course.get_absolute_url }}" class="btn btn-outline-light rounded-pill">{% trans "Batafsil" %}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-6">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Recent activity" %}</span>
+                                <h2 class="h4 mb-4">{% trans "Latest learning touchpoints" %}</h2>
+                                <div class="list-group list-group-flush">
+                                    {% for entry in recent_activity %}
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">{{ entry.lesson.title }}</div>
+                                                    <div class="small text-secondary">{{ entry.lesson.section.course.title }}</div>
+                                                </div>
+                                                <span class="badge rounded-pill {% if entry.completed %}bg-success-subtle text-success{% else %}bg-primary-subtle text-primary{% endif %} px-3 py-2">
+                                                    {% if entry.completed %}{% trans "Completed" %}{% else %}{{ entry.watched_seconds }} {% trans "sec" %}{% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Your activity will appear here after you start learning." %}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Quiz results" %}</span>
+                                <h2 class="h4 mb-4">{% trans "Recent assessment performance" %}</h2>
+                                <div class="list-group list-group-flush">
+                                    {% for result in quiz_results %}
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">{{ result.quiz.title }}</div>
+                                                    <div class="small text-secondary">{{ result.quiz.course.title }}</div>
+                                                </div>
+                                                <span class="badge rounded-pill {% if result.passed %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3 py-2">{{ result.score }}/{{ result.total_questions }}</span>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "No quiz attempts yet." %}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center gap-3 mb-4" id="courses">
+                    <div>
+                        <h2 class="h3 mb-1">{% trans "Mening kurslarim" %}</h2>
+                        <p class="text-secondary mb-0">{% trans "Purchased and active learning paths." %}</p>
+                    </div>
+                </div>
+                <div class="row g-4 mb-4">
+                    {% for item in enrolled_courses %}
+                        <div class="col-lg-6">
+                            <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <span class="badge premium-badge rounded-pill px-3 py-2">{{ item.course.category|translated_title }}</span>
+                                        <span class="badge text-bg-light border rounded-pill px-3 py-2">{{ item.progress_percent }}% {% trans "done" %}</span>
+                                    </div>
+                                    <h3 class="h4">{{ item.course|translated_title }}</h3>
+                                    <p class="text-secondary">{{ item.course|translated_short_description }}</p>
+                                    <div class="progress mb-2 mt-auto" style="height: .8rem;" data-progress>
+                                        <div class="progress-bar progress-bar-premium" style="width: {{ item.progress_percent }}%"></div>
+                                    </div>
+                                    <div class="small text-secondary mb-3">{% blocktrans with done=item.completed_lessons total=item.total_lessons %}{{ done }}/{{ total }} lessons completed{% endblocktrans %}</div>
+                                    <div class="d-grid gap-2 d-sm-flex">
+                                        {% if item.next_lesson %}
+                                            <a href="{{ item.next_lesson.get_absolute_url }}" class="btn gradient-btn text-white rounded-pill flex-fill">{% trans "Continue" %}</a>
+                                        {% else %}
+                                            <span class="btn btn-success rounded-pill disabled flex-fill">{% trans "Completed" %}</span>
+                                        {% endif %}
+                                        <a href="{{ item.course.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill flex-fill">{% trans "Batafsil" %}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <div class="alert alert-primary border-0 rounded-4 shadow-soft">
+                                {% trans "You have not enrolled in any courses yet." %} <a href="{% url 'courses:course_list' %}" class="fw-semibold">{% trans "Browse courses" %}</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row g-4 mb-4" id="certificates">
+                    <div class="col-lg-6">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Sertifikatlar" %}</span>
+                                <h2 class="h4 mb-4">{% trans "Earned credentials" %}</h2>
+                                <div class="list-group list-group-flush">
+                                    {% for certificate in certificates %}
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">{{ certificate.course.title }}</div>
+                                                    <div class="small text-secondary">{{ certificate.certificate_id }}</div>
+                                                </div>
+                                                <a href="{% url 'courses:certificate_detail' certificate.course.slug %}" class="btn btn-outline-secondary rounded-pill">{% trans "Open" %}</a>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Finish courses and pass quizzes to unlock certificates." %}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" id="payments">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "To'lov tarixi" %}</span>
+                                <h2 class="h4 mb-4">{% trans "Recent transactions" %}</h2>
+                                <div class="table-responsive table-premium glass-card p-0">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>{% trans "Course" %}</th>
+                                                <th>{% trans "Ref" %}</th>
+                                                <th>{% trans "Amount" %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for payment in payments %}
+                                                <tr>
+                                                    <td>{{ payment.course.title }}</td>
+                                                    <td>{{ payment.reference }}</td>
+                                                    <td>{{ payment.amount|money }} - {{ payment.provider|title }}</td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr><td colspan="3">{% trans "No payments yet." %}</td></tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom">
+                            <div class="card-body p-4 p-lg-5">
+                                <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+                                    <div>
+                                        <span class="eyebrow mb-2">{% trans "Wishlist" %}</span>
+                                        <h2 class="h4 mb-0">{% trans "Saved for later" %}</h2>
+                                    </div>
+                                </div>
+                                <div class="row g-4">
+                                    {% for wishlist in wishlist_items %}
+                                        <div class="col-md-6 col-xl-4">
+                                            {% with course=wishlist.course %}
+                                                {% include 'partials/course_card.html' %}
+                                            {% endwith %}
+                                        </div>
+                                    {% empty %}
+                                        <div class="col-12">
+                                            <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Your wishlist is empty right now." %}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom">
+                            <div class="card-body p-4 p-lg-5">
+                                <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+                                    <div>
+                                        <span class="eyebrow mb-2">{% trans "Recommended next" %}</span>
+                                        <h2 class="h4 mb-0">{% trans "Fresh courses to explore" %}</h2>
+                                    </div>
+                                </div>
+                                <div class="row g-4">
+                                    {% for course in recommended_courses %}
+                                        <div class="col-md-6 col-xl-4">
+                                            {% include 'partials/course_card.html' %}
+                                        </div>
+                                    {% empty %}
+                                        <div class="col-12">
+                                            <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "New suggestions will appear after you enroll in more courses." %}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

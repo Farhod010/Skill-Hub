@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Ro'yxatdan o'tish" %} | EduMaster{% endblock %}
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-5">
+                <div class="auth-side rounded-5 shadow-soft p-4 p-lg-5 h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <span class="eyebrow text-white-50 mb-3">{% trans "Start learning today" %}</span>
+                        <h1 class="display-5 mb-3">{% trans "Yangi premium akademiyaga xush kelibsiz" %}</h1>
+                        <p class="lead text-white-50">{% trans "Student yoki teacher sifatida qo'shiling, kurslar yarating, quizlardan o'ting va sertifikatlar oling." %}</p>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-6"><div class="glass-card p-3 h-100"><div class="small text-white-50">{% trans "Student mode" %}</div><div class="fw-semibold text-white">{% trans "Courses, progress, certificates" %}</div></div></div>
+                        <div class="col-sm-6"><div class="glass-card p-3 h-100"><div class="small text-white-50">{% trans "Teacher mode" %}</div><div class="fw-semibold text-white">{% trans "Create, manage, earn" %}</div></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="card border-0 auth-card shadow-soft rounded-5 h-100">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="mb-4">
+                            <span class="badge premium-badge rounded-pill px-3 py-2 mb-2">{% trans "Premium access" %}</span>
+                            <h2 class="mb-0">{% trans "Ro'yxatdan o'tish" %}</h2>
+                        </div>
+                        <form method="post" enctype="multipart/form-data" class="row g-4">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="{% if field.name == 'bio' or field.name == 'avatar' %}col-12{% else %}col-md-6{% endif %}">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {% if field.field.widget.input_type == 'password' %}
+                                        <div class="input-group" data-password-toggle>
+                                            <span class="input-group-text icon-pill"><i class="bi bi-shield-lock-fill"></i></span>
+                                            {{ field }}
+                                            <button type="button" class="btn btn-outline-secondary" data-password-toggle-button><i class="bi bi-eye"></i></button>
+                                        </div>
+                                    {% elif field.field.widget.input_type == 'file' %}
+                                        <div class="input-group"><span class="input-group-text icon-pill"><i class="bi bi-image-fill"></i></span>{{ field }}</div>
+                                    {% elif field.name == 'role' %}
+                                        <div class="input-group"><span class="input-group-text icon-pill"><i class="bi bi-person-badge-fill"></i></span>{{ field }}</div>
+                                    {% elif field.name == 'bio' %}
+                                        <div class="input-group"><span class="input-group-text icon-pill"><i class="bi bi-chat-left-text-fill"></i></span>{{ field }}</div>
+                                    {% else %}
+                                        <div class="input-group">
+                                            <span class="input-group-text icon-pill">
+                                                {% if 'email' in field.name %}<i class="bi bi-envelope-fill"></i>
+                                                {% elif 'phone' in field.name %}<i class="bi bi-telephone-fill"></i>
+                                                {% else %}<i class="bi bi-person-fill"></i>{% endif %}
+                                            </span>
+                                            {{ field }}
+                                        </div>
+                                    {% endif %}
+                                    {% if field.help_text %}<small class="text-secondary d-block mt-2">{{ field.help_text }}</small>{% endif %}
+                                    {% if field.errors %}<div class="form-error mt-2">{{ field.errors|striptags }}</div>{% endif %}
+                                </div>
+                            {% endfor %}
+                            {% if form.non_field_errors %}<div class="col-12"><div class="alert alert-danger border-0 rounded-4 mb-0">{{ form.non_field_errors|striptags }}</div></div>{% endif %}
+                            <div class="col-12 d-grid"><button type="submit" class="btn gradient-btn text-white rounded-pill py-3">{% trans "Ro'yxatdan o'tish" %}</button></div>
+                        </form>
+                        <div class="row g-3 mt-3">
+                            <div class="col-sm-4"><div class="glass-card p-3 h-100 text-center"><i class="bi bi-play-circle-fill fs-4 text-primary"></i><div class="small mt-2 text-secondary">{% trans "Video lessons" %}</div></div></div>
+                            <div class="col-sm-4"><div class="glass-card p-3 h-100 text-center"><i class="bi bi-ui-checks-grid fs-4 text-primary"></i><div class="small mt-2 text-secondary">{% trans "Quiz flow" %}</div></div></div>
+                            <div class="col-sm-4"><div class="glass-card p-3 h-100 text-center"><i class="bi bi-patch-check-fill fs-4 text-primary"></i><div class="small mt-2 text-secondary">{% trans "Certificates" %}</div></div></div>
+                        </div>
+                        <p class="text-secondary mt-4 mb-0">{% trans "Already registered?" %} <a href="{% url 'accounts:login' %}" class="fw-semibold text-primary">{% trans "Sign in" %}</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

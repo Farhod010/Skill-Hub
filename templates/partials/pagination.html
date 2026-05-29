@@ -1,0 +1,32 @@
+{% load course_extras i18n %}
+{% if page_obj.has_other_pages %}
+    <nav aria-label="{% trans 'Pagination' %}" class="mt-5">
+        <ul class="pagination justify-content-center align-items-center gap-2 flex-wrap">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                {% if page_obj.has_previous %}
+                    <a class="page-link rounded-pill border-0 shadow-soft px-4 py-2" href="?{% query_transform page=page_obj.previous_page_number %}">
+                        <i class="bi bi-arrow-left-short me-1"></i>{% trans "Previous" %}
+                    </a>
+                {% else %}
+                    <span class="page-link rounded-pill border-0 shadow-soft px-4 py-2">
+                        <i class="bi bi-arrow-left-short me-1"></i>{% trans "Previous" %}
+                    </span>
+                {% endif %}
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link rounded-pill border-0 shadow-soft px-4 py-2">{% blocktrans with number=page_obj.number pages=page_obj.paginator.num_pages %}Page {{ number }} of {{ pages }}{% endblocktrans %}</span>
+            </li>
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                {% if page_obj.has_next %}
+                    <a class="page-link rounded-pill border-0 shadow-soft px-4 py-2" href="?{% query_transform page=page_obj.next_page_number %}">
+                        {% trans "Next" %}<i class="bi bi-arrow-right-short ms-1"></i>
+                    </a>
+                {% else %}
+                    <span class="page-link rounded-pill border-0 shadow-soft px-4 py-2">
+                        {% trans "Next" %}<i class="bi bi-arrow-right-short ms-1"></i>
+                    </span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+{% endif %}

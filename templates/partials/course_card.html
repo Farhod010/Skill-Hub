@@ -1,0 +1,124 @@
+{% load course_extras i18n %}
+<article class="course-card card border-0 glass-card shadow-soft rounded-custom h-100 overflow-hidden hover-lift">
+    <div class="course-media position-relative">
+        <a href="{{ course.get_absolute_url }}" class="d-block">
+            {% if course.preview_lesson and course.preview_player_data.type == 'html5' %}
+                <div class="ratio ratio-16x9 course-media-frame">
+                    <video
+                        class="card-img-top course-media-video"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                    >
+                        <source src="{{ course.preview_player_data.source }}">
+                    </video>
+                </div>
+            {% elif course.preview_lesson and course.preview_player_data.type == 'iframe_url' %}
+                <div class="ratio ratio-16x9 course-media-frame">
+                    <iframe
+                        src="{{ course.preview_player_data.source }}"
+                        class="course-media-embed"
+                        title="{{ course.preview_lesson|translated_title }}"
+                        allowfullscreen
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            {% elif course.preview_lesson and course.preview_player_data.type == 'iframe_html' %}
+                <div class="ratio ratio-16x9 course-media-frame course-media-html">
+                    {{ course.preview_player_data.source|safe }}
+                </div>
+            {% elif course.thumbnail %}
+                <img src="{{ course.thumbnail.url }}" alt="{{ course|translated_title }}" class="card-img-top">
+            {% else %}
+                <div class="card-img-top course-media-fallback d-flex align-items-end p-4 text-white fw-bold">
+                    <div>
+                        <div class="small text-white-50 mb-2">{% trans "Preview lesson" %}</div>
+                        <span>{{ course.category|translated_title }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </a>
+        <div class="course-media-overlay"></div>
+        <div class="position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start gap-2 p-3">
+            <span class="badge premium-badge rounded-pill px-3 py-2 shadow-sm">
+                {% if course.is_featured %}
+                    {% trans "Bestseller" %}
+                {% elif course.created_at %}
+                    {% trans "New" %}
+                {% else %}
+                    {% trans "Premium" %}
+                {% endif %}
+            </span>
+            <span class="badge bg-dark bg-opacity-50 rounded-pill px-3 py-2 border border-white border-opacity-25">
+                {% if course.is_free %}{% trans "Free" %}{% else %}{% trans "Paid" %}{% endif %}
+            </span>
+        </div>
+        {% if course.preview_lesson %}
+            <div class="position-absolute bottom-0 start-0 end-0 p-3">
+                <div class="d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 course-media-pill">
+                    <i class="bi bi-play-circle-fill"></i>
+                    <span class="small fw-semibold">{{ course.preview_lesson|translated_title }}</span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="card-body p-4 d-flex flex-column">
+        <div class="d-flex flex-wrap gap-2 mb-3 small course-meta">
+            <span class="badge rounded-pill text-bg-light border"><i class="bi bi-grid-1x2-fill me-1"></i>{{ course.category|translated_title }}</span>
+            <span class="badge rounded-pill text-bg-light border"><i class="bi bi-mortarboard-fill me-1"></i>{{ course.get_level_display }}</span>
+            <span class="badge rounded-pill text-bg-light border"><i class="bi bi-translate me-1"></i>{{ course.language }}</span>
+        </div>
+
+        <h3 class="h4 mb-2">
+            <a href="{{ course.get_absolute_url }}" class="stretched-link text-decoration-none text-reset">{{ course|translated_title }}</a>
+        </h3>
+        <p class="card-text mb-4">{{ course|translated_short_description }}</p>
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <span class="teacher-avatar shadow-sm">
+                {% if course.instructor.avatar %}
+                    <img src="{{ course.instructor.avatar.url }}" alt="{{ course.instructor.full_name }}">
+                {% else %}
+                    {{ course.instructor.full_name|default:course.instructor.username|first|upper }}
+                {% endif %}
+            </span>
+            <div class="small">
+                <div class="fw-semibold text-body">{{ course.instructor.full_name }}</div>
+                <div class="text-secondary">{% trans "Expert instructor" %}</div>
+            </div>
+        </div>
+
+        <div class="row row-cols-2 g-2 small course-meta mb-4">
+            <div class="col"><i class="bi bi-star-fill text-warning me-1"></i>{{ course.average_rating|floatformat:1 }} {% trans "rating" %}</div>
+            <div class="col"><i class="bi bi-people-fill me-1"></i>{{ course.enrollment_count }} {% trans "students" %}</div>
+            <div class="col"><i class="bi bi-play-circle-fill me-1"></i>{{ course.lesson_count }} {% trans "lessons" %}</div>
+            <div class="col"><i class="bi bi-unlock-fill me-1"></i>{{ course.preview_lesson_count }} {% trans "preview" %}</div>
+        </div>
+
+        <div class="mt-auto">
+            <div class="d-flex justify-content-between align-items-end gap-3 mb-3">
+                <div>
+                    <div class="course-price">{% if course.is_free %}{% trans "Free" %}{% else %}{{ course.final_price|money }}{% endif %}</div>
+                    <div class="small text-secondary">
+                        {% if course.discount_percent %}
+                            {% blocktrans with percent=course.discount_percent %}{{ percent }}% discount active{% endblocktrans %}
+                        {% else %}
+                            {% trans "Premium access included" %}
+                        {% endif %}
+                    </div>
+                </div>
+                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">{{ course.get_status_display }}</span>
+            </div>
+            <div class="d-grid gap-2 d-sm-flex">
+                <a href="{{ course.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill flex-fill">{% trans "Batafsil" %}</a>
+                {% if course.is_free %}
+                    <a href="{{ course.get_absolute_url }}" class="btn gradient-btn text-white rounded-pill flex-fill">{% trans "Darsni boshlash" %}</a>
+                {% else %}
+                    <a href="{% url 'payments:course_checkout' course.slug %}" class="btn gradient-btn text-white rounded-pill flex-fill">{% trans "Kurs sotib olish" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</article>

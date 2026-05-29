@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Add Question" %} | EduMaster{% endblock %}
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow">{% trans "Teacher workspace" %}</span>
+            <h1>{% blocktrans with title=quiz.title %}Add question to {{ title }}{% endblocktrans %}</h1>
+        </div>
+        <div class="panel-grid">
+            <div class="content-card">
+                <form method="post" class="panel-form">
+                    {% csrf_token %}
+                    {% for field in question_form %}
+                        <div class="form-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="form-error">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    {% for field in answer_form %}
+                        <div class="{% if field.field.widget.input_type == 'checkbox' %}checkbox-field{% else %}form-field{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="form-error">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">{% trans "Save question" %}</button>
+                </form>
+            </div>
+            <div class="content-card">
+                <h2>{% trans "Next step" %}</h2>
+                <p>{% trans "This lightweight flow adds one answer together with the question. For richer editing, continue in the admin panel or extend the teacher workspace further." %}</p>
+                <a href="{% url 'dashboard:teacher_dashboard' %}" class="btn btn-ghost">{% trans "Back to teacher dashboard" %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

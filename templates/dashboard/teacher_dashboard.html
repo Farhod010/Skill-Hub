@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load course_extras i18n %}
+{% block title %}{% trans "Teacher Dashboard" %} | EduMaster{% endblock %}
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4 dashboard-shell">
+            <div class="col-xl-3">
+                <aside class="sidebar glass-card shadow-soft rounded-custom p-4 sticky-top" style="top: 6rem;">
+                    <div class="text-center mb-4">
+                        <div class="teacher-avatar mx-auto mb-3" style="width:4.5rem;height:4.5rem;">{{ request.user.full_name|first|upper }}</div>
+                        <h2 class="h4 mb-1">{{ request.user.full_name }}</h2>
+                        <p class="text-secondary small mb-3">{% trans "Creator dashboard" %}</p>
+                        <div class="d-flex justify-content-center flex-wrap gap-2">
+                            <span class="badge premium-badge rounded-pill px-3 py-2">{{ stats.courses }} {% trans "courses" %}</span>
+                            <span class="badge text-bg-light border rounded-pill px-3 py-2">{{ stats.students }} {% trans "students" %}</span>
+                        </div>
+                    </div>
+                    <nav class="nav flex-column gap-2 sidebar-links">
+                        <a href="#creator-overview" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Overview" %}</a>
+                        <a href="#creator-courses" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Kurslar" %}</a>
+                        <a href="#creator-reviews" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Sharhlar" %}</a>
+                        <a href="#creator-payments" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Revenue" %}</a>
+                    </nav>
+                    <div class="glass-card p-3 mt-4">
+                        <span class="eyebrow mb-2">{% trans "Quick actions" %}</span>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'dashboard:teacher_course_create' %}" class="btn gradient-btn text-white rounded-pill">{% trans "Create course" %}</a>
+                            <a href="{% url 'dashboard:teacher_lesson_create' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Add lesson" %}</a>
+                            <a href="{% url 'dashboard:teacher_quiz_create' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Add quiz" %}</a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="col-xl-9">
+                <div class="card border-0 glass-card shadow-soft rounded-custom mb-4" id="creator-overview">
+                    <div class="card-body p-4 p-lg-5">
+                        <span class="eyebrow mb-2">{% trans "Teacher dashboard" %}</span>
+                        <h1 class="display-6 mb-2">{% trans "Manage your teaching business" %}</h1>
+                        <p class="text-secondary mb-0">{% trans "Create, improve va monitor qiling: kurslar, o'quvchilar, quizlar va revenue bitta professional workspace ichida." %}</p>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Mening kurslarim" %}</div>
+                                <div class="display-6 fw-bold" data-countup="{{ stats.courses }}">{{ stats.courses }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Students" %}</div>
+                                <div class="display-6 fw-bold" data-countup="{{ stats.students }}">{{ stats.students }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Revenue" %}</div>
+                                <div class="display-6 fw-bold">{{ stats.revenue|money }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="dashboard-card card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body">
+                                <div class="small text-secondary">{% trans "Reyting" %}</div>
+                                <div class="display-6 fw-bold">{{ stats.average_rating }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-8">
+                        <div class="hero-preview-card p-4 p-lg-5 h-100">
+                            <span class="eyebrow text-white-50 mb-2">{% trans "Top performer" %}</span>
+                            <h2 class="h1 mb-3">{% if stats.top_course %}{{ stats.top_course.title }}{% else %}No top course yet{% endif %}</h2>
+                            <p class="text-white-50 mb-4">
+                                {% if stats.top_course %}
+                                    {{ stats.top_course.total_students }} students enrolled in your best-selling course.
+                                {% else %}
+                                    Publish and grow your catalog to unlock ranking data here.
+                                {% endif %}
+                            </p>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="glass-card p-3 h-100">
+                                        <div class="small text-white-50">{% trans "Quiz coverage" %}</div>
+                                        <div class="fs-3 fw-bold text-white">{{ stats.quizzes }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="glass-card p-3 h-100">
+                                        <div class="small text-white-50">{% trans "Creator readiness" %}</div>
+                                        <div class="fs-3 fw-bold text-white">Active</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Creator notes" %}</span>
+                                <h2 class="h4 mb-3">{% trans "Next growth moves" %}</h2>
+                                <ul class="list-unstyled d-grid gap-3 mb-0">
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Add lesson depth to improve completion</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Use quizzes to lift certificate conversion</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Watch reviews for curriculum improvements</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center gap-3 mb-4" id="creator-courses">
+                    <div>
+                        <h2 class="h3 mb-1">{% trans "Mening kurslarim" %}</h2>
+                        <p class="text-secondary mb-0">{% trans "Status, students, ratings va management links." %}</p>
+                    </div>
+                </div>
+                <div class="table-responsive table-premium glass-card shadow-soft rounded-custom p-0 mb-4">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Course" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th>{% trans "Students" %}</th>
+                                <th>{% trans "Reyting" %}</th>
+                                <th>{% trans "Quizzes" %}</th>
+                                <th class="text-end">{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in teacher_courses %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">{{ course.title }}</div>
+                                        <div class="small text-secondary">{{ course.category|translated_title }}</div>
+                                    </td>
+                                    <td><span class="badge rounded-pill {% if course.status == 'active' %}bg-success-subtle text-success{% elif course.status == 'pending' %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %} px-3 py-2">{{ course.status|title }}</span></td>
+                                    <td>{{ course.enrollment_count }}</td>
+                                    <td>{{ course.average_rating|floatformat:1 }}</td>
+                                    <td>{{ course.quiz_count }}</td>
+                                    <td class="text-end">
+                                        <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
+                                            <a href="{{ course.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "Preview" %}</a>
+                                            <a href="{% url 'dashboard:teacher_course_edit' course.pk %}" class="btn gradient-btn text-white rounded-pill btn-sm">{% trans "Edit" %}</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="6">You have not created any courses yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row g-4" id="creator-reviews">
+                    <div class="col-lg-6">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Recent reviews" %}</span>
+                                <h2 class="h4 mb-4">{% trans "Student feedback" %}</h2>
+                                <div class="list-group list-group-flush">
+                                    {% for review in recent_reviews %}
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">{{ review.course.title }}</div>
+                                                    <div class="small text-secondary">{{ review.student.full_name }}</div>
+                                                </div>
+                                                <span class="badge bg-warning-subtle text-warning rounded-pill px-3 py-2">{{ review.rating }}/5</span>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">Approved reviews will appear here.</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Recent enrollments" %}</span>
+                                <h2 class="h4 mb-4">{% trans "New students" %}</h2>
+                                <div class="list-group list-group-flush">
+                                    {% for enrollment in recent_enrollments %}
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">{{ enrollment.student.full_name }}</div>
+                                                    <div class="small text-secondary">{{ enrollment.course.title }}</div>
+                                                </div>
+                                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">{{ enrollment.enrolled_at|date:"M d" }}</span>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">New enrollments will appear here.</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mt-1" id="creator-payments">
+                    <div class="col-lg-6">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Quiz results" %}</span>
+                                <h2 class="h4 mb-4">{% trans "Latest assessment activity" %}</h2>
+                                <div class="list-group list-group-flush">
+                                    {% for result in recent_results %}
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">{{ result.student.full_name }}</div>
+                                                    <div class="small text-secondary">{{ result.quiz.title }} - {{ result.quiz.course.title }}</div>
+                                                </div>
+                                                <span class="badge rounded-pill {% if result.passed %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3 py-2">{% if result.passed %}Passed{% else %}Retry{% endif %}</span>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">Quiz submissions will appear here.</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card border-0 glass-card shadow-soft rounded-custom h-100">
+                            <div class="card-body p-4">
+                                <span class="eyebrow mb-2">{% trans "Recent payments" %}</span>
+                                <h2 class="h4 mb-4">{% trans "Revenue stream" %}</h2>
+                                <div class="list-group list-group-flush">
+                                    {% for payment in recent_payments %}
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">{{ payment.course.title }}</div>
+                                                    <div class="small text-secondary">{{ payment.user.full_name }} - {{ payment.provider|upper }}</div>
+                                                </div>
+                                                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">{{ payment.amount|money }}</span>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">Completed and demo payments will appear here.</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

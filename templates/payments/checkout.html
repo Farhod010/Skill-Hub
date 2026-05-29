@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load course_extras i18n %}
+{% block title %}{% trans "Checkout" %} | {{ course|translated_title }}{% endblock %}
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-xl-8">
+                <div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+                    <div class="card-body p-4 p-lg-5">
+                        <span class="eyebrow mb-2">{% trans "Course checkout" %}</span>
+                        <h1 class="display-6 mb-3">{{ course|translated_title }}</h1>
+                        <p class="text-secondary mb-4">{{ course|translated_short_description }}</p>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-4">
+                                <div class="dashboard-card card border-0 bg-body-tertiary rounded-4 h-100"><div class="card-body"><div class="small text-secondary">{% trans "Total due today" %}</div><div class="h3 mb-0">{% if course.discount_percent %}{{ course.final_price|money }}{% else %}{{ course.price|money }}{% endif %}</div></div></div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="dashboard-card card border-0 bg-body-tertiary rounded-4 h-100"><div class="card-body"><div class="small text-secondary">{% trans "Lessons unlocked" %}</div><div class="h3 mb-0">{{ course.lesson_count }}</div></div></div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="dashboard-card card border-0 bg-body-tertiary rounded-4 h-100"><div class="card-body"><div class="small text-secondary">{% trans "Preview lessons" %}</div><div class="h3 mb-0">{{ preview_lesson_count }}</div></div></div>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 bg-body-tertiary rounded-4">
+                            <div class="card-body p-4">
+                                <h2 class="h4 mb-3">{% trans "What you unlock" %}</h2>
+                                <ul class="list-unstyled d-grid gap-3 mb-0">
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Full access to every section and lesson" %}</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Progress tracking across the course" %}</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Quiz attempts and saved results" %}</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Certificate eligibility after completion" %}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4">
+                <div class="purchase-card sticky-top" style="top: 6rem;">
+                    {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}" class="sidebar-image mb-4 rounded-4">
+                    {% endif %}
+                    {% if course.discount_percent %}
+                        <div class="d-flex gap-2 flex-wrap small text-secondary mb-2">
+                            <span><s>{{ course.price|money }}</s></span>
+                            <span>{% blocktrans with percent=course.discount_percent %}{{ percent }}% off{% endblocktrans %}</span>
+                        </div>
+                    {% endif %}
+                    <div class="display-6 fw-bold mb-3">{{ course.final_price|money }}</div>
+                    <p class="text-secondary">{% trans "Choose a payment method. For MVP mode, every method resolves into the demo unlock flow." %}</p>
+                    <form method="post" class="row g-3">
+                        {% csrf_token %}
+                        <div class="col-12">
+                            <label for="id_provider" class="form-label">{% trans "Payment method" %}</label>
+                            <select name="provider" id="id_provider" class="form-select">
+                                {% for value, label in payment_methods %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 d-grid gap-2">
+                            <button type="submit" class="btn gradient-btn text-white rounded-pill py-3">{% trans "Pay now" %}</button>
+                            <a href="{{ course.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill py-3">{% trans "Back to course" %}</a>
+                        </div>
+                    </form>
+                    <div class="list-group list-group-flush mt-4">
+                        <div class="list-group-item bg-transparent px-0 d-flex justify-content-between"><span>{% trans "Instructor" %}</span><strong>{{ course.instructor.full_name }}</strong></div>
+                        <div class="list-group-item bg-transparent px-0 d-flex justify-content-between"><span>{% trans "Category" %}</span><strong>{{ course.category.get_translated_title }}</strong></div>
+                        <div class="list-group-item bg-transparent px-0 d-flex justify-content-between"><span>{% trans "Level" %}</span><strong>{{ course.get_level_display }}</strong></div>
+                        <div class="list-group-item bg-transparent px-0 d-flex justify-content-between"><span>{% trans "Language" %}</span><strong>{{ course.language }}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

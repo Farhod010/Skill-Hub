@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load i18n course_extras %}
+{% block title %}Quiz Result | EduMaster{% endblock %}
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="card border-0 glass-card shadow-soft rounded-custom overflow-hidden">
+            <div class="card-body p-4 p-lg-5 text-center">
+                <span class="eyebrow mb-2">{% trans "Quiz result" %}</span>
+                <h1 class="display-6 mb-2">{{ result.quiz.title }}</h1>
+                <p class="text-secondary mb-4">{{ course|translated_title }}</p>
+                <div class="mx-auto mb-4 d-inline-flex align-items-center justify-content-center rounded-circle border border-4 border-primary-subtle shadow-soft" style="width: 12rem; height: 12rem;">
+                    <div>
+                        <div class="display-5 fw-bold">{{ result.score_percent }}%</div>
+                        <div class="small text-secondary">{% trans "Your score" %}</div>
+                    </div>
+                </div>
+                <div class="row g-3 justify-content-center mb-4">
+                    <div class="col-sm-4">
+                        <div class="dashboard-card card border-0 bg-body-tertiary rounded-4 h-100"><div class="card-body"><div class="h3 mb-1">{{ result.score }}/{{ result.total_questions }}</div><div class="small text-secondary">{% trans "Correct answers" %}</div></div></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="dashboard-card card border-0 bg-body-tertiary rounded-4 h-100"><div class="card-body"><div class="h3 mb-1">{% if result.passed %}{% trans "Passed" %}{% else %}{% trans "Not yet" %}{% endif %}</div><div class="small text-secondary">{% trans "Status" %}</div></div></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="dashboard-card card border-0 bg-body-tertiary rounded-4 h-100"><div class="card-body"><div class="h3 mb-1">{{ result.submitted_at|date:"M d" }}</div><div class="small text-secondary">{% trans "Submitted" %}</div></div></div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center flex-wrap gap-3">
+                    <a href="{{ course.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Back to course" %}</a>
+                    <a href="{% url 'courses:quiz_take' course.slug result.quiz.id %}" class="btn gradient-btn text-white rounded-pill px-4">{% trans "Retake quiz" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

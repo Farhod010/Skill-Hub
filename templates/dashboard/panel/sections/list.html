@@ -1,0 +1,44 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% block panel_content %}
+<div class="panel-header">
+    <div>
+        <span class="eyebrow">Section management</span>
+        <h1>Sections</h1>
+    </div>
+    <a href="{% url 'panel:section_create' %}" class="btn btn-primary">Create section</a>
+</div>
+<form method="get" class="panel-toolbar">
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search sections">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<div class="table-card">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Course</th>
+                <th>Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for section in page_obj %}
+                <tr>
+                    <td>{{ section.title }}</td>
+                    <td>{{ section.course.title }}</td>
+                    <td>{{ section.order_index }}</td>
+                    <td>
+                        <div class="table-actions">
+                            <a href="{% url 'panel:section_edit' section.pk %}" class="btn btn-ghost">Edit</a>
+                            <a href="{% url 'panel:section_delete' section.pk %}" class="btn btn-danger btn-soft">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No sections found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% block panel_content %}
+<div class="panel-header">
+    <div><span class="eyebrow">Question management</span><h1>Questions</h1></div>
+    <a href="{% url 'panel:question_create' %}" class="btn btn-primary">Create question</a>
+</div>
+<form method="get" class="panel-toolbar">
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search questions">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<div class="table-card">
+    <table class="data-table">
+        <thead><tr><th>Course</th><th>Quiz</th><th>Order</th><th>Prompt</th><th>Actions</th></tr></thead>
+        <tbody>
+            {% for question in page_obj %}
+                <tr>
+                    <td>{{ question.quiz.course.title }}</td>
+                    <td>{{ question.quiz.title }}</td>
+                    <td>{{ question.order_index }}</td>
+                    <td>{{ question.prompt|truncatechars:80 }}</td>
+                    <td><div class="table-actions"><a href="{% url 'panel:question_edit' question.pk %}" class="btn btn-ghost">Edit</a><a href="{% url 'panel:question_delete' question.pk %}" class="btn btn-danger btn-soft">Delete</a></div></td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">No questions found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

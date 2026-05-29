@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n course_extras %}
+{% block title %}Certificate | EduMaster{% endblock %}
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="card border-0 glass-card shadow-soft rounded-custom overflow-hidden">
+            <div class="card-body p-4 p-lg-5">
+                <div class="text-center border rounded-5 p-4 p-lg-5 position-relative">
+                    <span class="eyebrow mb-3">{% trans "Certificate of completion" %}</span>
+                    <h1 class="display-5 mb-2">{{ request.user.full_name }}</h1>
+                    <p class="text-secondary mb-3">{% trans "has successfully completed" %}</p>
+                    <h2 class="display-6 text-gradient mb-4">{{ course|translated_title }}</h2>
+                    <div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+                        <span class="badge text-bg-light border rounded-pill px-3 py-2">{% blocktrans with instructor=course.instructor.full_name %}Instructor: {{ instructor }}{% endblocktrans %}</span>
+                        <span class="badge text-bg-light border rounded-pill px-3 py-2">{% blocktrans with issued=certificate.issued_at|date:"M d, Y" %}Issued: {{ issued }}{% endblocktrans %}</span>
+                        <span class="badge text-bg-light border rounded-pill px-3 py-2">{% blocktrans with id=certificate.certificate_id %}ID: {{ id }}{% endblocktrans %}</span>
+                    </div>
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card border-0 bg-body-tertiary rounded-4 h-100">
+                                <div class="card-body">
+                                    <span class="eyebrow mb-2">{% trans "Verification" %}</span>
+                                    <h3 class="h5">{% trans "Certificate ID" %}</h3>
+                                    <p class="mb-0">{{ certificate.certificate_id }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="card border-0 bg-body-tertiary rounded-4 h-100">
+                                <div class="card-body">
+                                    <span class="eyebrow mb-2">{% trans "QR slot" %}</span>
+                                    <h3 class="h5">{% trans "Verification ready" %}</h3>
+                                    <p class="mb-0">{% trans "Use this area for future public certificate verification or QR integration." %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center flex-wrap gap-3 mt-4">
+                    <a href="{% url 'courses:certificate_download' course.slug %}" class="btn gradient-btn text-white rounded-pill px-4">{% trans "Download PDF" %}</a>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="window.print()">{% trans "Print certificate" %}</button>
+                    <a href="{% url 'dashboard:student_dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Back to dashboard" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
