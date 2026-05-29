@@ -144,7 +144,33 @@ class EnrollmentAndLessonAccessTests(TestCase):
 
     def test_guest_cannot_open_locked_paid_lesson(self):
         response = self.client.get(self.locked_lesson.get_absolute_url())
-        self.assertRedirects(response, self.paid_course.get_absolute_url())
+        expected_login = f"{reverse('accounts:login')}?next={self.locked_lesson.get_absolute_url()}"
+        self.assertRedirects(response, expected_login, fetch_redirect_response=False)
+
+    def test_lesson_auto_syncs_course_from_section(self):
+        section = Section.objects.create(course=self.paid_course, title="Auto sync section", order_index=2)
+        lesson = Lesson.objects.create(
+            section=section,
+            title="Synced lesson",
+            order_index=5,
+            duration_minutes=7,
+            video_url="https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+        )
+
+        self.assertEqual(lesson.course, self.paid_course)
+
+    def test_course_only_lesson_creates_default_section(self):
+        lesson = Lesson.objects.create(
+            course=self.paid_course,
+            title="Inline-created lesson",
+            order_index=6,
+            duration_minutes=9,
+            video_url="https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
+        )
+
+        self.assertEqual(lesson.course, self.paid_course)
+        self.assertIsNotNone(lesson.section)
+        self.assertEqual(lesson.section.course, self.paid_course)
 
     def test_instructor_can_open_teacher_dashboard(self):
         self.client.force_login(self.instructor)

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 
 from .models import (
     Answer,
@@ -30,6 +31,37 @@ class SectionInline(admin.TabularInline):
     extra = 0
 
 
+class LessonInlineForm(forms.ModelForm):
+    class Meta:
+        model = Lesson
+        fields = (
+            "title",
+            "description",
+            "video_file",
+            "video_url",
+            "order_index",
+            "duration_minutes",
+            "is_preview",
+        )
+
+
+class LessonInline(admin.TabularInline):
+    model = Lesson
+    form = LessonInlineForm
+    extra = 1
+    fields = (
+        "title",
+        "description",
+        "video_file",
+        "video_url",
+        "order_index",
+        "duration_minutes",
+        "is_preview",
+    )
+    ordering = ("order_index", "id")
+    show_change_link = True
+
+
 class QuizInline(admin.TabularInline):
     model = Quiz
     extra = 0
@@ -39,16 +71,13 @@ class QuizInline(admin.TabularInline):
 class CourseAdmin(admin.ModelAdmin):
     list_display = (
         "title",
-        "title_uz",
-        "title_ru",
-        "title_en",
-        "category",
         "instructor",
+        "category",
         "price",
-        "is_published",
-        "is_featured",
+        "status",
+        "created_at",
     )
-    list_filter = ("category", "level", "is_published", "is_featured")
+    list_filter = ("category", "level", "status", "is_published", "is_featured")
     search_fields = (
         "title",
         "title_uz",
@@ -61,7 +90,23 @@ class CourseAdmin(admin.ModelAdmin):
         "instructor__email",
     )
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [SectionInline, QuizInline]
+    ordering = ("-created_at", "title")
+    readonly_fields = ("created_at", "updated_at")
+    inlines = [LessonInline, SectionInline, QuizInline]
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        if getattr(request.user, "role", None) == getattr(request.user, "Roles", None).INSTRUCTOR:
+            return queryset.filter(instructor=request.user)
+        return queryset
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "instructor" and not request.user.is_superuser:
+            if getattr(request.user, "role", None) == getattr(request.user, "Roles", None).INSTRUCTOR:
+                kwargs["queryset"] = db_field.remote_field.model.objects.filter(pk=request.user.pk)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(Section)
@@ -75,16 +120,28 @@ class SectionAdmin(admin.ModelAdmin):
 class LessonAdmin(admin.ModelAdmin):
     list_display = (
         "title",
-        "title_uz",
-        "title_ru",
-        "title_en",
-        "section",
-        "duration_minutes",
-        "is_preview",
+        "course",
         "order_index",
+        "has_video_source",
+        "is_preview",
+        "created_at",
     )
-    list_filter = ("is_preview", "section__course")
-    search_fields = ("title", "title_uz", "title_ru", "title_en", "section__title", "section__course__title")
+    list_filter = ("is_preview", "course", "course__category")
+    search_fields = ("title", "title_uz", "title_ru", "title_en", "course__title", "course__instructor__email")
+    ordering = ("course", "order_index", "id")
+    readonly_fields = ("created_at", "updated_at")
+
+    @admin.display(boolean=True, description="Video")
+    def has_video_source(self, obj):
+        return bool(obj.video_file or obj.video_url)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request).select_related("course", "section")
+        if request.user.is_superuser:
+            return queryset
+        if getattr(request.user, "role", None) == getattr(request.user, "Roles", None).INSTRUCTOR:
+            return queryset.filter(course__instructor=request.user)
+        return queryset
 
 
 @admin.register(Enrollment)

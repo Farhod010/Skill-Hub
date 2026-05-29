@@ -118,46 +118,34 @@
                             </div>
                             <span class="badge text-bg-light border rounded-pill px-3 py-2">{{ course.total_duration|minutes_to_duration }} {% trans "total" %}</span>
                         </div>
-                        <div class="accordion curriculum-accordion" id="curriculumAccordion">
-                            {% for section in sections %}
-                                <div class="accordion-item border-0 glass-card mb-3">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#section{{ section.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="section{{ section.id }}">
-                                            <span class="fw-semibold me-3">{{ section.order_index }}. {{ section.title }}</span>
-                                            <span class="small text-secondary">{{ section.lessons.count }} {% trans "lessons" %}</span>
-                                        </button>
-                                    </h2>
-                                    <div id="section{{ section.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#curriculumAccordion">
-                                        <div class="accordion-body">
-                                            {% if section.description %}<p class="text-secondary">{{ section.description }}</p>{% endif %}
-                                            <div class="list-group list-group-flush">
-                                                {% for lesson in section.lessons.all %}
-                                                    <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
-                                                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                                                            <div>
-                                                                {% if can_access_full_course or lesson.is_preview %}
-                                                                    <a href="{{ lesson.get_absolute_url }}" class="fw-semibold text-decoration-none">{{ lesson.order_index }}. {{ lesson.get_translated_title }}</a>
-                                                                {% else %}
-                                                                    <span class="fw-semibold">{{ lesson.order_index }}. {{ lesson.get_translated_title }}</span>
-                                                                {% endif %}
-                                                            </div>
-                                                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                                {% if lesson.is_preview %}
-                                                                    <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">{% trans "Preview" %}</span>
-                                                                {% elif can_access_full_course %}
-                                                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">{% trans "Watch now" %}</span>
-                                                                {% else %}
-                                                                    <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2">{% trans "Locked" %}</span>
-                                                                {% endif %}
-                                                                <span class="small text-secondary">{{ lesson.duration_minutes|minutes_to_duration }}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
+                        <div class="list-group list-group-flush curriculum-list">
+                            {% for lesson in course.lessons.all %}
+                                <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
+                                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                                        <div>
+                                            {% if can_access_full_course or lesson.is_preview %}
+                                                <a href="{{ lesson.get_absolute_url }}" class="fw-semibold text-decoration-none">{{ lesson.order_index }}. {{ lesson.get_translated_title }}</a>
+                                            {% else %}
+                                                <span class="fw-semibold">{{ lesson.order_index }}. {{ lesson.get_translated_title }}</span>
+                                            {% endif %}
+                                            {% if lesson.section %}
+                                                <div class="small text-secondary mt-1">{{ lesson.section.title }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            {% if lesson.is_preview %}
+                                                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">{% trans "Preview" %}</span>
+                                            {% elif can_access_full_course %}
+                                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">{% trans "Watch now" %}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2">{% trans "Locked" %}</span>
+                                            {% endif %}
+                                            <span class="small text-secondary">{{ lesson.duration_minutes|minutes_to_duration }}</span>
                                         </div>
                                     </div>
                                 </div>
+                            {% empty %}
+                                <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Lessons will appear here after you add them from the admin panel." %}</div>
                             {% endfor %}
                         </div>
                     </div>

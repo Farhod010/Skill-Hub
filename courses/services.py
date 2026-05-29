@@ -42,9 +42,7 @@ def enroll_user_in_course(
 
 
 def student_completed_course(student, course: Course) -> bool:
-    lesson_ids = list(
-        Lesson.objects.filter(section__course=course).values_list("id", flat=True)
-    )
+    lesson_ids = list(course.lessons.values_list("id", flat=True))
     if not lesson_ids:
         return False
     completed_count = WatchProgress.objects.filter(

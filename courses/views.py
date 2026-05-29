@@ -1,5 +1,6 @@
 import json
 from io import BytesIO
+from urllib.parse import urlencode
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -57,9 +58,11 @@ def get_course_queryset_for_user(user):
 
 
 def user_can_watch_lesson(user, lesson):
-    course = lesson.section.course
+    course = lesson.course or (lesson.section.course if lesson.section_id else None)
     if lesson.is_preview:
         return True
+    if course is None:
+        return False
     return user_has_course_access(user, course)
 
 
@@ -214,7 +217,7 @@ class CourseDetailView(DetailView):
 
 
 class LessonWatchView(DetailView):
-    template_name = "courses/lesson_watch.html"
+    template_name = "courses/video_lesson.html"
     context_object_name = "lesson"
     pk_url_kwarg = "lesson_id"
     model = Lesson
@@ -222,24 +225,27 @@ class LessonWatchView(DetailView):
     def get_object(self, queryset=None):
         queryset = (
             Lesson.objects.select_related(
+                "course",
                 "section",
-                "section__course",
-                "section__course__instructor",
+                "course__instructor",
             )
             .prefetch_related("comments__student")
         )
         lesson = get_object_or_404(
             queryset,
             pk=self.kwargs["lesson_id"],
-            section__course__slug=self.kwargs["course_slug"],
+            course__slug=self.kwargs["course_slug"],
         )
-        course = lesson.section.course
+        course = lesson.course
         if not course.is_published and not (
             self.request.user.is_authenticated
             and (self.request.user.can_access_panel or course.instructor_id == self.request.user.id)
         ):
             raise Http404("Course not found.")
         if not user_can_watch_lesson(self.request.user, lesson):
+            if not self.request.user.is_authenticated and not lesson.is_preview:
+                login_url = f"{reverse('accounts:login')}?{urlencode({'next': lesson.get_absolute_url()})}"
+                return redirect(login_url)
             messages.error(
                 self.request,
                 _("Enroll in this course to access the full lesson library."),
@@ -258,7 +264,7 @@ class LessonWatchView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         lesson = self.object
-        course = lesson.section.course
+        course = lesson.course
         progress = None
         completed_lesson_ids = set()
         if self.request.user.is_authenticated:
@@ -269,15 +275,17 @@ class LessonWatchView(DetailView):
             completed_lesson_ids = set(
                 WatchProgress.objects.filter(
                     student=self.request.user,
-                    lesson__section__course=course,
+                    lesson__course=course,
                     completed=True,
                 ).values_list("lesson_id", flat=True)
             )
 
         ordered_lessons = list(
-            Lesson.objects.filter(section__course=course)
-            .select_related("section", "section__course")
-            .order_by("section__order_index", "order_index", "id")
+            course.lessons.select_related("course", "section").order_by(
+                "order_index",
+                "section__order_index",
+                "id",
+            )
         )
         lesson_index = next(
             (index for index, item in enumerate(ordered_lessons) if item.id == lesson.id),
@@ -294,6 +302,7 @@ class LessonWatchView(DetailView):
         )
 
         context["course"] = course
+        context["ordered_lessons"] = ordered_lessons
         context["sections"] = course.sections.prefetch_related("lessons")
         context["player"] = lesson.get_player_data()
         context["progress"] = progress
@@ -406,13 +415,13 @@ def delete_review(request, slug):
 @require_POST
 def add_lesson_comment(request, course_slug, lesson_id):
     lesson = get_object_or_404(
-        Lesson.objects.select_related("section", "section__course"),
+        Lesson.objects.select_related("course", "section"),
         pk=lesson_id,
-        section__course__slug=course_slug,
+        course__slug=course_slug,
     )
     if not user_can_watch_lesson(request.user, lesson):
         messages.error(request, _("You cannot comment on lessons you cannot access."))
-        return redirect(lesson.section.course.get_absolute_url())
+        return redirect(lesson.course.get_absolute_url())
 
     form = LessonCommentForm(request.POST)
     if form.is_valid():
@@ -430,13 +439,15 @@ def add_lesson_comment(request, course_slug, lesson_id):
 @require_POST
 def mark_lesson_completed(request, course_slug, lesson_id):
     lesson = get_object_or_404(
-        Lesson.objects.select_related("section", "section__course"),
+        Lesson.objects.select_related("course", "section"),
         pk=lesson_id,
-        section__course__slug=course_slug,
+        course__slug=course_slug,
     )
     if not user_can_watch_lesson(request.user, lesson):
         messages.error(request, _("You do not have access to this lesson."))
-        return redirect(lesson.section.course.get_absolute_url())
+        if not request.user.is_authenticated and not lesson.is_preview:
+            return redirect(f"{reverse('accounts:login')}?{urlencode({'next': lesson.get_absolute_url()})}")
+        return redirect(lesson.course.get_absolute_url())
 
     progress, progress_created = WatchProgress.objects.get_or_create(
         student=request.user,
@@ -445,7 +456,7 @@ def mark_lesson_completed(request, course_slug, lesson_id):
     progress.completed = True
     progress.watched_seconds = max(progress.watched_seconds, lesson.duration_seconds)
     progress.save()
-    issue_certificate_if_eligible(request.user, lesson.section.course)
+    issue_certificate_if_eligible(request.user, lesson.course)
     messages.success(request, _("Lesson marked as completed."))
     return redirect(lesson.get_absolute_url())
 
@@ -454,9 +465,9 @@ def mark_lesson_completed(request, course_slug, lesson_id):
 @require_POST
 def save_watch_progress(request, course_slug, lesson_id):
     lesson = get_object_or_404(
-        Lesson.objects.select_related("section", "section__course"),
+        Lesson.objects.select_related("course", "section"),
         pk=lesson_id,
-        section__course__slug=course_slug,
+        course__slug=course_slug,
     )
     if not user_can_watch_lesson(request.user, lesson):
         return JsonResponse({"detail": "Forbidden"}, status=403)
@@ -484,7 +495,7 @@ def save_watch_progress(request, course_slug, lesson_id):
     progress.completed = progress.completed or completed
     progress.save()
     if progress.completed:
-        issue_certificate_if_eligible(request.user, lesson.section.course)
+        issue_certificate_if_eligible(request.user, lesson.course)
     return JsonResponse(
         {
             "completed": progress.completed,

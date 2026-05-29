@@ -1,6 +1,7 @@
 from urllib.parse import parse_qs, urlparse
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Avg, Sum
@@ -159,7 +160,7 @@ class Course(models.Model):
 
     @property
     def lesson_count(self):
-        return Lesson.objects.filter(section__course=self).count()
+        return self.lessons.count()
 
     @property
     def section_count(self):
@@ -171,19 +172,13 @@ class Course(models.Model):
 
     @property
     def total_duration(self):
-        return (
-            Lesson.objects.filter(section__course=self).aggregate(total=Sum("duration_minutes"))[
-                "total"
-            ]
-            or 0
-        )
+        return self.lessons.aggregate(total=Sum("duration_minutes"))["total"] or 0
 
     @property
     def first_lesson(self):
         return (
-            Lesson.objects.filter(section__course=self)
-            .select_related("section", "section__course")
-            .order_by("section__order_index", "order_index", "id")
+            self.lessons.select_related("course", "section")
+            .order_by("order_index", "section__order_index", "id")
             .first()
         )
 
@@ -204,7 +199,7 @@ class Course(models.Model):
 
     @property
     def preview_lesson_count(self):
-        return Lesson.objects.filter(section__course=self, is_preview=True).count()
+        return self.lessons.filter(is_preview=True).count()
 
     @property
     def has_preview_lessons(self):
@@ -213,9 +208,9 @@ class Course(models.Model):
     @property
     def first_preview_lesson(self):
         return (
-            Lesson.objects.filter(section__course=self, is_preview=True)
-            .select_related("section", "section__course")
-            .order_by("section__order_index", "order_index", "id")
+            self.lessons.filter(is_preview=True)
+            .select_related("course", "section")
+            .order_by("order_index", "section__order_index", "id")
             .first()
         )
 
@@ -261,10 +256,19 @@ class Section(models.Model):
 
 
 class Lesson(models.Model):
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="lessons",
+        blank=True,
+        null=True,
+    )
     section = models.ForeignKey(
         Section,
         on_delete=models.CASCADE,
         related_name="lessons",
+        blank=True,
+        null=True,
     )
     title = models.CharField(max_length=180)
     title_uz = models.CharField(max_length=180, blank=True)
@@ -290,7 +294,7 @@ class Lesson(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["section__order_index", "order_index", "id"]
+        ordering = ["order_index", "section__order_index", "id"]
         constraints = [
             models.UniqueConstraint(
                 fields=["section", "order_index"],
@@ -299,7 +303,9 @@ class Lesson(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.section.course.title} - {self.title}"
+        course = self.course or (self.section.course if self.section_id else None)
+        course_title = course.title if course else "Course"
+        return f"{course_title} - {self.title}"
 
     def get_translated_title(self, language=None):
         lang = (language or get_language() or "uz").split("-")[0]
@@ -312,18 +318,41 @@ class Lesson(models.Model):
         return value or self.description
 
     def get_absolute_url(self):
+        course = self.course or (self.section.course if self.section_id else None)
         return reverse(
             "courses:lesson_watch",
-            kwargs={"course_slug": self.section.course.slug, "lesson_id": self.pk},
+            kwargs={"course_slug": course.slug, "lesson_id": self.pk},
         )
 
     @property
     def duration_seconds(self):
         return self.duration_minutes * 60
 
-    @property
-    def course(self):
-        return self.section.course
+    def clean(self):
+        super().clean()
+        if not self.course and not self.section:
+            raise ValidationError(_("Choose a course or section for this lesson."))
+        if self.section and self.course and self.section.course_id != self.course_id:
+            raise ValidationError(_("The selected section belongs to a different course."))
+        if not self.video_file and not (self.video_url or "").strip():
+            raise ValidationError(_("Add either an uploaded video file or an external video URL."))
+
+    def save(self, *args, **kwargs):
+        if self.section_id and not self.course_id:
+            self.course = self.section.course
+        elif self.course_id and not self.section_id:
+            first_section = self.course.sections.order_by("order_index", "id").first()
+            if not first_section:
+                first_section = Section.objects.create(
+                    course=self.course,
+                    title="Main section",
+                    description="Auto-created section for direct lesson uploads.",
+                    order_index=1,
+                )
+            self.section = first_section
+        elif self.section_id and self.course_id != self.section.course_id:
+            self.course = self.section.course
+        super().save(*args, **kwargs)
 
     def _normalized_embed_url(self, value):
         parsed = urlparse(value)

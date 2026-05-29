@@ -36,6 +36,11 @@ urlpatterns = [
         name="lesson_watch",
     ),
     path(
+        "<slug:course_slug>/video/<int:lesson_id>/",
+        LessonWatchView.as_view(),
+        name="video_lesson",
+    ),
+    path(
         "<slug:course_slug>/lessons/<int:lesson_id>/progress/",
         save_watch_progress,
         name="lesson_progress",

@@ -118,7 +118,9 @@ class SectionForm(StyledModelForm):
 class LessonForm(StyledModelForm):
     def __init__(self, *args, actor=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["section"].required = False
         if actor and getattr(actor, "role", None) == User.Roles.INSTRUCTOR and not actor.can_access_panel:
+            self.fields["course"].queryset = Course.objects.filter(instructor=actor).order_by("title")
             self.fields["section"].queryset = Section.objects.filter(course__instructor=actor).order_by(
                 "course__title",
                 "order_index",
@@ -127,6 +129,7 @@ class LessonForm(StyledModelForm):
     class Meta:
         model = Lesson
         fields = (
+            "course",
             "section",
             "title",
             "title_uz",
@@ -154,8 +157,17 @@ class LessonForm(StyledModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        course = cleaned_data.get("course")
+        section = cleaned_data.get("section")
         video_file = cleaned_data.get("video_file")
         video_url = (cleaned_data.get("video_url") or "").strip()
+        if section and not course:
+            cleaned_data["course"] = section.course
+            course = section.course
+        if course and section and section.course_id != course.id:
+            raise ValidationError(_("The selected section belongs to another course."))
+        if not course and not section:
+            raise ValidationError(_("Choose which course this lesson belongs to."))
         if not video_file and not video_url:
             raise ValidationError(_("Add either an uploaded video file or an external video URL."))
         return cleaned_data
