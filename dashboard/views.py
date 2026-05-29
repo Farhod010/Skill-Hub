@@ -302,6 +302,8 @@ def panel_dashboard(request):
         "total_users": User.objects.count(),
         "total_courses": Course.objects.count(),
         "total_lessons": Lesson.objects.count(),
+        "total_payments": Payment.objects.count(),
+        "pending_courses": Course.objects.filter(status=Course.Statuses.PENDING).count(),
         "total_earnings": Payment.objects.filter(status=Payment.Status.COMPLETED).aggregate(
             total=Sum("amount")
         )["total"]
@@ -313,8 +315,10 @@ def panel_dashboard(request):
         "stats": stats,
         "recent_users": User.objects.order_by("-date_joined")[:6],
         "popular_courses": Course.objects.annotate(
-            total_enrollments=Count("enrollments")
+            total_enrollments=Count("enrollments", distinct=True),
+            total_lessons=Count("lessons", distinct=True),
         ).order_by("-total_enrollments", "title")[:6],
+        "recent_payments": Payment.objects.select_related("user", "course").order_by("-created_at")[:6],
         "recent_reviews": Review.objects.select_related("course", "student").order_by("-created_at")[
             :6
         ],
@@ -339,7 +343,10 @@ def panel_user_create(request):
 @panel_access_required
 def panel_user_list(request):
     query = request.GET.get("q", "").strip()
-    users = User.objects.all().order_by("-date_joined")
+    role = request.GET.get("role", "").strip()
+    status = request.GET.get("status", "").strip()
+    sort = request.GET.get("sort", "newest").strip()
+    users = User.objects.all()
     if query:
         users = users.filter(
             Q(email__icontains=query)
@@ -348,7 +355,38 @@ def panel_user_list(request):
             | Q(last_name__icontains=query)
             | Q(role__icontains=query)
         )
-    context = {"page_obj": paginate_queryset(request, users), "search_query": query}
+    if role:
+        users = users.filter(role=role)
+    if status == "active":
+        users = users.filter(is_active=True, is_blocked=False)
+    elif status == "blocked":
+        users = users.filter(is_blocked=True)
+
+    if sort == "oldest":
+        users = users.order_by("date_joined")
+    elif sort == "name":
+        users = users.order_by("first_name", "last_name", "username")
+    else:
+        users = users.order_by("-date_joined")
+
+    all_users = User.objects.all()
+    context = {
+        "page_obj": paginate_queryset(request, users),
+        "search_query": query,
+        "selected_role": role,
+        "selected_status": status,
+        "selected_sort": sort,
+        "role_choices": User.Roles.choices,
+        "create_form": UserPanelCreationForm(actor=request.user),
+        "stats": {
+            "total": all_users.count(),
+            "active": all_users.filter(is_active=True, is_blocked=False).count(),
+            "blocked": all_users.filter(is_blocked=True).count(),
+            "instructors": all_users.filter(role=User.Roles.INSTRUCTOR).count(),
+            "students": all_users.filter(role=User.Roles.STUDENT).count(),
+            "moderators": all_users.filter(role=User.Roles.MODERATOR).count(),
+        },
+    }
     return render(request, "dashboard/panel/users/list.html", context)
 
 
@@ -407,7 +445,13 @@ def panel_user_toggle_block(request, pk):
 @panel_access_required
 def panel_course_list(request):
     query = request.GET.get("q", "").strip()
-    courses = Course.objects.select_related("category", "instructor").order_by("-created_at")
+    status = request.GET.get("status", "").strip()
+    category = request.GET.get("category", "").strip()
+    sort = request.GET.get("sort", "newest").strip()
+    courses = Course.objects.select_related("category", "instructor").annotate(
+        total_lessons=Count("lessons", distinct=True),
+        total_students=Count("enrollments", distinct=True),
+    )
     if query:
         courses = courses.filter(
             Q(title__icontains=query)
@@ -420,7 +464,43 @@ def panel_course_list(request):
             | Q(category__name_en__icontains=query)
             | Q(instructor__email__icontains=query)
         )
-    context = {"page_obj": paginate_queryset(request, courses), "search_query": query}
+    if category:
+        courses = courses.filter(category_id=category)
+    if status == "published":
+        courses = courses.filter(is_published=True)
+    elif status == "draft":
+        courses = courses.filter(is_published=False)
+    elif status in {choice for choice, _label in Course.Statuses.choices}:
+        courses = courses.filter(status=status)
+    elif status == "featured":
+        courses = courses.filter(is_featured=True)
+
+    if sort == "oldest":
+        courses = courses.order_by("created_at")
+    elif sort == "title":
+        courses = courses.order_by("title")
+    elif sort == "students":
+        courses = courses.order_by("-total_students", "title")
+    else:
+        courses = courses.order_by("-created_at")
+
+    all_courses = Course.objects.all()
+    context = {
+        "page_obj": paginate_queryset(request, courses),
+        "search_query": query,
+        "selected_status": status,
+        "selected_category": category,
+        "selected_sort": sort,
+        "categories": Category.objects.order_by("title"),
+        "stats": {
+            "total": all_courses.count(),
+            "published": all_courses.filter(is_published=True).count(),
+            "pending": all_courses.filter(status=Course.Statuses.PENDING).count(),
+            "featured": all_courses.filter(is_featured=True).count(),
+            "rejected": all_courses.filter(status=Course.Statuses.REJECTED).count(),
+            "active": all_courses.filter(status=Course.Statuses.ACTIVE).count(),
+        },
+    }
     return render(request, "dashboard/panel/courses/list.html", context)
 
 
@@ -630,11 +710,9 @@ def panel_section_delete(request, pk):
 @panel_access_required
 def panel_lesson_list(request):
     query = request.GET.get("q", "").strip()
-    lessons = Lesson.objects.select_related("section", "section__course").order_by(
-        "section__course__title",
-        "section__order_index",
-        "order_index",
-    )
+    course = request.GET.get("course", "").strip()
+    sort = request.GET.get("sort", "course").strip()
+    lessons = Lesson.objects.select_related("course", "section", "section__course")
     if query:
         lessons = lessons.filter(
             Q(title__icontains=query)
@@ -642,18 +720,53 @@ def panel_lesson_list(request):
             | Q(title_ru__icontains=query)
             | Q(title_en__icontains=query)
             | Q(section__title__icontains=query)
+            | Q(course__title__icontains=query)
+            | Q(course__title_uz__icontains=query)
+            | Q(course__title_ru__icontains=query)
+            | Q(course__title_en__icontains=query)
             | Q(section__course__title__icontains=query)
             | Q(section__course__title_uz__icontains=query)
             | Q(section__course__title_ru__icontains=query)
             | Q(section__course__title_en__icontains=query)
         )
-    context = {"page_obj": paginate_queryset(request, lessons), "search_query": query}
+    if course:
+        lessons = lessons.filter(course_id=course)
+
+    if sort == "latest":
+        lessons = lessons.order_by("-created_at")
+    else:
+        lessons = lessons.order_by("course__title", "section__order_index", "order_index", "id")
+
+    all_lessons = Lesson.objects.all()
+    context = {
+        "page_obj": paginate_queryset(request, lessons),
+        "search_query": query,
+        "selected_course": course,
+        "selected_sort": sort,
+        "courses": Course.objects.order_by("title"),
+        "stats": {
+            "total": all_lessons.count(),
+            "preview": all_lessons.filter(is_preview=True).count(),
+            "video_uploads": all_lessons.exclude(video_file="").count(),
+            "external_videos": all_lessons.exclude(video_url="").count(),
+        },
+    }
     return render(request, "dashboard/panel/lessons/list.html", context)
 
 
 @panel_access_required
 def panel_lesson_create(request):
-    form = LessonForm(request.POST or None, request.FILES or None)
+    initial = {}
+    if request.method != "POST":
+        course_id = request.GET.get("course")
+        if course_id:
+            course = get_object_or_404(Course, pk=course_id)
+            initial["course"] = course
+            first_section = course.sections.order_by("order_index", "id").first()
+            if first_section:
+                initial["section"] = first_section
+
+    form = LessonForm(request.POST or None, request.FILES or None, initial=initial or None)
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, _("Lesson created successfully."))

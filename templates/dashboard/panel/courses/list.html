@@ -1,79 +1,235 @@
 {% extends 'dashboard/panel/base_panel.html' %}
 {% load course_extras i18n %}
-{% block panel_content %}
-<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-            <div>
-                <span class="eyebrow mb-2">{% trans "Course management" %}</span>
-                <h1 class="display-6 mb-0">{% trans "Courses" %}</h1>
-            </div>
-            <a href="{% url 'panel:course_create' %}" class="btn gradient-btn text-white rounded-pill px-4">{% trans "Create course" %}</a>
-        </div>
-        <form method="get" class="row g-3">
-            <div class="col-md-9">
-                <div class="input-group">
-                    <span class="input-group-text icon-pill"><i class="bi bi-search"></i></span>
-                    <input type="text" name="q" class="form-control border-start-0" value="{{ search_query }}" placeholder="{% trans 'Search courses' %}">
-                </div>
-            </div>
-            <div class="col-md-3 d-grid">
-                <button type="submit" class="btn btn-outline-secondary rounded-pill">{% trans "Search" %}</button>
-            </div>
-        </form>
-    </div>
-</div>
 
-<div class="table-responsive table-premium glass-card shadow-soft rounded-custom p-0">
-    <table class="table table-hover align-middle mb-0">
-        <thead>
-            <tr>
-                <th>{% trans "Title" %}</th>
-                <th>{% trans "Instructor" %}</th>
-                <th>{% trans "Category" %}</th>
-                <th>{% trans "Price" %}</th>
-                <th>{% trans "Status" %}</th>
-                <th class="text-end">{% trans "Actions" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for course in page_obj %}
+{% block panel_content %}
+<section class="admin-card glass-panel p-4 p-xl-5 mb-4">
+    <div class="row g-4 align-items-end">
+        <div class="col-lg-7">
+            <nav aria-label="{% trans 'Breadcrumb' %}" class="mb-3">
+                <ol class="breadcrumb admin-breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{% url 'panel:dashboard' %}">{% trans "Admin" %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'panel:course_list' %}">{% trans "Content" %}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Courses" %}</li>
+                </ol>
+            </nav>
+            <span class="eyebrow mb-2">{% trans "Course Management" %}</span>
+            <h1 class="admin-page-title mb-2">{% trans "Courses Control" %}</h1>
+            <p class="admin-page-copy mb-0">{% trans "Review publishing, lessons, pricing and instructor ownership across every course." %}</p>
+        </div>
+        <div class="col-lg-5">
+            <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                <a href="{% url 'panel:course_create' %}" class="btn gradient-btn rounded-pill px-4 text-white" data-admin-modal-url="{% url 'panel:course_create' %}" data-admin-modal-title="{% trans 'Create course' %}">
+                    <i class="bi bi-plus-circle me-2"></i>{% trans "Create course" %}
+                </a>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-export-table="#coursesAdminTable" data-export-name="skillhub-courses">
+                    <i class="bi bi-download me-2"></i>{% trans "Export" %}
+                </button>
+                <a href="{{ request.get_full_path }}" class="btn admin-icon-btn" aria-label="{% trans 'Refresh' %}">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon"><i class="bi bi-book"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.total }}">{{ stats.total }}</div>
+            <div class="stat-card-label">{% trans "Total courses" %}</div>
+            <div class="stat-card-meta">{% trans "All learning products" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon success"><i class="bi bi-broadcast-pin"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.published }}">{{ stats.published }}</div>
+            <div class="stat-card-label">{% trans "Published" %}</div>
+            <div class="stat-card-meta">{% trans "Visible in catalog" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon amber"><i class="bi bi-hourglass-split"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.pending }}">{{ stats.pending }}</div>
+            <div class="stat-card-label">{% trans "Pending" %}</div>
+            <div class="stat-card-meta">{% trans "Awaiting approval" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon blue"><i class="bi bi-stars"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.featured }}">{{ stats.featured }}</div>
+            <div class="stat-card-label">{% trans "Featured" %}</div>
+            <div class="stat-card-meta">{% trans "Boosted for discovery" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon purple"><i class="bi bi-patch-check"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.active }}">{{ stats.active }}</div>
+            <div class="stat-card-label">{% trans "Active" %}</div>
+            <div class="stat-card-meta">{% trans "Ready to scale" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon danger"><i class="bi bi-ban"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.rejected }}">{{ stats.rejected }}</div>
+            <div class="stat-card-label">{% trans "Rejected" %}</div>
+            <div class="stat-card-meta">{% trans "Needs revision" %}</div>
+        </article>
+    </div>
+</section>
+
+<section class="admin-card glass-panel filter-card p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-lg-4">
+            <label for="course-search" class="form-label">{% trans "Search courses" %}</label>
+            <div class="input-group input-group-premium">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input id="course-search" type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="{% trans 'Search by course, instructor or category' %}">
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <label for="course-category" class="form-label">{% trans "Category" %}</label>
+            <select id="course-category" name="category" class="form-select">
+                <option value="">{% trans "All categories" %}</option>
+                {% for item in categories %}
+                    <option value="{{ item.pk }}" {% if selected_category == item.pk|stringformat:'s' %}selected{% endif %}>{{ item|translated_title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="course-status" class="form-label">{% trans "Status" %}</label>
+            <select id="course-status" name="status" class="form-select">
+                <option value="">{% trans "All statuses" %}</option>
+                <option value="published" {% if selected_status == 'published' %}selected{% endif %}>{% trans "Published" %}</option>
+                <option value="draft" {% if selected_status == 'draft' %}selected{% endif %}>{% trans "Draft" %}</option>
+                <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>{% trans "Pending" %}</option>
+                <option value="active" {% if selected_status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                <option value="rejected" {% if selected_status == 'rejected' %}selected{% endif %}>{% trans "Rejected" %}</option>
+                <option value="featured" {% if selected_status == 'featured' %}selected{% endif %}>{% trans "Featured" %}</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="course-sort" class="form-label">{% trans "Sort" %}</label>
+            <select id="course-sort" name="sort" class="form-select">
+                <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>{% trans "Newest" %}</option>
+                <option value="oldest" {% if selected_sort == 'oldest' %}selected{% endif %}>{% trans "Oldest" %}</option>
+                <option value="title" {% if selected_sort == 'title' %}selected{% endif %}>{% trans "Name A-Z" %}</option>
+                <option value="students" {% if selected_sort == 'students' %}selected{% endif %}>{% trans "Top students" %}</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-1">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn gradient-btn rounded-pill text-white"><i class="bi bi-funnel"></i></button>
+                <a href="{% url 'panel:course_list' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="admin-card glass-panel p-0 overflow-hidden">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-4 py-3 border-bottom border-light-subtle">
+        <div>
+            <h2 class="h5 mb-1">{% trans "Course inventory" %}</h2>
+            <p class="text-secondary small mb-0">{% trans "Balance publication, enrichment and lesson production from a single view." %}</p>
+        </div>
+        <span class="admin-table-count">{{ page_obj.paginator.count }} {% trans "courses" %}</span>
+    </div>
+    <div class="table-responsive admin-table-wrap">
+        <table class="table table-hover align-middle mb-0 admin-table" id="coursesAdminTable">
+            <thead>
                 <tr>
-                    <td>{{ course|translated_title }}</td>
-                    <td>{{ course.instructor.full_name }}</td>
-                    <td>{{ course.category|translated_title }}</td>
-                    <td>{{ course.price|money }}</td>
-                    <td>
-                        <div class="d-flex flex-wrap gap-2">
-                            <span class="badge rounded-pill {% if course.is_published %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3 py-2">
-                                {% if course.is_published %}{% trans "Published" %}{% else %}{% trans "Draft" %}{% endif %}
-                            </span>
-                            {% if course.is_featured %}
-                                <span class="badge premium-badge rounded-pill px-3 py-2">{% trans "Featured" %}</span>
-                            {% endif %}
-                        </div>
-                    </td>
-                    <td class="text-end">
-                        <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
-                            <a href="{% url 'panel:course_edit' course.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "Edit" %}</a>
-                            <form method="post" action="{% url 'panel:course_publish_toggle' course.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-secondary rounded-pill btn-sm">{% if course.is_published %}{% trans "Unpublish" %}{% else %}{% trans "Publish" %}{% endif %}</button>
-                            </form>
-                            <form method="post" action="{% url 'panel:course_featured_toggle' course.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-secondary rounded-pill btn-sm">{% if course.is_featured %}{% trans "Unfeature" %}{% else %}{% trans "Feature" %}{% endif %}</button>
-                            </form>
-                            <a href="{% url 'panel:course_delete' course.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">{% trans "Delete" %}</a>
-                        </div>
-                    </td>
+                    <th>{% trans "Course" %}</th>
+                    <th>{% trans "Instructor" %}</th>
+                    <th>{% trans "Category" %}</th>
+                    <th>{% trans "Price" %}</th>
+                    <th>{% trans "Lessons" %}</th>
+                    <th>{% trans "Students" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th class="text-end">{% trans "Actions" %}</th>
                 </tr>
-            {% empty %}
-                <tr><td colspan="6">{% trans "No courses found." %}</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% for course in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="admin-course-cell">
+                                <div class="admin-course-thumb">
+                                    {% if course.thumbnail %}
+                                        <img src="{{ course.thumbnail.url }}" alt="{{ course|translated_title }}">
+                                    {% else %}
+                                        <i class="bi bi-collection-play"></i>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-light">{{ course|translated_title }}</div>
+                                    <div class="small text-secondary">{{ course.slug }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ course.instructor.full_name }}</td>
+                        <td>{{ course.category|translated_title }}</td>
+                        <td>{{ course.price|money }}</td>
+                        <td>{{ course.total_lessons }}</td>
+                        <td>{{ course.total_students }}</td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="status-badge {% if course.status == 'active' %}active{% elif course.status == 'rejected' %}blocked{% else %}pending{% endif %}">
+                                    {{ course.get_status_display }}
+                                </span>
+                                {% if course.is_featured %}
+                                    <span class="role-badge admin">{% trans "Featured" %}</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                <a href="{{ course.get_absolute_url }}" class="action-btn" target="_blank" rel="noopener">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'panel:course_edit' course.pk %}" class="action-btn" data-admin-modal-url="{% url 'panel:course_edit' course.pk %}" data-admin-modal-title="{% blocktrans with title=course|translated_title %}Edit {{ title }}{% endblocktrans %}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="{% url 'panel:lesson_create' %}?course={{ course.pk }}" class="action-btn success" data-admin-modal-url="{% url 'panel:lesson_create' %}?course={{ course.pk }}" data-admin-modal-title="{% blocktrans with title=course|translated_title %}Add lesson to {{ title }}{% endblocktrans %}">
+                                    <i class="bi bi-play-btn"></i>
+                                </a>
+                                <form method="post" action="{% url 'panel:course_publish_toggle' course.pk %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn warning">
+                                        <i class="bi {% if course.is_published %}bi-eye-slash{% else %}bi-send-check{% endif %}"></i>
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'panel:course_featured_toggle' course.pk %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn purple">
+                                        <i class="bi {% if course.is_featured %}bi-stars{% else %}bi-star{% endif %}"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="action-btn danger" data-delete-url="{% url 'panel:course_delete' course.pk %}" data-delete-label="{{ course|translated_title }}">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="admin-empty-state">
+                                <i class="bi bi-book"></i>
+                                <h3>{% trans "No courses found" %}</h3>
+                                <p>{% trans "Create a new course or adjust your filters to see matching content." %}</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 
 {% include 'partials/pagination.html' with page_obj=page_obj %}
 {% endblock %}

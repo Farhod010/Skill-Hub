@@ -1,38 +1,236 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load static i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
+
+{% block body_class %}bg-body-tertiary admin-body{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block site_nav %}
+{% if not request.GET.embed %}
+<nav class="navbar navbar-expand-lg sticky-top admin-topbar border-bottom border-light-subtle">
+    <div class="container-fluid px-3 px-lg-4">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn admin-icon-btn d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-3" href="{% url 'panel:dashboard' %}">
+                {% if site_settings.logo %}
+                    <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name }}" class="brand-logo rounded-4 shadow-soft">
+                {% else %}
+                    <span class="brand-mark shadow-soft">EM</span>
+                {% endif %}
+                <span class="d-grid lh-1">
+                    <span class="fs-6 fs-lg-5">{{ site_settings.site_name|default:"SkillHub" }}</span>
+                    <small class="text-secondary">{% trans "Platform Control" %}</small>
+                </span>
+            </a>
+        </div>
+
+        <div class="d-none d-lg-flex align-items-center justify-content-center flex-grow-1 px-4">
+            <ul class="navbar-nav flex-row admin-topbar-links gap-2">
+                <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}">{% trans "Home" %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'courses:course_list' %}">{% trans "Courses" %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}#categories">{% trans "Categories" %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}#teachers">{% trans "Teachers" %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}#about">{% trans "About" %}</a></li>
+            </ul>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 gap-lg-3">
+            <div class="dropdown">
+                <button class="btn admin-chip dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if CURRENT_LANGUAGE == 'ru' %}
+                        RU
+                    {% elif CURRENT_LANGUAGE == 'en' %}
+                        EN
+                    {% else %}
+                        UZ
+                    {% endif %}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end admin-dropdown shadow border-0 rounded-4">
+                    <li>
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="language" value="uz">
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'uz' %}active{% endif %}">UZ</button>
+                        </form>
+                    </li>
+                    <li>
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="language" value="ru">
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'ru' %}active{% endif %}">RU</button>
+                        </form>
+                    </li>
+                    <li>
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="language" value="en">
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'en' %}active{% endif %}">EN</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+            <button type="button" class="btn admin-chip" data-theme-toggle>
+                <i class="bi bi-moon-stars"></i>
+                <span class="d-none d-md-inline">{% trans "Theme" %}</span>
+            </button>
+
+            <button type="button" class="btn admin-icon-btn position-relative" aria-label="{% trans 'Notifications' %}">
+                <i class="bi bi-bell"></i>
+                <span class="admin-notification-dot"></span>
+            </button>
+
+            <div class="dropdown">
+                <button class="btn admin-profile dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="admin-avatar">
+                        {% if request.user.avatar %}
+                            <img src="{{ request.user.avatar.url }}" alt="{{ request.user.full_name }}">
+                        {% else %}
+                            {{ request.user.full_name|default:request.user.username|first|upper }}
+                        {% endif %}
+                    </span>
+                    <span class="text-start d-none d-md-grid">
+                        <span class="fw-semibold lh-1">{{ request.user.full_name }}</span>
+                        <small class="text-secondary">{{ request.user.get_role_display }}</small>
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end admin-dropdown shadow border-0 rounded-4">
+                    <li><a class="dropdown-item" href="{{ request.user.home_url }}"><i class="bi bi-speedometer2 me-2"></i>{% trans "Dashboard" %}</a></li>
+                    <li><a class="dropdown-item" href="{% url 'landing' %}"><i class="bi bi-box-arrow-up-right me-2"></i>{% trans "Open site" %}</a></li>
+                </ul>
+            </div>
+
+            <form method="post" action="{% url 'accounts:logout' %}" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary rounded-pill px-3 px-lg-4">{% trans "Logout" %}</button>
+            </form>
+        </div>
+    </div>
+</nav>
+{% endif %}
+{% endblock %}
+
 {% block content %}
-<section class="section-padding">
-    <div class="container">
+{% if request.GET.embed %}
+<section class="admin-embedded py-4 px-3 px-lg-4">
+    <div class="admin-main">
+{% else %}
+<section class="admin-layout section-padding pt-4 pt-lg-5">
+    <div class="container-fluid px-3 px-lg-4">
         <div class="row g-4">
-            <div class="col-xl-3">
-                <aside class="sidebar glass-card shadow-soft rounded-custom p-4 sticky-top" style="top: 6rem;">
-                    <div class="mb-4">
-                        <span class="eyebrow mb-2">{% trans "Admin panel" %}</span>
-                        <h2 class="h3 mb-2">{% trans "Platform control" %}</h2>
-                        <p class="text-secondary mb-0">{% trans "Users, courses, approvals, content, payments and settings in one place." %}</p>
+            <div class="col-xl-3 col-xxl-2">
+                <aside class="admin-sidebar offcanvas-xl offcanvas-start" tabindex="-1" id="adminSidebar" aria-labelledby="adminSidebarLabel">
+                    <div class="offcanvas-header d-xl-none border-bottom border-light-subtle">
+                        <h5 class="offcanvas-title" id="adminSidebarLabel">{% trans "Admin Panel" %}</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="{% trans 'Close' %}"></button>
                     </div>
-                    <nav class="nav flex-column gap-2 sidebar-links">
-                        <a href="{% url 'panel:dashboard' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Overview" %}</a>
-                        <a href="{% url 'panel:user_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Users" %}</a>
-                        <a href="{% url 'panel:course_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Courses" %}</a>
-                        <a href="{% url 'panel:category_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Categories" %}</a>
-                        <a href="{% url 'panel:section_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Sections" %}</a>
-                        <a href="{% url 'panel:lesson_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Lessons" %}</a>
-                        <a href="{% url 'panel:quiz_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Quizzes" %}</a>
-                        <a href="{% url 'panel:question_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Questions" %}</a>
-                        <a href="{% url 'panel:answer_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Answers" %}</a>
-                        <a href="{% url 'panel:quiz_result_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Quiz results" %}</a>
-                        <a href="{% url 'panel:certificate_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Certificates" %}</a>
-                        <a href="{% url 'panel:review_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Reviews" %}</a>
-                        <a href="{% url 'panel:payment_list' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Payments" %}</a>
-                        <a href="{% url 'panel:site_settings' %}" class="sidebar-link btn btn-outline-secondary rounded-pill text-start">{% trans "Site settings" %}</a>
-                    </nav>
+                    <div class="offcanvas-body p-0">
+                        <div class="glass-panel admin-sidebar-card">
+                            <div class="admin-sidebar-head">
+                                <span class="admin-sidebar-kicker">{% trans "Admin Panel" %}</span>
+                                <h2>{% trans "Platform Control" %}</h2>
+                                <p>{% trans "Monitor users, courses, lessons, payments and approvals from one place." %}</p>
+                            </div>
+                            <nav class="d-grid gap-2">
+                                <a href="{% url 'panel:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><i class="bi bi-speedometer2"></i><span>{% trans "Overview" %}</span></a>
+                                <a href="{% url 'panel:user_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_create' or request.resolver_match.url_name == 'user_edit' %}active{% endif %}"><i class="bi bi-people"></i><span>{% trans "Users" %}</span></a>
+                                <a href="{% url 'panel:course_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_create' or request.resolver_match.url_name == 'course_edit' %}active{% endif %}"><i class="bi bi-book"></i><span>{% trans "Courses" %}</span></a>
+                                <a href="{% url 'panel:category_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category_create' or request.resolver_match.url_name == 'category_edit' %}active{% endif %}"><i class="bi bi-grid"></i><span>{% trans "Categories" %}</span></a>
+                                <a href="{% url 'panel:section_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'section_list' or request.resolver_match.url_name == 'section_create' or request.resolver_match.url_name == 'section_edit' %}active{% endif %}"><i class="bi bi-diagram-3"></i><span>{% trans "Sections" %}</span></a>
+                                <a href="{% url 'panel:lesson_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'lesson_list' or request.resolver_match.url_name == 'lesson_create' or request.resolver_match.url_name == 'lesson_edit' %}active{% endif %}"><i class="bi bi-play-circle"></i><span>{% trans "Lessons" %}</span></a>
+                                <a href="{% url 'panel:quiz_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'quiz_list' or request.resolver_match.url_name == 'quiz_create' or request.resolver_match.url_name == 'quiz_edit' %}active{% endif %}"><i class="bi bi-question-circle"></i><span>{% trans "Quizzes" %}</span></a>
+                                <a href="{% url 'panel:question_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'question_list' or request.resolver_match.url_name == 'question_create' or request.resolver_match.url_name == 'question_edit' %}active{% endif %}"><i class="bi bi-patch-question"></i><span>{% trans "Questions" %}</span></a>
+                                <a href="{% url 'panel:answer_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'answer_list' or request.resolver_match.url_name == 'answer_create' or request.resolver_match.url_name == 'answer_edit' %}active{% endif %}"><i class="bi bi-check2-circle"></i><span>{% trans "Answers" %}</span></a>
+                                <a href="{% url 'panel:quiz_result_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'quiz_result_list' %}active{% endif %}"><i class="bi bi-bar-chart"></i><span>{% trans "Quiz results" %}</span></a>
+                                <a href="{% url 'panel:certificate_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'certificate_list' %}active{% endif %}"><i class="bi bi-award"></i><span>{% trans "Certificates" %}</span></a>
+                                <a href="{% url 'panel:review_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'review_list' %}active{% endif %}"><i class="bi bi-star"></i><span>{% trans "Reviews" %}</span></a>
+                                <a href="{% url 'panel:payment_list' %}" class="sidebar-link {% if request.resolver_match.url_name == 'payment_list' %}active{% endif %}"><i class="bi bi-credit-card"></i><span>{% trans "Payments" %}</span></a>
+                                <a href="{% url 'panel:site_settings' %}" class="sidebar-link {% if request.resolver_match.url_name == 'site_settings' %}active{% endif %}"><i class="bi bi-gear"></i><span>{% trans "Site settings" %}</span></a>
+                            </nav>
+                        </div>
+                    </div>
                 </aside>
             </div>
-            <div class="col-xl-9">
-                {% block panel_content %}{% endblock %}
+            <div class="col-xl-9 col-xxl-10">
+                <div class="admin-main">
+{% endif %}
+                    {% block panel_content %}{% endblock %}
+{% if request.GET.embed %}
+    </div>
+</section>
+{% else %}
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="adminActionModal" tabindex="-1" aria-labelledby="adminActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content modal-glass">
+            <div class="modal-header border-bottom border-light-subtle">
+                <div>
+                    <span class="eyebrow d-block mb-1">{% trans "Panel action" %}</span>
+                    <h5 class="modal-title mb-0" id="adminActionModalLabel">{% trans "Manage item" %}</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-4x3 admin-modal-frame-wrap">
+                    <iframe src="about:blank" title="{% trans 'Admin action' %}" class="admin-modal-frame" data-admin-modal-frame></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-glass">
+            <div class="modal-header border-bottom border-light-subtle">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">{% trans "Delete item" %}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2 text-light">{% trans "Are you sure you want to remove this record?" %}</p>
+                <p class="text-secondary small mb-0" data-delete-label>{% trans "This action cannot be undone." %}</p>
+            </div>
+            <div class="modal-footer border-top border-light-subtle">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <form method="post" action="#" class="m-0" data-delete-form>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">{% trans "Delete" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block site_footer %}
+{% if not request.GET.embed %}
+<footer class="admin-footer border-top border-light-subtle">
+    <div class="container-fluid px-3 px-lg-4 py-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 small text-secondary">
+            <span>{% trans "SkillHub admin control center" %}</span>
+            <span>{% trans "Monitor your platform with confidence." %}</span>
+        </div>
+    </div>
+</footer>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/admin.js' %}"></script>
 {% endblock %}

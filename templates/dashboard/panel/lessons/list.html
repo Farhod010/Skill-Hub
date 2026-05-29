@@ -1,46 +1,179 @@
 {% extends 'dashboard/panel/base_panel.html' %}
+{% load course_extras i18n %}
+
 {% block panel_content %}
-<div class="panel-header">
-    <div>
-        <span class="eyebrow">Lesson management</span>
-        <h1>Lessons</h1>
+<section class="admin-card glass-panel p-4 p-xl-5 mb-4">
+    <div class="row g-4 align-items-end">
+        <div class="col-lg-7">
+            <nav aria-label="{% trans 'Breadcrumb' %}" class="mb-3">
+                <ol class="breadcrumb admin-breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{% url 'panel:dashboard' %}">{% trans "Admin" %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'panel:course_list' %}">{% trans "Content" %}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Lessons" %}</li>
+                </ol>
+            </nav>
+            <span class="eyebrow mb-2">{% trans "Lesson Management" %}</span>
+            <h1 class="admin-page-title mb-2">{% trans "Video Lessons" %}</h1>
+            <p class="admin-page-copy mb-0">{% trans "Manage curriculum order, preview access and uploaded video inventory across your platform." %}</p>
+        </div>
+        <div class="col-lg-5">
+            <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                <a href="{% url 'panel:lesson_create' %}" class="btn gradient-btn rounded-pill px-4 text-white" data-admin-modal-url="{% url 'panel:lesson_create' %}" data-admin-modal-title="{% trans 'Create lesson' %}">
+                    <i class="bi bi-plus-circle me-2"></i>{% trans "Create lesson" %}
+                </a>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-export-table="#lessonsAdminTable" data-export-name="skillhub-lessons">
+                    <i class="bi bi-download me-2"></i>{% trans "Export" %}
+                </button>
+                <a href="{{ request.get_full_path }}" class="btn admin-icon-btn" aria-label="{% trans 'Refresh' %}">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </a>
+            </div>
+        </div>
     </div>
-    <a href="{% url 'panel:lesson_create' %}" class="btn btn-primary">Create lesson</a>
-</div>
-<form method="get" class="panel-toolbar">
-    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search lessons">
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
-<div class="table-card">
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Course</th>
-                <th>Section</th>
-                <th>Preview</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for lesson in page_obj %}
+</section>
+
+<section class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon"><i class="bi bi-play-circle"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.total }}">{{ stats.total }}</div>
+            <div class="stat-card-label">{% trans "Total lessons" %}</div>
+            <div class="stat-card-meta">{% trans "Structured video units" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon success"><i class="bi bi-unlock"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.preview }}">{{ stats.preview }}</div>
+            <div class="stat-card-label">{% trans "Preview lessons" %}</div>
+            <div class="stat-card-meta">{% trans "Open to visitors" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon blue"><i class="bi bi-camera-video"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.video_uploads }}">{{ stats.video_uploads }}</div>
+            <div class="stat-card-label">{% trans "Uploads" %}</div>
+            <div class="stat-card-meta">{% trans "Hosted on platform" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon purple"><i class="bi bi-link-45deg"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.external_videos }}">{{ stats.external_videos }}</div>
+            <div class="stat-card-label">{% trans "External videos" %}</div>
+            <div class="stat-card-meta">{% trans "Embed or streaming links" %}</div>
+        </article>
+    </div>
+</section>
+
+<section class="admin-card glass-panel filter-card p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-lg-5">
+            <label for="lesson-search" class="form-label">{% trans "Search lessons" %}</label>
+            <div class="input-group input-group-premium">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input id="lesson-search" type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="{% trans 'Search by lesson, course or section' %}">
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <label for="lesson-course" class="form-label">{% trans "Course" %}</label>
+            <select id="lesson-course" name="course" class="form-select">
+                <option value="">{% trans "All courses" %}</option>
+                {% for item in courses %}
+                    <option value="{{ item.pk }}" {% if selected_course == item.pk|stringformat:'s' %}selected{% endif %}>{{ item|translated_title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="lesson-sort" class="form-label">{% trans "Sort" %}</label>
+            <select id="lesson-sort" name="sort" class="form-select">
+                <option value="course" {% if selected_sort == 'course' %}selected{% endif %}>{% trans "Course order" %}</option>
+                <option value="latest" {% if selected_sort == 'latest' %}selected{% endif %}>{% trans "Latest" %}</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-1">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn gradient-btn rounded-pill text-white"><i class="bi bi-funnel"></i></button>
+                <a href="{% url 'panel:lesson_list' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="admin-card glass-panel p-0 overflow-hidden">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-4 py-3 border-bottom border-light-subtle">
+        <div>
+            <h2 class="h5 mb-1">{% trans "Lesson library" %}</h2>
+            <p class="text-secondary small mb-0">{% trans "Keep curriculum order and preview visibility clean as the catalog grows." %}</p>
+        </div>
+        <span class="admin-table-count">{{ page_obj.paginator.count }} {% trans "lessons" %}</span>
+    </div>
+    <div class="table-responsive admin-table-wrap">
+        <table class="table table-hover align-middle mb-0 admin-table" id="lessonsAdminTable">
+            <thead>
                 <tr>
-                    <td>{{ lesson.title }}</td>
-                    <td>{{ lesson.section.course.title }}</td>
-                    <td>{{ lesson.section.title }}</td>
-                    <td>{% if lesson.is_preview %}Yes{% else %}No{% endif %}</td>
-                    <td>
-                        <div class="table-actions">
-                            <a href="{% url 'panel:lesson_edit' lesson.pk %}" class="btn btn-ghost">Edit</a>
-                            <a href="{% url 'panel:lesson_delete' lesson.pk %}" class="btn btn-danger btn-soft">Delete</a>
-                        </div>
-                    </td>
+                    <th>{% trans "Lesson title" %}</th>
+                    <th>{% trans "Course" %}</th>
+                    <th>{% trans "Order" %}</th>
+                    <th>{% trans "Duration" %}</th>
+                    <th>{% trans "Preview" %}</th>
+                    <th>{% trans "Video" %}</th>
+                    <th class="text-end">{% trans "Actions" %}</th>
                 </tr>
-            {% empty %}
-                <tr><td colspan="5">No lessons found.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% for lesson in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="fw-semibold text-light">{{ lesson|translated_title }}</div>
+                            <div class="small text-secondary">
+                                {% if lesson.section %}{{ lesson.section.title }}{% else %}{% trans "No section" %}{% endif %}
+                            </div>
+                        </td>
+                        <td>{{ lesson.course|translated_title }}</td>
+                        <td>#{{ lesson.order_index }}</td>
+                        <td>{{ lesson.duration_minutes }} {% trans "min" %}</td>
+                        <td>
+                            <span class="status-badge {% if lesson.is_preview %}active{% else %}pending{% endif %}">
+                                {% if lesson.is_preview %}{% trans "Preview" %}{% else %}{% trans "Locked" %}{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            {% if lesson.video_file %}
+                                <span class="role-badge student"><i class="bi bi-upload me-1"></i>{% trans "Upload" %}</span>
+                            {% elif lesson.video_url %}
+                                <span class="role-badge moderator"><i class="bi bi-link-45deg me-1"></i>{% trans "External" %}</span>
+                            {% else %}
+                                <span class="text-secondary">{% trans "Missing" %}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                <a href="{% url 'panel:lesson_edit' lesson.pk %}" class="action-btn" data-admin-modal-url="{% url 'panel:lesson_edit' lesson.pk %}" data-admin-modal-title="{% blocktrans with title=lesson|translated_title %}Edit {{ title }}{% endblocktrans %}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <button type="button" class="action-btn danger" data-delete-url="{% url 'panel:lesson_delete' lesson.pk %}" data-delete-label="{{ lesson|translated_title }}">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="admin-empty-state">
+                                <i class="bi bi-play-circle"></i>
+                                <h3>{% trans "No lessons found" %}</h3>
+                                <p>{% trans "Add your first lesson or change the course filter to explore more content." %}</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
 {% include 'partials/pagination.html' with page_obj=page_obj %}
 {% endblock %}

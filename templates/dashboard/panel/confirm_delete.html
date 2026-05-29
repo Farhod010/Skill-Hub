@@ -1,18 +1,21 @@
 {% extends 'dashboard/panel/base_panel.html' %}
 {% load i18n %}
 {% block panel_content %}
-<div class="panel-header">
-    <div>
-        <span class="eyebrow">{% trans "Confirm deletion" %}</span>
-        <h1>{{ page_title }}</h1>
+<section class="admin-card glass-panel p-4 p-xl-5">
+    <div class="d-flex align-items-start gap-3 mb-4">
+        <div class="admin-delete-icon">
+            <i class="bi bi-trash3"></i>
+        </div>
+        <div>
+            <span class="eyebrow mb-2">{% trans "Confirm deletion" %}</span>
+            <h1 class="admin-page-title h3 mb-2">{{ page_title }}</h1>
+            <p class="admin-page-copy mb-0">{% blocktrans with label=object_label %}Are you sure you want to delete <strong>{{ label }}</strong>?{% endblocktrans %}</p>
+        </div>
     </div>
-</div>
-<div class="content-card">
-    <p>{% blocktrans with label=object_label %}Are you sure you want to delete <strong>{{ label }}</strong>?{% endblocktrans %}</p>
-    <form method="post" class="inline-actions">
+    <form method="post" class="d-flex flex-wrap justify-content-end gap-2">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
-        <a href="{% url cancel_url %}" class="btn btn-ghost">{% trans "Cancel" %}</a>
+        <a href="{% url cancel_url %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+        <button type="submit" class="btn btn-danger rounded-pill px-4">{% trans "Delete" %}</button>
     </form>
-</div>
+</section>
 {% endblock %}

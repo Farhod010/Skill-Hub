@@ -1,68 +1,281 @@
 {% extends 'dashboard/panel/base_panel.html' %}
 {% load i18n %}
-{% block panel_content %}
-<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-            <div>
-                <span class="eyebrow mb-2">{% trans "User management" %}</span>
-                <h1 class="display-6 mb-0">{% trans "Users" %}</h1>
-            </div>
-            <a href="{% url 'panel:user_create' %}" class="btn gradient-btn text-white rounded-pill px-4">{% trans "Create user" %}</a>
-        </div>
-        <form method="get" class="row g-3">
-            <div class="col-md-9">
-                <div class="input-group">
-                    <span class="input-group-text icon-pill"><i class="bi bi-search"></i></span>
-                    <input type="text" name="q" class="form-control border-start-0" value="{{ search_query }}" placeholder="{% trans 'Search users' %}">
-                </div>
-            </div>
-            <div class="col-md-3 d-grid">
-                <button type="submit" class="btn btn-outline-secondary rounded-pill">{% trans "Search" %}</button>
-            </div>
-        </form>
-    </div>
-</div>
 
-<div class="table-responsive table-premium glass-card shadow-soft rounded-custom p-0">
-    <table class="table table-hover align-middle mb-0">
-        <thead>
-            <tr>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Email" %}</th>
-                <th>{% trans "Role" %}</th>
-                <th>{% trans "Status" %}</th>
-                <th class="text-end">{% trans "Actions" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in page_obj %}
+{% block panel_content %}
+<section class="admin-card glass-panel p-4 p-xl-5 mb-4">
+    <div class="row g-4 align-items-end">
+        <div class="col-lg-7">
+            <nav aria-label="{% trans 'Breadcrumb' %}" class="mb-3">
+                <ol class="breadcrumb admin-breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{% url 'panel:dashboard' %}">{% trans "Admin" %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'panel:user_list' %}">{% trans "User Management" %}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Users" %}</li>
+                </ol>
+            </nav>
+            <span class="eyebrow mb-2">{% trans "Control Center" %}</span>
+            <h1 class="admin-page-title mb-2">{% trans "Users Management" %}</h1>
+            <p class="admin-page-copy mb-0">{% trans "Manage students, instructors, moderators and admins from one polished workspace." %}</p>
+        </div>
+        <div class="col-lg-5">
+            <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                <button type="button" class="btn gradient-btn rounded-pill px-4 text-white" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                    <i class="bi bi-person-plus me-2"></i>{% trans "Create user" %}
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-export-table="#usersAdminTable" data-export-name="skillhub-users">
+                    <i class="bi bi-download me-2"></i>{% trans "Export" %}
+                </button>
+                <a href="{{ request.get_full_path }}" class="btn admin-icon-btn" aria-label="{% trans 'Refresh' %}">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon"><i class="bi bi-people"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.total }}">{{ stats.total }}</div>
+            <div class="stat-card-label">{% trans "Total users" %}</div>
+            <div class="stat-card-meta">{% trans "All platform accounts" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon success"><i class="bi bi-person-check"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.active }}">{{ stats.active }}</div>
+            <div class="stat-card-label">{% trans "Active users" %}</div>
+            <div class="stat-card-meta">{% trans "Ready to learn today" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon danger"><i class="bi bi-person-x"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.blocked }}">{{ stats.blocked }}</div>
+            <div class="stat-card-label">{% trans "Blocked users" %}</div>
+            <div class="stat-card-meta">{% trans "Need review or appeal" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon purple"><i class="bi bi-mortarboard"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.instructors }}">{{ stats.instructors }}</div>
+            <div class="stat-card-label">{% trans "Instructors" %}</div>
+            <div class="stat-card-meta">{% trans "Teaching creators" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon blue"><i class="bi bi-backpack2"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.students }}">{{ stats.students }}</div>
+            <div class="stat-card-label">{% trans "Students" %}</div>
+            <div class="stat-card-meta">{% trans "Enrolled learners" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon amber"><i class="bi bi-shield-check"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.moderators }}">{{ stats.moderators }}</div>
+            <div class="stat-card-label">{% trans "Moderators" %}</div>
+            <div class="stat-card-meta">{% trans "Operational oversight" %}</div>
+        </article>
+    </div>
+</section>
+
+<section class="admin-card glass-panel filter-card p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-lg-4">
+            <label for="user-search" class="form-label">{% trans "Search users" %}</label>
+            <div class="input-group input-group-premium">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input id="user-search" type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="{% trans 'Search by name, username, email or role' %}">
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="role-filter" class="form-label">{% trans "Role" %}</label>
+            <select id="role-filter" name="role" class="form-select">
+                <option value="">{% trans "All roles" %}</option>
+                {% for value, label in role_choices %}
+                    <option value="{{ value }}" {% if selected_role == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="status-filter" class="form-label">{% trans "Status" %}</label>
+            <select id="status-filter" name="status" class="form-select">
+                <option value="">{% trans "All statuses" %}</option>
+                <option value="active" {% if selected_status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                <option value="blocked" {% if selected_status == 'blocked' %}selected{% endif %}>{% trans "Blocked" %}</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="sort-filter" class="form-label">{% trans "Sort" %}</label>
+            <select id="sort-filter" name="sort" class="form-select">
+                <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>{% trans "Newest" %}</option>
+                <option value="oldest" {% if selected_sort == 'oldest' %}selected{% endif %}>{% trans "Oldest" %}</option>
+                <option value="name" {% if selected_sort == 'name' %}selected{% endif %}>{% trans "Name A-Z" %}</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn gradient-btn rounded-pill text-white">{% trans "Search" %}</button>
+                <a href="{% url 'panel:user_list' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Reset filters" %}</a>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="admin-card glass-panel p-0 overflow-hidden">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-4 py-3 border-bottom border-light-subtle">
+        <div>
+            <h2 class="h5 mb-1">{% trans "Users directory" %}</h2>
+            <p class="text-secondary small mb-0">{% trans "Review identities, access levels and activity without leaving the page." %}</p>
+        </div>
+        <span class="admin-table-count">{{ page_obj.paginator.count }} {% trans "users" %}</span>
+    </div>
+    <div class="table-responsive admin-table-wrap">
+        <table class="table table-hover align-middle mb-0 admin-table" id="usersAdminTable">
+            <thead>
                 <tr>
-                    <td>{{ user.full_name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td><span class="badge text-bg-light border rounded-pill px-3 py-2">{{ user.get_role_display }}</span></td>
-                    <td>
-                        <span class="badge rounded-pill {% if user.is_blocked %}bg-danger-subtle text-danger{% else %}bg-success-subtle text-success{% endif %} px-3 py-2">
-                            {% if user.is_blocked %}{% trans "Blocked" %}{% else %}{% trans "Active" %}{% endif %}
-                        </span>
-                    </td>
-                    <td class="text-end">
-                        <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
-                            <a href="{% url 'panel:user_edit' user.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "Edit" %}</a>
-                            <form method="post" action="{% url 'panel:user_toggle_block' user.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-secondary rounded-pill btn-sm">{% if user.is_blocked %}{% trans "Unblock" %}{% else %}{% trans "Block" %}{% endif %}</button>
-                            </form>
-                            <a href="{% url 'panel:user_delete' user.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">{% trans "Delete" %}</a>
-                        </div>
-                    </td>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Email" %}</th>
+                    <th>{% trans "Role" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Joined date" %}</th>
+                    <th>{% trans "Last login" %}</th>
+                    <th class="text-end">{% trans "Actions" %}</th>
                 </tr>
-            {% empty %}
-                <tr><td colspan="5">{% trans "No users found." %}</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% for user_obj in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="admin-identity">
+                                <span class="admin-avatar lg">
+                                    {% if user_obj.avatar %}
+                                        <img src="{{ user_obj.avatar.url }}" alt="{{ user_obj.full_name }}">
+                                    {% else %}
+                                        {{ user_obj.full_name|default:user_obj.username|first|upper }}
+                                    {% endif %}
+                                </span>
+                                <div>
+                                    <div class="fw-semibold text-light">{{ user_obj.full_name }}</div>
+                                    <div class="small text-secondary">@{{ user_obj.username }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ user_obj.email }}</td>
+                        <td>
+                            <span class="role-badge {{ user_obj.role }}">
+                                {{ user_obj.get_role_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge {% if user_obj.is_blocked %}blocked{% elif user_obj.is_active %}active{% else %}pending{% endif %}">
+                                {% if user_obj.is_blocked %}
+                                    {% trans "Blocked" %}
+                                {% elif user_obj.is_active %}
+                                    {% trans "Active" %}
+                                {% else %}
+                                    {% trans "Pending" %}
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>{{ user_obj.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            {% if user_obj.last_login %}
+                                {{ user_obj.last_login|date:"M d, Y H:i" }}
+                            {% else %}
+                                <span class="text-secondary">{% trans "Never" %}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                <a href="{% url 'panel:user_edit' user_obj.pk %}" class="action-btn" data-admin-modal-url="{% url 'panel:user_edit' user_obj.pk %}" data-admin-modal-title="{% blocktrans with name=user_obj.full_name %}View {{ name }}{% endblocktrans %}">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'panel:user_edit' user_obj.pk %}" class="action-btn" data-admin-modal-url="{% url 'panel:user_edit' user_obj.pk %}" data-admin-modal-title="{% blocktrans with name=user_obj.full_name %}Edit {{ name }}{% endblocktrans %}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form method="post" action="{% url 'panel:user_toggle_block' user_obj.pk %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn {% if user_obj.is_blocked %}success{% else %}warning{% endif %}">
+                                        <i class="bi {% if user_obj.is_blocked %}bi-unlock{% else %}bi-slash-circle{% endif %}"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="action-btn danger" data-delete-url="{% url 'panel:user_delete' user_obj.pk %}" data-delete-label="{{ user_obj.email }}">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="admin-empty-state">
+                                <i class="bi bi-people"></i>
+                                <h3>{% trans "No users found" %}</h3>
+                                <p>{% trans "Try adjusting the search or filters to find the right account." %}</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 
 {% include 'partials/pagination.html' with page_obj=page_obj %}
+
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content modal-glass">
+            <div class="modal-header border-bottom border-light-subtle">
+                <div>
+                    <span class="eyebrow d-block mb-1">{% trans "New account" %}</span>
+                    <h2 class="modal-title h4 mb-0" id="createUserModalLabel">{% trans "Create user" %}</h2>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'panel:user_create' %}" enctype="multipart/form-data" class="row g-3 admin-modal-form">
+                    {% csrf_token %}
+                    {% for field in create_form %}
+                        <div class="{% if field.name == 'bio' %}col-12{% elif field.field.widget.input_type == 'checkbox' %}col-sm-6 col-lg-4{% else %}col-md-6{% endif %}">
+                            {% if field.field.widget.input_type == 'checkbox' %}
+                                <div class="form-check form-switch admin-check">
+                                    {{ field }}
+                                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                </div>
+                            {% else %}
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {% if field.name == 'password1' or field.name == 'password2' %}
+                                    <div class="input-group input-group-premium">
+                                        {{ field }}
+                                        <button class="btn btn-outline-secondary" type="button" data-password-toggle data-password-target="{{ field.id_for_label }}">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <div class="form-text text-secondary">{{ field.help_text|safe }}</div>
+                                {% endif %}
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn gradient-btn rounded-pill px-4 text-white">{% trans "Create user" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
