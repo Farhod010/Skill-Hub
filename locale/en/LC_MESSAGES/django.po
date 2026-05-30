@@ -68,3 +68,411 @@ msgstr "Your email"
 
 msgid "Obuna"
 msgstr "Subscribe"
+
+msgid 'All courses'
+msgstr 'All courses'
+
+msgid 'Upload'
+msgstr 'Upload'
+
+msgid 'No lessons found'
+msgstr 'No lessons found'
+
+msgid 'Teaching creators'
+msgstr 'Teaching creators'
+
+msgid 'Lesson Management'
+msgstr 'Lesson Management'
+
+msgid 'Lesson title'
+msgstr 'Lesson title'
+
+msgid 'Monitor your platform with confidence.'
+msgstr 'Monitor your platform with confidence.'
+
+msgid 'Revenue'
+msgstr 'Revenue'
+
+msgid 'Joined date'
+msgstr 'Joined date'
+
+msgid 'Locked'
+msgstr 'Locked'
+
+msgid 'No users found'
+msgstr 'No users found'
+
+msgid 'Structured learning units'
+msgstr 'Structured learning units'
+
+msgid 'Hosted on platform'
+msgstr 'Hosted on platform'
+
+msgid 'Manage curriculum order, preview access and uploaded video inventory across your platform.'
+msgstr 'Manage curriculum order, preview access and uploaded video inventory across your platform.'
+
+msgid 'Latest signups'
+msgstr 'Latest signups'
+
+msgid 'External'
+msgstr 'External'
+
+msgid 'Missing'
+msgstr 'Missing'
+
+msgid 'Review publishing, lessons, pricing and instructor ownership across every course.'
+msgstr 'Review publishing, lessons, pricing and instructor ownership across every course.'
+
+msgid 'Next'
+msgstr 'Next'
+
+msgid 'Needs revision'
+msgstr 'Needs revision'
+
+msgid 'Try adjusting the search or filters to find the right account.'
+msgstr 'Try adjusting the search or filters to find the right account.'
+
+msgid 'Lesson library'
+msgstr 'Lesson library'
+
+msgid 'Save user'
+msgstr 'Save user'
+
+msgid 'Video'
+msgstr 'Video'
+
+msgid 'Waiting for review'
+msgstr 'Waiting for review'
+
+msgid 'Course Management'
+msgstr 'Course Management'
+
+msgid 'All categories'
+msgstr 'All categories'
+
+msgid 'Price'
+msgstr 'Price'
+
+msgid 'Video Lessons'
+msgstr 'Video Lessons'
+
+msgid 'Instructors'
+msgstr 'Instructors'
+
+msgid 'Instructor'
+msgstr 'Instructor'
+
+msgid 'Review identities, access levels and activity without leaving the page.'
+msgstr 'Review identities, access levels and activity without leaving the page.'
+
+msgid 'Need review or appeal'
+msgstr 'Need review or appeal'
+
+msgid 'Users directory'
+msgstr 'Users directory'
+
+msgid 'Open payments'
+msgstr 'Open payments'
+
+msgid 'Preview'
+msgstr 'Preview'
+
+msgid 'Monitor users, courses, lessons, payments and approvals from one place.'
+msgstr 'Monitor users, courses, lessons, payments and approvals from one place.'
+
+msgid 'Transactions'
+msgstr 'Transactions'
+
+msgid 'Top courses'
+msgstr 'Top courses'
+
+msgid 'Top students'
+msgstr 'Top students'
+
+msgid 'Transaction records'
+msgstr 'Transaction records'
+
+msgid 'Keep curriculum order and preview visibility clean as the catalog grows.'
+msgstr 'Keep curriculum order and preview visibility clean as the catalog grows.'
+
+msgid 'Active users'
+msgstr 'Active users'
+
+msgid 'Update roles, block accounts and monitor access.'
+msgstr 'Update roles, block accounts and monitor access.'
+
+msgid 'Review courses'
+msgstr 'Review courses'
+
+msgid 'No payments yet.'
+msgstr 'No payments yet.'
+
+msgid 'Preview lessons'
+msgstr 'Preview lessons'
+
+msgid 'Approve pending content and feature top classes.'
+msgstr 'Approve pending content and feature top classes.'
+
+msgid 'Name A-Z'
+msgstr 'Name A-Z'
+
+msgid 'Watch revenue and payment status in real time.'
+msgstr 'Watch revenue and payment status in real time.'
+
+msgid 'Adjust branding, messaging and platform defaults.'
+msgstr 'Adjust branding, messaging and platform defaults.'
+
+msgid 'Enrolled learners'
+msgstr 'Enrolled learners'
+
+msgid 'min'
+msgstr 'min'
+
+msgid 'Operational oversight'
+msgstr 'Operational oversight'
+
+msgid 'New account'
+msgstr 'New account'
+
+msgid 'Moderators'
+msgstr 'Moderators'
+
+msgid 'Manage users'
+msgstr 'Manage users'
+
+msgid 'Panel action'
+msgstr 'Panel action'
+
+msgid 'External videos'
+msgstr 'External videos'
+
+msgid 'Previous'
+msgstr 'Previous'
+
+msgid 'Duration'
+msgstr 'Duration'
+
+msgid 'Ready to scale'
+msgstr 'Ready to scale'
+
+msgid 'lessons'
+msgstr 'lessons'
+
+msgid 'Awaiting approval'
+msgstr 'Awaiting approval'
+
+msgid 'All catalog entries'
+msgstr 'All catalog entries'
+
+msgid 'Launchpad'
+msgstr 'Launchpad'
+
+msgid 'Search by name, username, email or role'
+msgstr 'Search by name, username, email or role'
+
+msgid 'This action cannot be undone.'
+msgstr 'This action cannot be undone.'
+
+msgid 'Theme'
+msgstr 'Theme'
+
+msgid 'students'
+msgstr 'students'
+
+msgid 'No courses found'
+msgstr 'No courses found'
+
+msgid 'Admin Panel'
+msgstr 'Admin Panel'
+
+msgid 'Are you sure you want to remove this record?'
+msgstr 'Are you sure you want to remove this record?'
+
+msgid 'Oldest'
+msgstr 'Oldest'
+
+msgid 'Reset filters'
+msgstr 'Reset filters'
+
+msgid 'Order'
+msgstr 'Order'
+
+msgid 'Course inventory'
+msgstr 'Course inventory'
+
+msgid 'Visible in catalog'
+msgstr 'Visible in catalog'
+
+msgid 'Open to visitors'
+msgstr 'Open to visitors'
+
+msgid 'About'
+msgstr 'About'
+
+msgid 'Control the course story, pricing, publishing state and learning metadata.'
+msgstr 'Control the course story, pricing, publishing state and learning metadata.'
+
+msgid 'User Management'
+msgstr 'User Management'
+
+msgid 'users'
+msgstr 'users'
+
+msgid 'Manage item'
+msgstr 'Manage item'
+
+msgid 'Home'
+msgstr 'Home'
+
+msgid 'Save lesson'
+msgstr 'Save lesson'
+
+msgid 'Joined'
+msgstr 'Joined'
+
+msgid 'Latest'
+msgstr 'Latest'
+
+msgid 'Attach a lesson to the right course, define order and choose whether it works as preview content.'
+msgstr 'Attach a lesson to the right course, define order and choose whether it works as preview content.'
+
+msgid 'Moderation'
+msgstr 'Moderation'
+
+msgid 'Last login'
+msgstr 'Last login'
+
+msgid 'Boosted for discovery'
+msgstr 'Boosted for discovery'
+
+msgid 'Monitor payments'
+msgstr 'Monitor payments'
+
+msgid 'Control Center'
+msgstr 'Control Center'
+
+msgid 'No section'
+msgstr 'No section'
+
+msgid 'Open site'
+msgstr 'Open site'
+
+msgid 'courses'
+msgstr 'courses'
+
+msgid 'SkillHub admin control center'
+msgstr 'SkillHub admin control center'
+
+msgid 'Top content'
+msgstr 'Top content'
+
+msgid 'Users Management'
+msgstr 'Users Management'
+
+msgid 'Delete item'
+msgstr 'Delete item'
+
+msgid 'Quick actions'
+msgstr 'Quick actions'
+
+msgid 'Completed payment volume'
+msgstr 'Completed payment volume'
+
+msgid 'User'
+msgstr 'User'
+
+msgid 'Update access, profile and administrative status from one clean form.'
+msgstr 'Update access, profile and administrative status from one clean form.'
+
+msgid 'Update settings'
+msgstr 'Update settings'
+
+msgid 'Open reviews'
+msgstr 'Open reviews'
+
+msgid 'Uploads'
+msgstr 'Uploads'
+
+msgid 'Embed or streaming links'
+msgstr 'Embed or streaming links'
+
+msgid 'Sort'
+msgstr 'Sort'
+
+msgid 'Blocked users'
+msgstr 'Blocked users'
+
+msgid 'Courses Control'
+msgstr 'Courses Control'
+
+msgid 'Newest'
+msgstr 'Newest'
+
+msgid 'Never'
+msgstr 'Never'
+
+msgid 'Balance publication, enrichment and lesson production from a single view.'
+msgstr 'Balance publication, enrichment and lesson production from a single view.'
+
+msgid 'Ready to learn today'
+msgstr 'Ready to learn today'
+
+msgid 'Track growth, approvals, payment flow and content activity from one premium LMS command center.'
+msgstr 'Track growth, approvals, payment flow and content activity from one premium LMS command center.'
+
+msgid 'Confirm deletion'
+msgstr 'Confirm deletion'
+
+msgid 'Manage students, instructors, moderators and admins from one polished workspace.'
+msgstr 'Manage students, instructors, moderators and admins from one polished workspace.'
+
+msgid 'Open users'
+msgstr 'Open users'
+
+msgid 'Open courses'
+msgstr 'Open courses'
+
+msgid 'Create a new course or adjust your filters to see matching content.'
+msgstr 'Create a new course or adjust your filters to see matching content.'
+
+msgid 'Course order'
+msgstr 'Course order'
+
+msgid 'Admin'
+msgstr 'Admin'
+
+msgid 'Save course'
+msgstr 'Save course'
+
+msgid 'All learning products'
+msgstr 'All learning products'
+
+msgid 'Platform Control'
+msgstr 'Platform Control'
+
+msgid 'All active accounts'
+msgstr 'All active accounts'
+
+msgid 'Recent payments'
+msgstr 'Recent payments'
+
+msgid 'Amount'
+msgstr 'Amount'
+
+msgid 'Content'
+msgstr 'Content'
+
+msgid 'Export'
+msgstr 'Export'
+
+msgid 'Pending courses'
+msgstr 'Pending courses'
+
+msgid 'All platform accounts'
+msgstr 'All platform accounts'
+
+msgid 'All roles'
+msgstr 'All roles'
+
+msgid 'Add your first lesson or change the course filter to explore more content.'
+msgstr 'Add your first lesson or change the course filter to explore more content.'

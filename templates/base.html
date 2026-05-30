@@ -1,5 +1,8 @@
-{% load static i18n %}
+{% load static i18n i18n_extras %}
 {% get_current_language as CURRENT_LANGUAGE %}
+{% switch_i18n_url 'uz' as switch_url_uz %}
+{% switch_i18n_url 'ru' as switch_url_ru %}
+{% switch_i18n_url 'en' as switch_url_en %}
 <!DOCTYPE html>
 <html lang="{{ CURRENT_LANGUAGE|default:'uz' }}" data-bs-theme="light">
 <head>
@@ -76,7 +79,7 @@
                                     <form action="{% url 'set_language' %}" method="post" class="m-0">
                                         {% csrf_token %}
                                         <input type="hidden" name="language" value="uz">
-                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <input type="hidden" name="next" value="{{ switch_url_uz|default:'/' }}">
                                         <button type="submit" class="dropdown-item d-flex justify-content-between align-items-center {% if CURRENT_LANGUAGE == 'uz' %}active{% endif %}">
                                             <span>UZ</span>
                                             <span>{% trans "O'zbekcha" %}</span>
@@ -87,10 +90,10 @@
                                     <form action="{% url 'set_language' %}" method="post" class="m-0">
                                         {% csrf_token %}
                                         <input type="hidden" name="language" value="ru">
-                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <input type="hidden" name="next" value="{{ switch_url_ru|default:'/' }}">
                                         <button type="submit" class="dropdown-item d-flex justify-content-between align-items-center {% if CURRENT_LANGUAGE == 'ru' %}active{% endif %}">
                                             <span>RU</span>
-                                            <span>???????</span>
+                                            <span>Русский</span>
                                         </button>
                                     </form>
                                 </li>
@@ -98,7 +101,7 @@
                                     <form action="{% url 'set_language' %}" method="post" class="m-0">
                                         {% csrf_token %}
                                         <input type="hidden" name="language" value="en">
-                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <input type="hidden" name="next" value="{{ switch_url_en|default:'/' }}">
                                         <button type="submit" class="dropdown-item d-flex justify-content-between align-items-center {% if CURRENT_LANGUAGE == 'en' %}active{% endif %}">
                                             <span>EN</span>
                                             <span>English</span>

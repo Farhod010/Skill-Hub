@@ -641,3 +641,384 @@ msgstr "Sharh muvaffaqiyatli o'chirildi."
 
 msgid "Site settings updated successfully."
 msgstr "Sayt sozlamalari muvaffaqiyatli yangilandi."
+
+msgid 'Platform Control'
+msgstr 'Platforma boshqaruvi'
+
+msgid 'About'
+msgstr 'Biz haqimizda'
+
+msgid 'Theme'
+msgstr 'Tema'
+
+msgid 'Open site'
+msgstr 'Saytni ochish'
+
+msgid 'Admin Panel'
+msgstr 'Admin panel'
+
+msgid 'Monitor users, courses, lessons, payments and approvals from one place.'
+msgstr "Foydalanuvchilar, kurslar, darslar, to'lovlar va tasdiqlarni bir joydan boshqaring."
+
+msgid 'Panel action'
+msgstr 'Panel amali'
+
+msgid 'Manage item'
+msgstr 'Elementni boshqarish'
+
+msgid 'Delete item'
+msgstr "Elementni o'chirish"
+
+msgid 'Are you sure you want to remove this record?'
+msgstr "Rostdan ham bu yozuvni o'chirmoqchimisiz?"
+
+msgid 'This action cannot be undone.'
+msgstr "Bu amalni ortga qaytarib bo'lmaydi."
+
+msgid 'SkillHub admin control center'
+msgstr 'SkillHub admin boshqaruv markazi'
+
+msgid 'Monitor your platform with confidence.'
+msgstr 'Platformangizni ishonch bilan boshqaring.'
+
+msgid 'Track growth, approvals, payment flow and content activity from one premium LMS command center.'
+msgstr "O'sish, tasdiqlar, to'lov oqimi va kontent faolligini bitta premium LMS boshqaruv markazidan kuzating."
+
+msgid 'Manage users'
+msgstr 'Foydalanuvchilarni boshqarish'
+
+msgid 'Revenue'
+msgstr 'Daromad'
+
+msgid 'Completed payment volume'
+msgstr "Yakunlangan to'lovlar hajmi"
+
+msgid 'All active accounts'
+msgstr 'Barcha faol akkauntlar'
+
+msgid 'All catalog entries'
+msgstr 'Katalogdagi barcha kurslar'
+
+msgid 'Transaction records'
+msgstr 'Tranzaksiya yozuvlari'
+
+msgid 'Pending courses'
+msgstr 'Kutilayotgan kurslar'
+
+msgid 'Waiting for review'
+msgstr "Ko'rib chiqishni kutmoqda"
+
+msgid 'Structured learning units'
+msgstr "Tuzilgan o'quv birliklari"
+
+msgid 'Quick actions'
+msgstr 'Tezkor amallar'
+
+msgid 'Launchpad'
+msgstr 'Tezkor markaz'
+
+msgid 'Update roles, block accounts and monitor access.'
+msgstr 'Rollarni yangilang, akkauntlarni bloklang va kirishni nazorat qiling.'
+
+msgid 'Review courses'
+msgstr "Kurslarni ko'rib chiqing"
+
+msgid 'Approve pending content and feature top classes.'
+msgstr 'Kutilayotgan kontentni tasdiqlang va eng yaxshi kurslarni ajrating.'
+
+msgid 'Monitor payments'
+msgstr "To'lovlarni kuzatish"
+
+msgid 'Watch revenue and payment status in real time.'
+msgstr "Daromad va to'lov holatini real vaqtda kuzating."
+
+msgid 'Update settings'
+msgstr 'Sozlamalarni yangilash'
+
+msgid 'Adjust branding, messaging and platform defaults.'
+msgstr 'Brending, matnlar va platforma sozlamalarini moslang.'
+
+msgid 'Latest signups'
+msgstr "So'nggi ro'yxatdan o'tganlar"
+
+msgid 'Open users'
+msgstr 'Foydalanuvchilarni ochish'
+
+msgid 'Joined'
+msgstr "Qo'shilgan sana"
+
+msgid 'Transactions'
+msgstr 'Tranzaksiyalar'
+
+msgid 'Recent payments'
+msgstr "So'nggi to'lovlar"
+
+msgid 'Open payments'
+msgstr "To'lovlarni ochish"
+
+msgid 'No payments yet.'
+msgstr "Hali to'lovlar yo'q."
+
+msgid 'Top content'
+msgstr 'Top kontent'
+
+msgid 'Top courses'
+msgstr 'Top kurslar'
+
+msgid 'Open courses'
+msgstr 'Kurslarni ochish'
+
+msgid 'students'
+msgstr "o'quvchi"
+
+msgid 'lessons'
+msgstr 'dars'
+
+msgid 'Moderation'
+msgstr 'Moderatsiya'
+
+msgid 'Open reviews'
+msgstr 'Sharhlarni ochish'
+
+msgid 'Admin'
+msgstr 'Admin'
+
+msgid 'User Management'
+msgstr 'Foydalanuvchilar boshqaruvi'
+
+msgid 'Control Center'
+msgstr 'Boshqaruv markazi'
+
+msgid 'Users Management'
+msgstr 'Foydalanuvchilar boshqaruvi'
+
+msgid 'Manage students, instructors, moderators and admins from one polished workspace.'
+msgstr "O'quvchilar, o'qituvchilar, moderatorlar va adminlarni bitta qulay oynadan boshqaring."
+
+msgid 'Export'
+msgstr 'Eksport'
+
+msgid 'All platform accounts'
+msgstr 'Platformadagi barcha akkauntlar'
+
+msgid 'Active users'
+msgstr 'Faol foydalanuvchilar'
+
+msgid 'Ready to learn today'
+msgstr "Bugun o'qishga tayyor"
+
+msgid 'Blocked users'
+msgstr 'Bloklangan foydalanuvchilar'
+
+msgid 'Need review or appeal'
+msgstr "Ko'rib chiqish yoki murojaat kerak"
+
+msgid 'Instructors'
+msgstr "O'qituvchilar"
+
+msgid 'Teaching creators'
+msgstr "Ta'lim yaratuvchilari"
+
+msgid 'Enrolled learners'
+msgstr "Yozilgan o'quvchilar"
+
+msgid 'Moderators'
+msgstr 'Moderatorlar'
+
+msgid 'Operational oversight'
+msgstr 'Operatsion nazorat'
+
+msgid 'Search by name, username, email or role'
+msgstr "Ism, username, email yoki rol bo'yicha qidiring"
+
+msgid 'All roles'
+msgstr 'Barcha rollar'
+
+msgid 'Sort'
+msgstr 'Saralash'
+
+msgid 'Newest'
+msgstr 'Eng yangi'
+
+msgid 'Oldest'
+msgstr 'Eng eski'
+
+msgid 'Name A-Z'
+msgstr 'Nom A-Z'
+
+msgid 'Reset filters'
+msgstr 'Filterni tozalash'
+
+msgid 'Users directory'
+msgstr "Foydalanuvchilar ro'yxati"
+
+msgid 'Review identities, access levels and activity without leaving the page.'
+msgstr "Sahifani tark etmasdan foydalanuvchi ma'lumotlari, kirish darajalari va faolligini ko'ring."
+
+msgid 'users'
+msgstr 'foydalanuvchi'
+
+msgid 'Joined date'
+msgstr "Qo'shilgan sana"
+
+msgid 'Last login'
+msgstr 'Oxirgi kirish'
+
+msgid 'Never'
+msgstr 'Hech qachon'
+
+msgid 'No users found'
+msgstr 'Foydalanuvchilar topilmadi'
+
+msgid 'Try adjusting the search or filters to find the right account.'
+msgstr "Kerakli akkauntni topish uchun qidiruv yoki filterni o'zgartirib ko'ring."
+
+msgid 'New account'
+msgstr 'Yangi akkaunt'
+
+msgid 'Content'
+msgstr 'Kontent'
+
+msgid 'Course Management'
+msgstr 'Kurs boshqaruvi'
+
+msgid 'Courses Control'
+msgstr 'Kurslar boshqaruvi'
+
+msgid 'Review publishing, lessons, pricing and instructor ownership across every course.'
+msgstr "Har bir kurs bo'yicha nashr, darslar, narx va o'qituvchi egaligini boshqaring."
+
+msgid 'All learning products'
+msgstr "Barcha o'quv mahsulotlari"
+
+msgid 'Visible in catalog'
+msgstr "Katalogda ko'rinadi"
+
+msgid 'Awaiting approval'
+msgstr 'Tasdiqni kutmoqda'
+
+msgid 'Boosted for discovery'
+msgstr "Ajratib ko'rsatilgan"
+
+msgid 'Ready to scale'
+msgstr 'Masshtabga tayyor'
+
+msgid 'Needs revision'
+msgstr 'Tuzatish talab qilinadi'
+
+msgid 'All categories'
+msgstr 'Barcha kategoriyalar'
+
+msgid 'Top students'
+msgstr "Top o'quvchilar"
+
+msgid 'Course inventory'
+msgstr 'Kurslar inventari'
+
+msgid 'Balance publication, enrichment and lesson production from a single view.'
+msgstr 'Nashr, boyitish va dars ishlab chiqishni bitta oynadan boshqaring.'
+
+msgid 'courses'
+msgstr 'kurs'
+
+msgid 'No courses found'
+msgstr 'Kurslar topilmadi'
+
+msgid 'Create a new course or adjust your filters to see matching content.'
+msgstr "Yangi kurs yarating yoki mos natijalarni ko'rish uchun filterni o'zgartiring."
+
+msgid 'Lesson Management'
+msgstr 'Dars boshqaruvi'
+
+msgid 'Video Lessons'
+msgstr 'Video darslar'
+
+msgid 'Manage curriculum order, preview access and uploaded video inventory across your platform.'
+msgstr "Darslar tartibi, preview kirishi va yuklangan videolarni butun platforma bo'ylab boshqaring."
+
+msgid 'Open to visitors'
+msgstr 'Mehmonlarga ochiq'
+
+msgid 'Uploads'
+msgstr 'Yuklanganlar'
+
+msgid 'Hosted on platform'
+msgstr 'Platformada saqlanadi'
+
+msgid 'External videos'
+msgstr 'Tashqi videolar'
+
+msgid 'Embed or streaming links'
+msgstr 'Embed yoki stream linklari'
+
+msgid 'All courses'
+msgstr 'Barcha kurslar'
+
+msgid 'Course order'
+msgstr 'Kurs tartibi'
+
+msgid 'Latest'
+msgstr "So'nggi"
+
+msgid 'Lesson library'
+msgstr 'Darslar kutubxonasi'
+
+msgid 'Keep curriculum order and preview visibility clean as the catalog grows.'
+msgstr "Katalog kengaygan sari dars tartibi va preview ko'rinishini toza saqlang."
+
+msgid 'Lesson title'
+msgstr 'Dars nomi'
+
+msgid 'Order'
+msgstr 'Tartib'
+
+msgid 'Duration'
+msgstr 'Davomiyligi'
+
+msgid 'Video'
+msgstr 'Video'
+
+msgid 'No section'
+msgstr "Bo'limsiz"
+
+msgid 'min'
+msgstr 'daq'
+
+msgid 'Upload'
+msgstr 'Yuklangan'
+
+msgid 'External'
+msgstr 'Tashqi'
+
+msgid 'Missing'
+msgstr 'Mavjud emas'
+
+msgid 'No lessons found'
+msgstr 'Darslar topilmadi'
+
+msgid 'Add your first lesson or change the course filter to explore more content.'
+msgstr "Birinchi darsni qo'shing yoki ko'proq kontentni ko'rish uchun kurs filtrini o'zgartiring."
+
+msgid 'Update access, profile and administrative status from one clean form.'
+msgstr 'Kirish, profil va admin holatini bitta toza forma orqali yangilang.'
+
+msgid 'Save user'
+msgstr 'Foydalanuvchini saqlash'
+
+msgid 'Control the course story, pricing, publishing state and learning metadata.'
+msgstr "Kurs tavsifi, narxi, nashr holati va o'quv metadata boshqaring."
+
+msgid 'Save course'
+msgstr 'Kursni saqlash'
+
+msgid 'Attach a lesson to the right course, define order and choose whether it works as preview content.'
+msgstr "Darsni kerakli kursga ulang, tartibini belgilang va preview bo'lishini tanlang."
+
+msgid 'Save lesson'
+msgstr 'Darsni saqlash'
+
+msgid 'Previous'
+msgstr 'Oldingi'
+
+msgid 'Next'
+msgstr 'Keyingi'

@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n i18n_extras %}
 {% get_current_language as CURRENT_LANGUAGE %}
+{% switch_i18n_url 'uz' as switch_url_uz %}
+{% switch_i18n_url 'ru' as switch_url_ru %}
+{% switch_i18n_url 'en' as switch_url_en %}
 
 {% block body_class %}bg-body-tertiary admin-body{% endblock %}
 
@@ -56,24 +59,24 @@
                         <form action="{% url 'set_language' %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="language" value="uz">
-                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'uz' %}active{% endif %}">UZ</button>
+                            <input type="hidden" name="next" value="{{ switch_url_uz|default:'/' }}">
+                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'uz' %}active{% endif %}">UZ · O'zbekcha</button>
                         </form>
                     </li>
                     <li>
                         <form action="{% url 'set_language' %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="language" value="ru">
-                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'ru' %}active{% endif %}">RU</button>
+                            <input type="hidden" name="next" value="{{ switch_url_ru|default:'/' }}">
+                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'ru' %}active{% endif %}">RU · Русский</button>
                         </form>
                     </li>
                     <li>
                         <form action="{% url 'set_language' %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="language" value="en">
-                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'en' %}active{% endif %}">EN</button>
+                            <input type="hidden" name="next" value="{{ switch_url_en|default:'/' }}">
+                            <button type="submit" class="dropdown-item {% if CURRENT_LANGUAGE == 'en' %}active{% endif %}">EN · English</button>
                         </form>
                     </li>
                 </ul>
