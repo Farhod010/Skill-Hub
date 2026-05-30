@@ -1,0 +1,49 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n %}
+
+{% block panel_content %}
+<section class="admin-card glass-panel p-4 p-xl-5">
+    <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <span class="eyebrow mb-2">{% trans "Teacher management" %}</span>
+            <h1 class="admin-page-title h3 mb-2">{{ page_title }}</h1>
+            <p class="admin-page-copy mb-0">{% trans "Create or update an instructor account together with the profile details shown on the platform." %}</p>
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="row g-3">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="{% if field.name == 'bio' or field.name == 'social_links' %}col-12{% elif field.field.widget.input_type == 'checkbox' %}col-sm-6 col-lg-4{% else %}col-md-6{% endif %}">
+                {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="form-check form-switch admin-check">
+                        {{ field }}
+                        <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                {% else %}
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {% if field.name == 'password1' or field.name == 'password2' %}
+                        <div class="input-group input-group-premium">
+                            {{ field }}
+                            <button class="btn btn-outline-secondary" type="button" data-password-toggle data-password-target="{{ field.id_for_label }}">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% if field.help_text %}
+                        <div class="form-text text-secondary">{{ field.help_text|safe }}</div>
+                    {% endif %}
+                {% endif %}
+                {% if field.errors %}
+                    <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+            <a href="{% url 'panel:teacher_list' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+            <button type="submit" class="btn gradient-btn rounded-pill px-4 text-white">{% trans "Save teacher" %}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

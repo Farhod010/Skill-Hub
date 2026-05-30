@@ -4,14 +4,17 @@
 {% block teacher_main %}
 <section class="card border-0 glass-card shadow-soft rounded-custom">
     <div class="card-body p-4 p-xl-5">
-        <div class="mb-4">
-            <span class="eyebrow mb-2">{% trans "Teacher workspace" %}</span>
-            <h1 class="h2 mb-2">{{ page_title }}</h1>
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <span class="eyebrow mb-2">{% trans "Course builder" %}</span>
+                <h1 class="h2 mb-2">{{ page_title }}</h1>
+                <p class="text-secondary mb-0">{% trans "New teacher courses are saved as pending and stay hidden until an admin approves them." %}</p>
+            </div>
         </div>
         <form method="post" enctype="multipart/form-data" class="row g-3">
             {% csrf_token %}
             {% for field in form %}
-                <div class="{% if 'description' in field.name or field.name == 'video_url' %}col-12{% elif field.field.widget.input_type == 'checkbox' %}col-sm-6{% else %}col-md-6{% endif %}">
+                <div class="{% if 'description' in field.name or field.name == 'thumbnail' or field.name == 'preview_video' %}col-12{% elif field.field.widget.input_type == 'checkbox' %}col-sm-6{% else %}col-md-6{% endif %}">
                     {% if field.field.widget.input_type == 'checkbox' %}
                         <div class="form-check form-switch">
                             {{ field }}
@@ -30,7 +33,7 @@
                 </div>
             {% endfor %}
             <div class="col-12 d-flex justify-content-end gap-2 pt-2">
-                <a href="{% url 'dashboard:teacher_dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+                <a href="{% url 'dashboard:teacher_course_list' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
                 <button type="submit" class="btn gradient-btn rounded-pill px-4 text-white">{{ submit_label }}</button>
             </div>
         </form>

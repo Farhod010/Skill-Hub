@@ -1,0 +1,37 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load i18n course_extras %}
+
+{% block teacher_main %}
+{% trans "Student review" as fallback_review_title %}
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 p-lg-5">
+        <span class="eyebrow mb-2">{% trans "Reviews" %}</span>
+        <h1 class="h2 mb-2">{% trans "Course feedback" %}</h1>
+        <p class="text-secondary mb-0">{% trans "Read student ratings and comments for the courses you teach." %}</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for review in page_obj %}
+        <div class="col-lg-6">
+            <article class="card border-0 glass-card shadow-soft rounded-custom review-card h-100">
+                <div class="card-body p-4">
+                    <div class="review-card-header mb-3">
+                        <span class="badge bg-warning-subtle text-warning rounded-pill px-3 py-2">{{ review.rating }}/5</span>
+                        <span class="text-secondary small">{{ review.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <h2 class="h5 mb-1">{{ review.title|default:fallback_review_title }}</h2>
+                    <p class="text-secondary small mb-3">{{ review.course|translated_title }} · {{ review.student.full_name }}</p>
+                    <p class="mb-0">{{ review.comment }}</p>
+                </div>
+            </article>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Reviews will appear here after students rate your courses." %}</div>
+        </div>
+    {% endfor %}
+</div>
+
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

@@ -78,6 +78,7 @@ class CourseForm(StyledModelForm):
             "category",
             "instructor",
             "thumbnail",
+            "preview_video",
             "short_description",
             "short_description_uz",
             "short_description_ru",
@@ -87,10 +88,12 @@ class CourseForm(StyledModelForm):
             "description_ru",
             "description_en",
             "price",
+            "discount_price",
             "discount_percent",
             "level",
             "language",
             "status",
+            "moderation_notes",
             "is_published",
             "is_featured",
             "certificate_enabled",
@@ -114,6 +117,7 @@ class CourseForm(StyledModelForm):
             "category": _("Category"),
             "instructor": _("Instructor"),
             "thumbnail": _("Thumbnail"),
+            "preview_video": _("Preview video"),
             "short_description": _("Default short description"),
             "short_description_uz": _("Short description (Uzbek)"),
             "short_description_ru": _("Short description (Russian)"),
@@ -123,10 +127,12 @@ class CourseForm(StyledModelForm):
             "description_ru": _("Full description (Russian)"),
             "description_en": _("Full description (English)"),
             "price": _("Price"),
+            "discount_price": _("Discount price"),
             "discount_percent": _("Discount percent"),
             "level": _("Level"),
             "language": _("Language"),
             "status": _("Status"),
+            "moderation_notes": _("Moderation notes"),
             "is_published": _("Published"),
             "is_featured": _("Featured"),
             "certificate_enabled": _("Certificate enabled"),
@@ -138,6 +144,64 @@ class CourseForm(StyledModelForm):
             raise ValidationError(_("Only instructors or admins can be assigned to a course."))
         return instructor
 
+
+class TeacherCourseForm(StyledModelForm):
+    class Meta:
+        model = Course
+        fields = (
+            "title",
+            "title_uz",
+            "title_ru",
+            "title_en",
+            "category",
+            "thumbnail",
+            "preview_video",
+            "short_description",
+            "short_description_uz",
+            "short_description_ru",
+            "short_description_en",
+            "full_description",
+            "description_uz",
+            "description_ru",
+            "description_en",
+            "price",
+            "discount_price",
+            "level",
+            "language",
+            "certificate_enabled",
+        )
+        widgets = {
+            "short_description": forms.Textarea(attrs={"rows": 3}),
+            "short_description_uz": forms.Textarea(attrs={"rows": 2}),
+            "short_description_ru": forms.Textarea(attrs={"rows": 2}),
+            "short_description_en": forms.Textarea(attrs={"rows": 2}),
+            "full_description": forms.Textarea(attrs={"rows": 8}),
+            "description_uz": forms.Textarea(attrs={"rows": 4}),
+            "description_ru": forms.Textarea(attrs={"rows": 4}),
+            "description_en": forms.Textarea(attrs={"rows": 4}),
+        }
+        labels = {
+            "title": _("Default title"),
+            "title_uz": _("Title (Uzbek)"),
+            "title_ru": _("Title (Russian)"),
+            "title_en": _("Title (English)"),
+            "category": _("Category"),
+            "thumbnail": _("Thumbnail"),
+            "preview_video": _("Preview video"),
+            "short_description": _("Default short description"),
+            "short_description_uz": _("Short description (Uzbek)"),
+            "short_description_ru": _("Short description (Russian)"),
+            "short_description_en": _("Short description (English)"),
+            "full_description": _("Default full description"),
+            "description_uz": _("Full description (Uzbek)"),
+            "description_ru": _("Full description (Russian)"),
+            "description_en": _("Full description (English)"),
+            "price": _("Price"),
+            "discount_price": _("Discount price"),
+            "level": _("Level"),
+            "language": _("Language"),
+            "certificate_enabled": _("Certificate enabled"),
+        }
 
 class SectionForm(StyledModelForm):
     def __init__(self, *args, actor=None, **kwargs):
@@ -252,6 +316,20 @@ class LessonForm(StyledModelForm):
         if not video_file and not video_url:
             raise ValidationError(_("Add either an uploaded video file or an external video URL."))
         return cleaned_data
+
+
+class TeacherLessonForm(LessonForm):
+    def __init__(self, *args, actor=None, course=None, **kwargs):
+        super().__init__(*args, actor=actor, **kwargs)
+        if course is not None:
+            self.fields["course"].initial = course
+            self.fields["section"].queryset = Section.objects.filter(course=course).order_by(
+                "order_index",
+                "id",
+            )
+
+        self.fields["course"].help_text = _("Choose which of your courses this lesson belongs to.")
+        self.fields["order_index"].help_text = _("Use lesson order to control the playback sequence.")
 
 
 class ReviewForm(StyledModelForm):

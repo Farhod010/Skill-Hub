@@ -128,6 +128,57 @@ class CourseAdmin(admin.ModelAdmin):
     ordering = ("-created_at", "title")
     readonly_fields = ("created_at", "updated_at")
     inlines = [LessonInline, SectionInline, QuizInline]
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "title",
+                    "title_uz",
+                    "title_ru",
+                    "title_en",
+                    "slug",
+                    "category",
+                    "instructor",
+                    "thumbnail",
+                    "preview_video",
+                )
+            },
+        ),
+        (
+            "Descriptions",
+            {
+                "fields": (
+                    "short_description",
+                    "short_description_uz",
+                    "short_description_ru",
+                    "short_description_en",
+                    "full_description",
+                    "description_uz",
+                    "description_ru",
+                    "description_en",
+                )
+            },
+        ),
+        (
+            "Commerce and publishing",
+            {
+                "fields": (
+                    "price",
+                    "discount_price",
+                    "discount_percent",
+                    "level",
+                    "language",
+                    "status",
+                    "moderation_notes",
+                    "is_published",
+                    "is_featured",
+                    "certificate_enabled",
+                )
+            },
+        ),
+        ("Timestamps", {"fields": ("created_at", "updated_at")}),
+    )
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

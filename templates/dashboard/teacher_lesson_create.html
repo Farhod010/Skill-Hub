@@ -1,12 +1,21 @@
 {% extends 'dashboard/teacher_base.html' %}
-{% load i18n %}
+{% load i18n course_extras %}
 
 {% block teacher_main %}
 <section class="card border-0 glass-card shadow-soft rounded-custom">
     <div class="card-body p-4 p-xl-5">
-        <div class="mb-4">
-            <span class="eyebrow mb-2">{% trans "Teacher workspace" %}</span>
-            <h1 class="h2 mb-2">{{ page_title }}</h1>
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <span class="eyebrow mb-2">{% trans "Lesson builder" %}</span>
+                <h1 class="h2 mb-2">{{ page_title }}</h1>
+                <p class="text-secondary mb-0">
+                    {% if course %}
+                        {% blocktrans with title=course|translated_title %}You are adding a lesson to {{ title }}.{% endblocktrans %}
+                    {% else %}
+                        {% trans "Choose one of your courses and attach a video lesson to it." %}
+                    {% endif %}
+                </p>
+            </div>
         </div>
         <form method="post" enctype="multipart/form-data" class="row g-3">
             {% csrf_token %}
@@ -30,7 +39,11 @@
                 </div>
             {% endfor %}
             <div class="col-12 d-flex justify-content-end gap-2 pt-2">
-                <a href="{% url 'dashboard:teacher_dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+                {% if course %}
+                    <a href="{% url 'dashboard:teacher_lesson_list' course.pk %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+                {% else %}
+                    <a href="{% url 'dashboard:teacher_course_list' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+                {% endif %}
                 <button type="submit" class="btn gradient-btn rounded-pill px-4 text-white">{{ submit_label }}</button>
             </div>
         </form>

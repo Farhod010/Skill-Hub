@@ -1,0 +1,87 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load i18n course_extras %}
+
+{% block teacher_main %}
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 p-lg-5">
+        <span class="eyebrow mb-2">{% trans "Curriculum management" %}</span>
+        <h1 class="h2 mb-2">{{ course|translated_title }}</h1>
+        <p class="text-secondary mb-0">{% trans "Upload, reorder and control preview access for each video lesson in this course." %}</p>
+    </div>
+</div>
+
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+            <div class="small text-secondary">{% trans "Total lessons" %}</div>
+            <div class="h4 mb-0">{{ page_obj.paginator.count }}</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'dashboard:teacher_course_edit' course.pk %}" class="btn btn-outline-secondary rounded-pill">{% trans "Edit course" %}</a>
+            <a href="{% url 'dashboard:teacher_lesson_create' %}?course={{ course.pk }}" class="btn gradient-btn rounded-pill text-white">{% trans "Add lesson" %}</a>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 glass-card shadow-soft rounded-custom">
+    <div class="card-body p-4">
+        <div class="table-responsive table-premium">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>{% trans "Order" %}</th>
+                        <th>{% trans "Lesson title" %}</th>
+                        <th>{% trans "Duration" %}</th>
+                        <th>{% trans "Preview" %}</th>
+                        <th>{% trans "Video" %}</th>
+                        <th class="text-end">{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lesson in page_obj %}
+                        <tr>
+                            <td>#{{ lesson.order_index }}</td>
+                            <td>
+                                <div class="fw-semibold">{{ lesson|translated_title }}</div>
+                                {% if lesson.section %}
+                                    <div class="small text-secondary">{{ lesson.section|translated_title }}</div>
+                                {% endif %}
+                            </td>
+                            <td>{{ lesson.duration_minutes }} {% trans "min" %}</td>
+                            <td>
+                                <span class="badge-status {% if lesson.is_preview %}status-active{% else %}status-pending{% endif %}">
+                                    {% if lesson.is_preview %}{% trans "Preview" %}{% else %}{% trans "Locked" %}{% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                {% if lesson.video_file %}
+                                    {% trans "Uploaded file" %}
+                                {% elif lesson.video_url %}
+                                    {% trans "External video" %}
+                                {% else %}
+                                    {% trans "Missing" %}
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex flex-wrap gap-2 justify-content-end">
+                                    <a href="{% url 'dashboard:teacher_lesson_edit' lesson.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "Edit" %}</a>
+                                    <form method="post" action="{% url 'dashboard:teacher_lesson_delete' lesson.pk %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm">{% trans "Delete" %}</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-secondary">{% trans "This course has no lessons yet." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

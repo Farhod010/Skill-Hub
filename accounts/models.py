@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -54,3 +56,30 @@ class User(AbstractUser):
         if self.role == self.Roles.INSTRUCTOR:
             return reverse("dashboard:teacher_dashboard")
         return reverse("dashboard:student_dashboard")
+
+    @property
+    def is_teacher(self):
+        return self.role == self.Roles.INSTRUCTOR
+
+
+class TeacherProfile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="teacher_profile",
+    )
+    specialization = models.CharField(max_length=180, blank=True)
+    experience = models.CharField(max_length=180, blank=True)
+    social_links = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["user__first_name", "user__last_name", "user__email"]
+
+    def __str__(self):
+        return f"{self.user.full_name} teacher profile"
+
+
+@receiver(post_save, sender=User)
+def ensure_teacher_profile(sender, instance, **kwargs):
+    if instance.role == User.Roles.INSTRUCTOR:
+        TeacherProfile.objects.get_or_create(user=instance)

@@ -93,6 +93,11 @@ class Course(models.Model):
         blank=True,
         null=True,
     )
+    preview_video = models.FileField(
+        upload_to="courses/previews/",
+        blank=True,
+        null=True,
+    )
     short_description = models.CharField(max_length=280)
     short_description_uz = models.CharField(max_length=280, blank=True)
     short_description_ru = models.CharField(max_length=280, blank=True)
@@ -102,6 +107,12 @@ class Course(models.Model):
     description_ru = models.TextField(blank=True)
     description_en = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
     discount_percent = models.PositiveSmallIntegerField(default=0)
     level = models.CharField(
         max_length=20,
@@ -114,6 +125,7 @@ class Course(models.Model):
         choices=Statuses.choices,
         default=Statuses.PENDING,
     )
+    moderation_notes = models.TextField(blank=True)
     is_published = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
     certificate_enabled = models.BooleanField(default=True)
@@ -140,6 +152,13 @@ class Course(models.Model):
         lang = (language or get_language() or "uz").split("-")[0]
         value = getattr(self, f"description_{lang}", "")
         return value or self.full_description
+
+    def clean(self):
+        super().clean()
+        if self.discount_price is not None and self.discount_price < 0:
+            raise ValidationError(_("Discount price cannot be negative."))
+        if self.discount_price is not None and self.discount_price > self.price:
+            raise ValidationError(_("Discount price cannot be higher than the base price."))
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -189,6 +208,8 @@ class Course(models.Model):
 
     @property
     def final_price(self):
+        if self.discount_price is not None:
+            return self.discount_price
         if not self.discount_percent:
             return self.price
         return self.price - ((self.price * self.discount_percent) / 100)
@@ -220,6 +241,8 @@ class Course(models.Model):
 
     @property
     def preview_player_data(self):
+        if self.preview_video:
+            return {"type": "html5", "source": self.preview_video.url}
         lesson = self.first_preview_lesson
         return lesson.get_player_data() if lesson else {"type": "missing", "source": ""}
 

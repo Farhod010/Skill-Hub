@@ -1,0 +1,59 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load i18n course_extras %}
+
+{% block teacher_main %}
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 p-lg-5 d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+            <span class="eyebrow mb-2">{% trans "Earnings" %}</span>
+            <h1 class="h2 mb-2">{% trans "Payment history" %}</h1>
+            <p class="text-secondary mb-0">{% trans "Track completed, pending and demo payments linked to your courses." %}</p>
+        </div>
+        <div class="glass-card px-4 py-3">
+            <div class="small text-secondary">{% trans "Completed revenue" %}</div>
+            <div class="h3 mb-0">{{ completed_total|money }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 glass-card shadow-soft rounded-custom">
+    <div class="card-body p-4">
+        <div class="table-responsive table-premium">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>{% trans "Course" %}</th>
+                        <th>{% trans "Student" %}</th>
+                        <th>{% trans "Provider" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Amount" %}</th>
+                        <th>{% trans "Date" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in page_obj %}
+                        <tr>
+                            <td>{{ payment.course|translated_title }}</td>
+                            <td>{{ payment.user.full_name }}</td>
+                            <td>{{ payment.provider|upper }}</td>
+                            <td>
+                                <span class="badge-status {% if payment.status == 'completed' %}status-active{% elif payment.status == 'failed' %}status-rejected{% else %}status-pending{% endif %}">
+                                    {{ payment.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ payment.amount|money }}</td>
+                            <td>{{ payment.created_at|date:"M d, Y H:i" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-secondary">{% trans "No payments found yet." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

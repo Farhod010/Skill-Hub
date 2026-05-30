@@ -1,0 +1,35 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load i18n %}
+
+{% block teacher_main %}
+<section class="card border-0 glass-card shadow-soft rounded-custom">
+    <div class="card-body p-4 p-xl-5">
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <span class="eyebrow mb-2">{% trans "Profile" %}</span>
+                <h1 class="h2 mb-2">{{ page_title }}</h1>
+                <p class="text-secondary mb-0">{% trans "Update your public instructor information, contact details and social links." %}</p>
+            </div>
+            <a href="{% url 'dashboard:teacher_password_change' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Change password" %}</a>
+        </div>
+        <form method="post" enctype="multipart/form-data" class="row g-3">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="{% if field.name == 'bio' or field.name == 'social_links' %}col-12{% else %}col-md-6{% endif %}">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="form-text text-secondary">{{ field.help_text|safe }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+                <button type="submit" class="btn gradient-btn rounded-pill px-4 text-white">{% trans "Save profile" %}</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

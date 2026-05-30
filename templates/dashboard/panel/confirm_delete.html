@@ -14,7 +14,11 @@
     </div>
     <form method="post" class="d-flex flex-wrap justify-content-end gap-2">
         {% csrf_token %}
-        <a href="{% url cancel_url %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+        {% if cancel_href %}
+            <a href="{{ cancel_href }}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+        {% else %}
+            <a href="{% url cancel_url %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+        {% endif %}
         <button type="submit" class="btn btn-danger rounded-pill px-4">{% trans "Delete" %}</button>
     </form>
 </section>

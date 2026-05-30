@@ -1,0 +1,65 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load i18n course_extras %}
+
+{% block teacher_main %}
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 p-lg-5">
+        <span class="eyebrow mb-2">{% trans "Students" %}</span>
+        <h1 class="h2 mb-2">{% trans "Enrolled learners" %}</h1>
+        <p class="text-secondary mb-0">{% trans "See which students joined your courses and what they enrolled in." %}</p>
+    </div>
+</div>
+
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-lg-9">
+                <label class="form-label" for="teacher-student-search">{% trans "Search students" %}</label>
+                <input id="teacher-student-search" type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="{% trans 'Search by learner name, email or course' %}">
+            </div>
+            <div class="col-lg-3">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn gradient-btn rounded-pill text-white">{% trans "Search" %}</button>
+                    <a href="{% url 'dashboard:teacher_student_list' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Reset" %}</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 glass-card shadow-soft rounded-custom">
+    <div class="card-body p-4">
+        <div class="table-responsive table-premium">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>{% trans "Student" %}</th>
+                        <th>{% trans "Course" %}</th>
+                        <th>{% trans "Paid" %}</th>
+                        <th>{% trans "Joined" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in page_obj %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ enrollment.student.full_name }}</div>
+                                <div class="small text-secondary">{{ enrollment.student.email }}</div>
+                            </td>
+                            <td>{{ enrollment.course|translated_title }}</td>
+                            <td>{{ enrollment.price_paid|money }}</td>
+                            <td>{{ enrollment.enrolled_at|date:"M d, Y" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-secondary">{% trans "No students found for the current search." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

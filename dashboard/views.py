@@ -1,15 +1,34 @@
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from accounts.forms import UserPanelCreationForm, UserPanelForm
-from accounts.models import User
-from courses.forms import AnswerForm, CategoryForm, CourseForm, LessonForm, QuestionForm, QuizForm, SectionForm
+from accounts.forms import (
+    TeacherPanelCreationForm,
+    TeacherPanelForm,
+    TeacherPasswordChangeForm,
+    TeacherProfileUpdateForm,
+    UserPanelCreationForm,
+    UserPanelForm,
+)
+from accounts.models import TeacherProfile, User
+from courses.forms import (
+    AnswerForm,
+    CategoryForm,
+    CourseForm,
+    LessonForm,
+    QuestionForm,
+    QuizForm,
+    SectionForm,
+    TeacherCourseForm,
+    TeacherLessonForm,
+)
 from courses.models import (
     Answer,
     Certificate,
@@ -29,7 +48,7 @@ from payments.models import Payment
 from site_settings.forms import SiteSettingForm
 from site_settings.models import SiteSetting
 
-from .permissions import panel_access_required
+from .permissions import admin_required, course_owner_required, panel_access_required, teacher_required
 
 
 def paginate_queryset(request, queryset, per_page=12):
@@ -40,6 +59,55 @@ def paginate_queryset(request, queryset, per_page=12):
 def enforce_superuser_guard(request, target_user):
     if target_user.is_superuser and not request.user.is_superuser:
         raise PermissionDenied(_("Only a superuser can manage another superuser."))
+
+
+def get_teacher_courses_queryset(user):
+    return (
+        Course.objects.filter(instructor=user)
+        .select_related("category")
+        .prefetch_related("lessons", "quizzes")
+        .annotate(
+            total_lessons=Count("lessons", distinct=True),
+            total_students=Count("enrollments", distinct=True),
+        )
+        .order_by("-created_at")
+    )
+
+
+def get_teacher_dashboard_context(user):
+    courses = get_teacher_courses_queryset(user)
+    course_ids = list(courses.values_list("id", flat=True))
+    enrollments = Enrollment.objects.filter(course_id__in=course_ids)
+    reviews = Review.objects.filter(course_id__in=course_ids, is_approved=True)
+    payments = Payment.objects.filter(course_id__in=course_ids).select_related("user", "course")
+    completed_payments = payments.filter(status=Payment.Status.COMPLETED)
+    top_course = courses.order_by("-total_students", "title").first()
+    try:
+        teacher_profile = user.teacher_profile
+    except TeacherProfile.DoesNotExist:
+        teacher_profile = None
+
+    return {
+        "teacher_courses": courses,
+        "recent_enrollments": enrollments.select_related("student", "course").order_by("-enrolled_at")[:6],
+        "recent_payments": payments.order_by("-created_at")[:6],
+        "recent_results": QuizResult.objects.filter(quiz__course_id__in=course_ids)
+        .select_related("student", "quiz", "quiz__course")
+        .order_by("-submitted_at")[:6],
+        "recent_reviews": reviews.select_related("student", "course").order_by("-created_at")[:6],
+        "teacher_profile": teacher_profile,
+        "stats": {
+            "courses": courses.count(),
+            "students": enrollments.values("student").distinct().count(),
+            "lessons": Lesson.objects.filter(course_id__in=course_ids).count(),
+            "revenue": completed_payments.aggregate(total=Sum("amount"))["total"] or 0,
+            "average_rating": round(reviews.aggregate(avg=Avg("rating"))["avg"] or 0, 1)
+            if reviews.exists()
+            else 0,
+            "top_course": top_course,
+            "quizzes": Quiz.objects.filter(course_id__in=course_ids).count(),
+        },
+    }
 
 
 @login_required
@@ -141,114 +209,227 @@ def student_dashboard(request):
     return render(request, "dashboard/student_dashboard.html", context)
 
 
-@login_required
+@teacher_required
 def teacher_dashboard(request):
-    if request.user.can_access_panel:
-        return redirect(request.user.home_url)
-    if request.user.role != User.Roles.INSTRUCTOR:
-        return redirect("dashboard:student_dashboard")
-
-    courses = (
-        Course.objects.filter(instructor=request.user)
-        .select_related("category")
-        .prefetch_related("sections__lessons", "quizzes")
-        .order_by("-created_at")
-    )
-    course_ids = list(courses.values_list("id", flat=True))
-    enrollments = Enrollment.objects.filter(course_id__in=course_ids)
-    reviews = Review.objects.filter(course_id__in=course_ids, is_approved=True)
-    total_revenue = (
-        Payment.objects.filter(
-            course_id__in=course_ids,
-            status=Payment.Status.COMPLETED,
-        ).aggregate(total=Sum("amount"))["total"]
-        or 0
-    )
-    top_course = (
-        courses.annotate(total_students=Count("enrollments"))
-        .order_by("-total_students", "title")
-        .first()
-    )
-    context = {
-        "teacher_courses": courses,
-        "recent_enrollments": enrollments.select_related("student", "course").order_by("-enrolled_at")[:6],
-        "recent_payments": Payment.objects.filter(course_id__in=course_ids).select_related("user", "course").order_by("-created_at")[:6],
-        "recent_results": QuizResult.objects.filter(quiz__course_id__in=course_ids).select_related("student", "quiz", "quiz__course").order_by("-submitted_at")[:6],
-        "recent_reviews": reviews.select_related("student", "course").order_by("-created_at")[:6],
-        "stats": {
-            "courses": courses.count(),
-            "students": enrollments.values("student").distinct().count(),
-            "revenue": total_revenue,
-            "average_rating": round(reviews.aggregate(avg=Avg("rating"))["avg"] or 0, 1)
-            if reviews.exists()
-            else 0,
-            "top_course": top_course,
-            "quizzes": Quiz.objects.filter(course_id__in=course_ids).count(),
-        },
-    }
+    context = get_teacher_dashboard_context(request.user)
+    context["active_teacher_tab"] = "overview"
     return render(request, "dashboard/teacher_dashboard.html", context)
 
 
-def teacher_required(view_func):
-    @login_required
-    def wrapped(request, *args, **kwargs):
-        if request.user.role != User.Roles.INSTRUCTOR:
-            return redirect(request.user.home_url)
-        return view_func(request, *args, **kwargs)
+@teacher_required
+def teacher_course_list(request):
+    query = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "").strip()
+    courses = get_teacher_courses_queryset(request.user)
+    if query:
+        courses = courses.filter(
+            Q(title__icontains=query)
+            | Q(title_uz__icontains=query)
+            | Q(title_ru__icontains=query)
+            | Q(title_en__icontains=query)
+            | Q(category__title__icontains=query)
+            | Q(category__name_uz__icontains=query)
+            | Q(category__name_ru__icontains=query)
+            | Q(category__name_en__icontains=query)
+        )
+    if status:
+        courses = courses.filter(status=status)
 
-    return wrapped
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "active_teacher_tab": "courses",
+            "page_obj": paginate_queryset(request, courses),
+            "search_query": query,
+            "selected_status": status,
+            "status_choices": Course.Statuses.choices,
+        }
+    )
+    return render(request, "dashboard/teacher_course_list.html", context)
 
 
 @teacher_required
 def teacher_course_create(request):
-    form = CourseForm(request.POST or None, request.FILES or None, actor=request.user)
+    form = TeacherCourseForm(request.POST or None, request.FILES or None)
     if request.method == "POST" and form.is_valid():
         course = form.save(commit=False)
         course.instructor = request.user
         course.status = Course.Statuses.PENDING
         course.is_published = False
         course.save()
-        messages.success(request, _("Course created and sent for review."))
-        return redirect("dashboard:teacher_dashboard")
+        messages.success(request, _("Course created and sent for admin review."))
+        return redirect("dashboard:teacher_course_list")
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "form": form,
+            "page_title": _("Create course"),
+            "submit_label": _("Save course"),
+            "active_teacher_tab": "create-course",
+        }
+    )
     return render(
         request,
-        "dashboard/teacher_form.html",
-        {"form": form, "page_title": _("Create course"), "submit_label": _("Save course")},
+        "dashboard/teacher_course_create.html",
+        context,
     )
 
 
 @teacher_required
+@course_owner_required(Course)
 def teacher_course_edit(request, pk):
     course = get_object_or_404(Course, pk=pk, instructor=request.user)
-    form = CourseForm(request.POST or None, request.FILES or None, instance=course, actor=request.user)
+    form = TeacherCourseForm(request.POST or None, request.FILES or None, instance=course)
     if request.method == "POST" and form.is_valid():
         course = form.save(commit=False)
         course.instructor = request.user
+        course.status = Course.Statuses.PENDING
+        course.is_published = False
         course.save()
-        messages.success(request, _("Course updated successfully."))
-        return redirect("dashboard:teacher_dashboard")
-    return render(
-        request,
-        "dashboard/teacher_form.html",
+        messages.success(request, _("Course updated and sent back for approval."))
+        return redirect("dashboard:teacher_course_list")
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
         {
             "form": form,
+            "course": course,
             "page_title": _("Edit %(title)s") % {"title": course.get_translated_title()},
             "submit_label": _("Update course"),
+            "active_teacher_tab": "courses",
+        }
+    )
+    return render(
+        request,
+        "dashboard/teacher_course_edit.html",
+        context,
+    )
+
+
+@teacher_required
+@course_owner_required(Course)
+def teacher_course_delete(request, pk):
+    course = get_object_or_404(Course, pk=pk, instructor=request.user)
+    if request.method == "POST":
+        course.delete()
+        messages.success(request, _("Course deleted successfully."))
+        return redirect("dashboard:teacher_course_list")
+    return render(
+        request,
+        "dashboard/panel/confirm_delete.html",
+        {
+            "page_title": _("Delete course"),
+            "object_label": course.get_translated_title(),
+            "cancel_url": "dashboard:teacher_course_list",
         },
     )
 
 
 @teacher_required
+@course_owner_required(Course, lookup_kwarg="course_id")
+def teacher_lesson_list(request, course_id):
+    course = get_object_or_404(Course, pk=course_id, instructor=request.user)
+    lessons = course.lessons.select_related("section").order_by("order_index", "section__order_index", "id")
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "active_teacher_tab": "lessons",
+            "course": course,
+            "page_obj": paginate_queryset(request, lessons, per_page=15),
+        }
+    )
+    return render(request, "dashboard/teacher_lesson_list.html", context)
+
+
+@teacher_required
 def teacher_lesson_create(request):
-    form = LessonForm(request.POST or None, request.FILES or None, actor=request.user)
+    course = None
+    course_id = request.GET.get("course") or request.POST.get("course")
+    if course_id:
+        course = get_object_or_404(Course, pk=course_id, instructor=request.user)
+    form = TeacherLessonForm(
+        request.POST or None,
+        request.FILES or None,
+        actor=request.user,
+        course=course,
+    )
+    if course is not None:
+        form.fields["course"].initial = course
     if request.method == "POST" and form.is_valid():
-        form.save()
+        lesson = form.save(commit=False)
+        lesson.course = lesson.course or course
+        lesson.save()
         messages.success(request, _("Lesson added successfully."))
-        return redirect("dashboard:teacher_dashboard")
+        redirect_course = lesson.course_id or (course.pk if course else None)
+        if redirect_course:
+            return redirect("dashboard:teacher_lesson_list", course_id=redirect_course)
+        return redirect("dashboard:teacher_course_list")
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "form": form,
+            "course": course,
+            "page_title": _("Add lesson"),
+            "submit_label": _("Save lesson"),
+            "active_teacher_tab": "lessons",
+        }
+    )
     return render(
         request,
-        "dashboard/teacher_form.html",
-        {"form": form, "page_title": _("Add lesson"), "submit_label": _("Save lesson")},
+        "dashboard/teacher_lesson_create.html",
+        context,
+    )
+
+
+@teacher_required
+@course_owner_required(Lesson, instructor_lookup="course__instructor")
+def teacher_lesson_edit(request, pk):
+    lesson = get_object_or_404(Lesson.objects.select_related("course", "section"), pk=pk, course__instructor=request.user)
+    form = TeacherLessonForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=lesson,
+        actor=request.user,
+        course=lesson.course,
+    )
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Lesson updated successfully."))
+        return redirect("dashboard:teacher_lesson_list", course_id=lesson.course_id)
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "form": form,
+            "lesson": lesson,
+            "course": lesson.course,
+            "page_title": _("Edit lesson"),
+            "submit_label": _("Update lesson"),
+            "active_teacher_tab": "lessons",
+        }
+    )
+    return render(
+        request,
+        "dashboard/teacher_lesson_edit.html",
+        context,
+    )
+
+
+@teacher_required
+@course_owner_required(Lesson, instructor_lookup="course__instructor")
+def teacher_lesson_delete(request, pk):
+    lesson = get_object_or_404(Lesson, pk=pk, course__instructor=request.user)
+    course_id = lesson.course_id
+    if request.method == "POST":
+        lesson.delete()
+        messages.success(request, _("Lesson deleted successfully."))
+        return redirect("dashboard:teacher_lesson_list", course_id=course_id)
+    return render(
+        request,
+        "dashboard/panel/confirm_delete.html",
+        {
+            "page_title": _("Delete lesson"),
+            "object_label": lesson.get_translated_title(),
+            "cancel_href": reverse("dashboard:teacher_lesson_list", kwargs={"course_id": course_id}),
+        },
     )
 
 
@@ -259,10 +440,19 @@ def teacher_quiz_create(request):
         quiz = form.save()
         messages.success(request, _("Quiz created successfully."))
         return redirect("dashboard:teacher_question_create", quiz_id=quiz.id)
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "form": form,
+            "page_title": _("Create quiz"),
+            "submit_label": _("Save quiz"),
+            "active_teacher_tab": "quizzes",
+        }
+    )
     return render(
         request,
         "dashboard/teacher_form.html",
-        {"form": form, "page_title": _("Create quiz"), "submit_label": _("Save quiz")},
+        context,
     )
 
 
@@ -284,16 +474,125 @@ def teacher_question_create(request, quiz_id):
             request,
             _("Question and answer saved. Add more from the admin panel if needed."),
         )
-        return redirect("dashboard:teacher_dashboard")
-    return render(
-        request,
-        "dashboard/teacher_question_form.html",
+        return redirect("dashboard:teacher_course_list")
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
         {
             "quiz": quiz,
             "question_form": question_form,
             "answer_form": answer_form,
-        },
+            "active_teacher_tab": "quizzes",
+        }
     )
+    return render(
+        request,
+        "dashboard/teacher_question_form.html",
+        context,
+    )
+
+
+@teacher_required
+def teacher_student_list(request):
+    courses = Course.objects.filter(instructor=request.user)
+    enrollments = (
+        Enrollment.objects.filter(course__instructor=request.user)
+        .select_related("student", "course")
+        .order_by("-enrolled_at")
+    )
+    query = request.GET.get("q", "").strip()
+    if query:
+        enrollments = enrollments.filter(
+            Q(student__first_name__icontains=query)
+            | Q(student__last_name__icontains=query)
+            | Q(student__email__icontains=query)
+            | Q(course__title__icontains=query)
+            | Q(course__title_uz__icontains=query)
+            | Q(course__title_ru__icontains=query)
+            | Q(course__title_en__icontains=query)
+        )
+
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "active_teacher_tab": "students",
+            "page_obj": paginate_queryset(request, enrollments, per_page=15),
+            "search_query": query,
+            "course_count": courses.count(),
+        }
+    )
+    return render(request, "dashboard/teacher_students.html", context)
+
+
+@teacher_required
+def teacher_review_list(request):
+    reviews = (
+        Review.objects.filter(course__instructor=request.user)
+        .select_related("course", "student")
+        .order_by("-created_at")
+    )
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "active_teacher_tab": "reviews",
+            "page_obj": paginate_queryset(request, reviews, per_page=12),
+        }
+    )
+    return render(request, "dashboard/teacher_reviews.html", context)
+
+
+@teacher_required
+def teacher_earnings(request):
+    payments = (
+        Payment.objects.filter(course__instructor=request.user)
+        .select_related("course", "user")
+        .order_by("-created_at")
+    )
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "active_teacher_tab": "earnings",
+            "page_obj": paginate_queryset(request, payments, per_page=15),
+            "completed_total": payments.filter(status=Payment.Status.COMPLETED).aggregate(total=Sum("amount"))["total"] or 0,
+        }
+    )
+    return render(request, "dashboard/teacher_earnings.html", context)
+
+
+@teacher_required
+def teacher_profile_edit(request):
+    form = TeacherProfileUpdateForm(request.POST or None, request.FILES or None, instance=request.user)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Profile updated successfully."))
+        return redirect("dashboard:teacher_profile")
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "active_teacher_tab": "profile",
+            "form": form,
+            "page_title": _("Edit profile"),
+        }
+    )
+    return render(request, "dashboard/teacher_profile.html", context)
+
+
+@teacher_required
+def teacher_password_change(request):
+    form = TeacherPasswordChangeForm(request.user, request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)
+        messages.success(request, _("Password updated successfully."))
+        return redirect("dashboard:teacher_profile")
+    context = get_teacher_dashboard_context(request.user)
+    context.update(
+        {
+            "active_teacher_tab": "profile",
+            "password_form": form,
+            "page_title": _("Change password"),
+        }
+    )
+    return render(request, "dashboard/teacher_password_change.html", context)
 
 
 @panel_access_required
@@ -442,11 +741,118 @@ def panel_user_toggle_block(request, pk):
     return redirect("panel:user_list")
 
 
+@admin_required
+def panel_teacher_list(request):
+    query = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "").strip()
+    teachers = TeacherProfile.objects.select_related("user").annotate(
+        total_courses=Count("user__courses_taught", distinct=True),
+        total_lessons=Count("user__courses_taught__lessons", distinct=True),
+    )
+    if query:
+        teachers = teachers.filter(
+            Q(user__first_name__icontains=query)
+            | Q(user__last_name__icontains=query)
+            | Q(user__email__icontains=query)
+            | Q(user__username__icontains=query)
+            | Q(specialization__icontains=query)
+            | Q(experience__icontains=query)
+        )
+    if status == "active":
+        teachers = teachers.filter(user__is_active=True, user__is_blocked=False)
+    elif status == "blocked":
+        teachers = teachers.filter(user__is_blocked=True)
+
+    all_teachers = TeacherProfile.objects.select_related("user")
+    context = {
+        "page_obj": paginate_queryset(request, teachers.order_by("user__first_name", "user__last_name")),
+        "search_query": query,
+        "selected_status": status,
+        "create_form": TeacherPanelCreationForm(actor=request.user),
+        "stats": {
+            "total": all_teachers.count(),
+            "active": all_teachers.filter(user__is_active=True, user__is_blocked=False).count(),
+            "blocked": all_teachers.filter(user__is_blocked=True).count(),
+            "courses": Course.objects.filter(instructor__role=User.Roles.INSTRUCTOR).count(),
+            "lessons": Lesson.objects.filter(course__instructor__role=User.Roles.INSTRUCTOR).count(),
+            "pending_courses": Course.objects.filter(
+                instructor__role=User.Roles.INSTRUCTOR,
+                status=Course.Statuses.PENDING,
+            ).count(),
+        },
+    }
+    return render(request, "dashboard/panel/teachers/list.html", context)
+
+
+@admin_required
+def panel_teacher_create(request):
+    form = TeacherPanelCreationForm(request.POST or None, request.FILES or None, actor=request.user)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Teacher account created successfully."))
+        return redirect("panel:teacher_list")
+    return render(
+        request,
+        "dashboard/panel/teachers/form.html",
+        {"form": form, "page_title": _("Create teacher")},
+    )
+
+
+@admin_required
+def panel_teacher_edit(request, pk):
+    teacher = get_object_or_404(User, pk=pk, role=User.Roles.INSTRUCTOR)
+    form = TeacherPanelForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=teacher,
+        actor=request.user,
+    )
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Teacher updated successfully."))
+        return redirect("panel:teacher_list")
+    return render(
+        request,
+        "dashboard/panel/teachers/form.html",
+        {"form": form, "teacher_user": teacher, "page_title": _("Edit %(name)s") % {"name": teacher.full_name}},
+    )
+
+
+@admin_required
+def panel_teacher_delete(request, pk):
+    teacher = get_object_or_404(User, pk=pk, role=User.Roles.INSTRUCTOR)
+    if request.method == "POST":
+        teacher.delete()
+        messages.success(request, _("Teacher deleted successfully."))
+        return redirect("panel:teacher_list")
+    return render(
+        request,
+        "dashboard/panel/confirm_delete.html",
+        {
+            "page_title": _("Delete teacher"),
+            "object_label": teacher.full_name,
+            "cancel_url": "panel:teacher_list",
+        },
+    )
+
+
+@admin_required
+@require_POST
+def panel_teacher_toggle_block(request, pk):
+    teacher = get_object_or_404(User, pk=pk, role=User.Roles.INSTRUCTOR)
+    teacher.is_blocked = not teacher.is_blocked
+    teacher.save(update_fields=["is_blocked"])
+    state = _("blocked") if teacher.is_blocked else _("unblocked")
+    messages.success(request, _("Teacher has been %(state)s.") % {"state": state})
+    return redirect("panel:teacher_list")
+
+
 @panel_access_required
 def panel_course_list(request):
     query = request.GET.get("q", "").strip()
     status = request.GET.get("status", "").strip()
     category = request.GET.get("category", "").strip()
+    instructor = request.GET.get("instructor", "").strip()
     sort = request.GET.get("sort", "newest").strip()
     courses = Course.objects.select_related("category", "instructor").annotate(
         total_lessons=Count("lessons", distinct=True),
@@ -463,9 +869,13 @@ def panel_course_list(request):
             | Q(category__name_ru__icontains=query)
             | Q(category__name_en__icontains=query)
             | Q(instructor__email__icontains=query)
+            | Q(instructor__first_name__icontains=query)
+            | Q(instructor__last_name__icontains=query)
         )
     if category:
         courses = courses.filter(category_id=category)
+    if instructor:
+        courses = courses.filter(instructor_id=instructor)
     if status == "published":
         courses = courses.filter(is_published=True)
     elif status == "draft":
@@ -490,8 +900,10 @@ def panel_course_list(request):
         "search_query": query,
         "selected_status": status,
         "selected_category": category,
+        "selected_instructor": instructor,
         "selected_sort": sort,
         "categories": Category.objects.order_by("title"),
+        "instructors": User.objects.filter(role=User.Roles.INSTRUCTOR).order_by("first_name", "last_name", "email"),
         "stats": {
             "total": all_courses.count(),
             "published": all_courses.filter(is_published=True).count(),
@@ -506,7 +918,7 @@ def panel_course_list(request):
 
 @panel_access_required
 def panel_course_create(request):
-    form = CourseForm(request.POST or None, request.FILES or None)
+    form = CourseForm(request.POST or None, request.FILES or None, actor=request.user)
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, _("Course created successfully."))
@@ -521,7 +933,7 @@ def panel_course_create(request):
 @panel_access_required
 def panel_course_edit(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    form = CourseForm(request.POST or None, request.FILES or None, instance=course)
+    form = CourseForm(request.POST or None, request.FILES or None, instance=course, actor=request.user)
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, _("Course updated successfully."))
@@ -568,6 +980,26 @@ def panel_course_featured_toggle(request, pk):
     course.is_featured = not course.is_featured
     course.save(update_fields=["is_featured"])
     messages.success(request, _("Course featured status updated."))
+    return redirect("panel:course_list")
+
+
+@panel_access_required
+@require_POST
+def panel_course_status_update(request, pk, status):
+    course = get_object_or_404(Course, pk=pk)
+    if status not in {Course.Statuses.ACTIVE, Course.Statuses.REJECTED, Course.Statuses.PENDING}:
+        raise PermissionDenied(_("Unsupported course moderation action."))
+    course.status = status
+    course.moderation_notes = request.POST.get("moderation_notes", "").strip()
+    if status == Course.Statuses.ACTIVE:
+        course.is_published = True
+    elif status == Course.Statuses.REJECTED:
+        course.is_published = False
+    course.save(update_fields=["status", "moderation_notes", "is_published", "updated_at"])
+    messages.success(
+        request,
+        _("Course moderation updated to %(status)s.") % {"status": course.get_status_display()},
+    )
     return redirect("panel:course_list")
 
 

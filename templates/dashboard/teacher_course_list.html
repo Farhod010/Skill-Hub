@@ -1,0 +1,103 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load i18n course_extras %}
+
+{% block teacher_main %}
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4 p-lg-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+            <div>
+                <span class="eyebrow mb-2">{% trans "Teacher workspace" %}</span>
+                <h1 class="display-6 mb-2">{% trans "My courses" %}</h1>
+                <p class="text-secondary mb-0">{% trans "Create, update and monitor only the courses assigned to you." %}</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'dashboard:teacher_course_create' %}" class="btn gradient-btn rounded-pill text-white">{% trans "Create course" %}</a>
+                <a href="{% url 'dashboard:teacher_lesson_create' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Add lesson" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
+    <div class="card-body p-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-lg-6">
+                <label class="form-label" for="teacher-course-search">{% trans "Search courses" %}</label>
+                <input id="teacher-course-search" type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="{% trans 'Search by course title or category' %}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="teacher-course-status">{% trans "Status" %}</label>
+                <select id="teacher-course-status" name="status" class="form-select">
+                    <option value="">{% trans "All statuses" %}</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn gradient-btn rounded-pill text-white">{% trans "Apply filters" %}</button>
+                    <a href="{% url 'dashboard:teacher_course_list' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Reset" %}</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 glass-card shadow-soft rounded-custom">
+    <div class="card-body p-4">
+        <div class="table-responsive table-premium">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>{% trans "Course" %}</th>
+                        <th>{% trans "Category" %}</th>
+                        <th>{% trans "Price" %}</th>
+                        <th>{% trans "Lessons" %}</th>
+                        <th>{% trans "Students" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th class="text-end">{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in page_obj %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ course|translated_title }}</div>
+                                <div class="small text-secondary">{{ course.slug }}</div>
+                            </td>
+                            <td>{{ course.category|translated_title }}</td>
+                            <td>{{ course.final_price|money }}</td>
+                            <td>{{ course.total_lessons }}</td>
+                            <td>{{ course.total_students }}</td>
+                            <td>
+                                <span class="badge-status {% if course.status == 'active' %}status-active{% elif course.status == 'rejected' %}status-rejected{% else %}status-pending{% endif %}">
+                                    {{ course.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex flex-wrap gap-2 justify-content-end">
+                                    <a href="{{ course.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "View" %}</a>
+                                    <a href="{% url 'dashboard:teacher_course_edit' course.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "Edit" %}</a>
+                                    <a href="{% url 'dashboard:teacher_lesson_create' %}?course={{ course.pk }}" class="btn gradient-btn text-white rounded-pill btn-sm">{% trans "Add lesson" %}</a>
+                                    <a href="{% url 'dashboard:teacher_lesson_list' course.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm">{% trans "Lessons" %}</a>
+                                    <form method="post" action="{% url 'dashboard:teacher_course_delete' course.pk %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm">{% trans "Delete" %}</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-secondary">{% trans "No courses match the current filters." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

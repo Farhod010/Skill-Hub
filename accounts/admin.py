@@ -2,13 +2,21 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from .forms import CustomUserCreationForm
-from .models import User
+from .models import TeacherProfile, User
+
+
+class TeacherProfileInline(admin.StackedInline):
+    model = TeacherProfile
+    extra = 0
+    can_delete = False
+    fields = ("specialization", "experience", "social_links")
 
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
     add_form = CustomUserCreationForm
     model = User
+    inlines = [TeacherProfileInline]
     list_display = (
         "email",
         "username",
@@ -62,3 +70,9 @@ class UserAdmin(DjangoUserAdmin):
             },
         ),
     )
+
+
+@admin.register(TeacherProfile)
+class TeacherProfileAdmin(admin.ModelAdmin):
+    list_display = ("user", "specialization", "experience")
+    search_fields = ("user__email", "user__first_name", "user__last_name", "specialization", "experience")

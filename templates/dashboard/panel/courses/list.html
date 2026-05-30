@@ -85,19 +85,28 @@
 
 <section class="admin-card glass-panel filter-card p-4 mb-4">
     <form method="get" class="row g-3 align-items-end">
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <label for="course-search" class="form-label">{% trans "Search courses" %}</label>
             <div class="input-group input-group-premium">
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                 <input id="course-search" type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="{% trans 'Search by course, instructor or category' %}">
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
+        <div class="col-sm-6 col-lg-2">
             <label for="course-category" class="form-label">{% trans "Category" %}</label>
             <select id="course-category" name="category" class="form-select">
                 <option value="">{% trans "All categories" %}</option>
                 {% for item in categories %}
                     <option value="{{ item.pk }}" {% if selected_category == item.pk|stringformat:'s' %}selected{% endif %}>{{ item|translated_title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="course-instructor" class="form-label">{% trans "Instructor" %}</label>
+            <select id="course-instructor" name="instructor" class="form-select">
+                <option value="">{% trans "All instructors" %}</option>
+                {% for item in instructors %}
+                    <option value="{{ item.pk }}" {% if selected_instructor == item.pk|stringformat:'s' %}selected{% endif %}>{{ item.full_name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -168,6 +177,9 @@
                                 <div>
                                     <div class="fw-semibold text-light">{{ course|translated_title }}</div>
                                     <div class="small text-secondary">{{ course.slug }}</div>
+                                    {% if course.moderation_notes %}
+                                        <div class="small text-warning mt-1">{{ course.moderation_notes|truncatechars:80 }}</div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </td>
@@ -209,6 +221,22 @@
                                         <i class="bi {% if course.is_featured %}bi-stars{% else %}bi-star{% endif %}"></i>
                                     </button>
                                 </form>
+                                {% if course.status != 'active' %}
+                                    <form method="post" action="{% url 'panel:course_status_update' course.pk 'active' %}" class="m-0">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn success" title="{% trans 'Approve course' %}">
+                                            <i class="bi bi-check2-circle"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                {% if course.status != 'rejected' %}
+                                    <form method="post" action="{% url 'panel:course_status_update' course.pk 'rejected' %}" class="m-0">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn danger" title="{% trans 'Reject course' %}">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
                                 <button type="button" class="action-btn danger" data-delete-url="{% url 'panel:course_delete' course.pk %}" data-delete-label="{{ course|translated_title }}">
                                     <i class="bi bi-trash3"></i>
                                 </button>

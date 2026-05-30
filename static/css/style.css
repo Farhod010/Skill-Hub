@@ -608,6 +608,18 @@ a {
     top: 6.3rem;
 }
 
+.sidebar-links .sidebar-link {
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar-links .sidebar-link:hover,
+.sidebar-links .sidebar-link.active {
+    transform: translateX(2px);
+    border-color: rgba(var(--bs-primary-rgb), 0.36);
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+}
+
 .dashboard-card {
     padding: 1.25rem;
     height: 100%;

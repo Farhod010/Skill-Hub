@@ -24,6 +24,19 @@ class EnrollmentAndLessonAccessTests(TestCase):
             username="instructor",
             role=User.Roles.INSTRUCTOR,
         )
+        self.other_instructor = User.objects.create_user(
+            email="other-instructor@example.com",
+            password="InstructorPass12345",
+            username="otherinstructor",
+            role=User.Roles.INSTRUCTOR,
+        )
+        self.admin = User.objects.create_user(
+            email="admin@example.com",
+            password="AdminPass12345",
+            username="admin",
+            role=User.Roles.ADMIN,
+            is_staff=True,
+        )
         self.category = Category.objects.create(title="Testing", description="Testing category")
 
         self.free_course = Course.objects.create(
@@ -74,6 +87,26 @@ class EnrollmentAndLessonAccessTests(TestCase):
             duration_minutes=10,
             is_preview=False,
             video_url="https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
+        )
+        self.other_course = Course.objects.create(
+            title="Other Teacher Course",
+            category=self.category,
+            instructor=self.other_instructor,
+            short_description="Other course",
+            full_description="Other course description",
+            price=Decimal("19.00"),
+            level=Course.Levels.INTERMEDIATE,
+            language="English",
+            is_published=False,
+        )
+        other_section = Section.objects.create(course=self.other_course, title="Other section", order_index=1)
+        self.other_lesson = Lesson.objects.create(
+            section=other_section,
+            title="Other lesson",
+            order_index=1,
+            duration_minutes=8,
+            is_preview=False,
+            video_url="https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
         )
         self.free_quiz = Quiz.objects.create(
             course=self.free_course,
@@ -177,6 +210,72 @@ class EnrollmentAndLessonAccessTests(TestCase):
         self.client.force_login(self.instructor)
         response = self.client.get(reverse("dashboard:teacher_dashboard"))
         self.assertEqual(response.status_code, 200)
+
+    def test_teacher_course_create_defaults_to_pending(self):
+        self.client.force_login(self.instructor)
+
+        response = self.client.post(
+            reverse("dashboard:teacher_course_create"),
+            {
+                "title": "Teacher Flow Course",
+                "category": self.category.pk,
+                "short_description": "Teacher short description",
+                "full_description": "Teacher full description",
+                "price": "99.00",
+                "discount_price": "79.00",
+                "level": Course.Levels.BEGINNER,
+                "language": "English",
+                "certificate_enabled": "on",
+            },
+        )
+
+        self.assertRedirects(response, reverse("dashboard:teacher_course_list"))
+        course = Course.objects.get(title="Teacher Flow Course")
+        self.assertEqual(course.instructor, self.instructor)
+        self.assertEqual(course.status, Course.Statuses.PENDING)
+        self.assertFalse(course.is_published)
+
+    def test_teacher_cannot_edit_another_teachers_course(self):
+        self.client.force_login(self.instructor)
+
+        response = self.client.get(
+            reverse("dashboard:teacher_course_edit", args=[self.other_course.pk])
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_teacher_cannot_edit_another_teachers_lesson(self):
+        self.client.force_login(self.instructor)
+
+        response = self.client.get(
+            reverse("dashboard:teacher_lesson_edit", args=[self.other_lesson.pk])
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_can_approve_pending_teacher_course(self):
+        self.client.force_login(self.admin)
+        pending_course = Course.objects.create(
+            title="Approval Queue Course",
+            category=self.category,
+            instructor=self.instructor,
+            short_description="Approval short",
+            full_description="Approval full description",
+            price=Decimal("11.00"),
+            level=Course.Levels.BEGINNER,
+            language="English",
+            status=Course.Statuses.PENDING,
+            is_published=False,
+        )
+
+        response = self.client.post(
+            reverse("panel:course_status_update", args=[pending_course.pk, Course.Statuses.ACTIVE])
+        )
+
+        self.assertRedirects(response, reverse("panel:course_list"))
+        pending_course.refresh_from_db()
+        self.assertEqual(pending_course.status, Course.Statuses.ACTIVE)
+        self.assertTrue(pending_course.is_published)
 
     def test_passing_quiz_creates_result(self):
         Enrollment.objects.create(student=self.student, course=self.free_course, price_paid=0)

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import User
+from .models import TeacherProfile, User
 
 
 class RoleRoutingTests(TestCase):
@@ -79,3 +79,42 @@ class LanguageSwitcherTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.wsgi_request.LANGUAGE_CODE, "ru")
         self.assertContains(response, "Пользователи")
+
+
+class TeacherManagementTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            email="ops-admin@example.com",
+            password="AdminPass12345",
+            username="opsadmin",
+            role=User.Roles.ADMIN,
+            is_staff=True,
+        )
+
+    def test_creating_teacher_from_panel_also_creates_profile(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.post(
+            reverse("panel:teacher_create"),
+            {
+                "email": "newteacher@example.com",
+                "username": "newteacher",
+                "first_name": "Amina",
+                "last_name": "Teacher",
+                "phone": "+998901234567",
+                "bio": "Python mentor",
+                "specialization": "Python backend",
+                "experience": "6 years",
+                "social_links": "https://t.me/teacher",
+                "password1": "TeacherPass12345",
+                "password2": "TeacherPass12345",
+                "is_active": "on",
+            },
+        )
+
+        self.assertRedirects(response, reverse("panel:teacher_list"))
+        teacher = User.objects.get(email="newteacher@example.com")
+        self.assertEqual(teacher.role, User.Roles.INSTRUCTOR)
+        self.assertTrue(
+            TeacherProfile.objects.filter(user=teacher, specialization="Python backend").exists()
+        )

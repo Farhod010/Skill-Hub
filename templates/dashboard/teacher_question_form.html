@@ -1,44 +1,46 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/teacher_base.html' %}
 {% load i18n course_extras %}
-{% block title %}{% trans "Add Question" %} | EduMaster{% endblock %}
-{% block content %}
-<section class="auth-section">
-    <div class="container">
-        <div class="section-heading">
-            <span class="eyebrow">{% trans "Teacher workspace" %}</span>
-            <h1>{% blocktrans with title=quiz.get_translated_title %}Add question to {{ title }}{% endblocktrans %}</h1>
+
+{% block teacher_main %}
+<section class="card border-0 glass-card shadow-soft rounded-custom">
+    <div class="card-body p-4 p-xl-5">
+        <div class="mb-4">
+            <span class="eyebrow mb-2">{% trans "Quiz builder" %}</span>
+            <h1 class="h2 mb-2">{% blocktrans with title=quiz|translated_title %}Add question to {{ title }}{% endblocktrans %}</h1>
+            <p class="text-secondary mb-0">{% trans "Add one question and one answer choice here, then continue building the assessment." %}</p>
         </div>
-        <div class="panel-grid">
-            <div class="content-card">
-                <form method="post" class="panel-form">
-                    {% csrf_token %}
-                    {% for field in question_form %}
-                        <div class="form-field">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            {% for field in question_form %}
+                <div class="col-12">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            {% for field in answer_form %}
+                <div class="{% if field.field.widget.input_type == 'checkbox' %}col-sm-6{% else %}col-md-6{% endif %}">
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                        <div class="form-check form-switch">
                             {{ field }}
-                            {% if field.errors %}
-                                <div class="form-error">{{ field.errors|striptags }}</div>
-                            {% endif %}
+                            <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                         </div>
-                    {% endfor %}
-                    {% for field in answer_form %}
-                        <div class="{% if field.field.widget.input_type == 'checkbox' %}checkbox-field{% else %}form-field{% endif %}">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.errors %}
-                                <div class="form-error">{{ field.errors|striptags }}</div>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary">{% trans "Save question" %}</button>
-                </form>
+                    {% else %}
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+                <a href="{% url 'dashboard:teacher_course_list' %}" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Back" %}</a>
+                <button type="submit" class="btn gradient-btn rounded-pill px-4 text-white">{% trans "Save question" %}</button>
             </div>
-            <div class="content-card">
-                <h2>{% trans "Next step" %}</h2>
-                <p>{% trans "This lightweight flow adds one answer together with the question. For richer editing, continue in the admin panel or extend the teacher workspace further." %}</p>
-                <a href="{% url 'dashboard:teacher_dashboard' %}" class="btn btn-ghost">{% trans "Back to teacher dashboard" %}</a>
-            </div>
-        </div>
+        </form>
     </div>
 </section>
 {% endblock %}

@@ -1,0 +1,245 @@
+{% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n %}
+
+{% block panel_content %}
+<section class="admin-card glass-panel p-4 p-xl-5 mb-4">
+    <div class="row g-4 align-items-end">
+        <div class="col-lg-7">
+            <nav aria-label="{% trans 'Breadcrumb' %}" class="mb-3">
+                <ol class="breadcrumb admin-breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{% url 'panel:dashboard' %}">{% trans "Admin" %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'panel:teacher_list' %}">{% trans "Teacher Management" %}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Teachers" %}</li>
+                </ol>
+            </nav>
+            <span class="eyebrow mb-2">{% trans "Teacher management" %}</span>
+            <h1 class="admin-page-title mb-2">{% trans "Instructor accounts" %}</h1>
+            <p class="admin-page-copy mb-0">{% trans "Create teacher logins, update profiles, block access and jump straight into their course catalog." %}</p>
+        </div>
+        <div class="col-lg-5">
+            <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                <button type="button" class="btn gradient-btn rounded-pill px-4 text-white" data-bs-toggle="modal" data-bs-target="#createTeacherModal">
+                    <i class="bi bi-person-plus me-2"></i>{% trans "Create teacher" %}
+                </button>
+                <a href="{{ request.get_full_path }}" class="btn admin-icon-btn" aria-label="{% trans 'Refresh' %}">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon purple"><i class="bi bi-mortarboard"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.total }}">{{ stats.total }}</div>
+            <div class="stat-card-label">{% trans "Teachers" %}</div>
+            <div class="stat-card-meta">{% trans "All instructor accounts" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon success"><i class="bi bi-person-check"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.active }}">{{ stats.active }}</div>
+            <div class="stat-card-label">{% trans "Active" %}</div>
+            <div class="stat-card-meta">{% trans "Can log in now" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon danger"><i class="bi bi-slash-circle"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.blocked }}">{{ stats.blocked }}</div>
+            <div class="stat-card-label">{% trans "Blocked" %}</div>
+            <div class="stat-card-meta">{% trans "Need admin action" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon blue"><i class="bi bi-book"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.courses }}">{{ stats.courses }}</div>
+            <div class="stat-card-label">{% trans "Courses" %}</div>
+            <div class="stat-card-meta">{% trans "Teacher-owned catalog" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon amber"><i class="bi bi-play-circle"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.lessons }}">{{ stats.lessons }}</div>
+            <div class="stat-card-label">{% trans "Lessons" %}</div>
+            <div class="stat-card-meta">{% trans "Uploaded curriculum" %}</div>
+        </article>
+    </div>
+    <div class="col-sm-6 col-xl-4 col-xxl-2">
+        <article class="stat-card hover-lift">
+            <div class="stat-card-icon amber"><i class="bi bi-hourglass-split"></i></div>
+            <div class="stat-card-value" data-countup="{{ stats.pending_courses }}">{{ stats.pending_courses }}</div>
+            <div class="stat-card-label">{% trans "Pending courses" %}</div>
+            <div class="stat-card-meta">{% trans "Waiting for approval" %}</div>
+        </article>
+    </div>
+</section>
+
+<section class="admin-card glass-panel filter-card p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-lg-8">
+            <label for="teacher-search" class="form-label">{% trans "Search teachers" %}</label>
+            <div class="input-group input-group-premium">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input id="teacher-search" type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="{% trans 'Search by name, email, username or specialization' %}">
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="teacher-status" class="form-label">{% trans "Status" %}</label>
+            <select id="teacher-status" name="status" class="form-select">
+                <option value="">{% trans "All statuses" %}</option>
+                <option value="active" {% if selected_status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                <option value="blocked" {% if selected_status == 'blocked' %}selected{% endif %}>{% trans "Blocked" %}</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn gradient-btn rounded-pill text-white">{% trans "Search" %}</button>
+                <a href="{% url 'panel:teacher_list' %}" class="btn btn-outline-secondary rounded-pill">{% trans "Reset" %}</a>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="admin-card glass-panel p-0 overflow-hidden">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-4 py-3 border-bottom border-light-subtle">
+        <div>
+            <h2 class="h5 mb-1">{% trans "Teacher directory" %}</h2>
+            <p class="text-secondary small mb-0">{% trans "Each instructor can only manage their own courses and lesson uploads." %}</p>
+        </div>
+        <span class="admin-table-count">{{ page_obj.paginator.count }} {% trans "teachers" %}</span>
+    </div>
+    <div class="table-responsive admin-table-wrap">
+        <table class="table table-hover align-middle mb-0 admin-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Teacher" %}</th>
+                    <th>{% trans "Specialization" %}</th>
+                    <th>{% trans "Experience" %}</th>
+                    <th>{% trans "Courses" %}</th>
+                    <th>{% trans "Lessons" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th class="text-end">{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="admin-identity">
+                                <span class="admin-avatar lg">
+                                    {% if teacher.user.avatar %}
+                                        <img src="{{ teacher.user.avatar.url }}" alt="{{ teacher.user.full_name }}">
+                                    {% else %}
+                                        {{ teacher.user.full_name|default:teacher.user.username|first|upper }}
+                                    {% endif %}
+                                </span>
+                                <div>
+                                    <div class="fw-semibold text-light">{{ teacher.user.full_name }}</div>
+                                    <div class="small text-secondary">{{ teacher.user.email }} · @{{ teacher.user.username }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ teacher.specialization|default:"-" }}</td>
+                        <td>{{ teacher.experience|default:"-" }}</td>
+                        <td>{{ teacher.total_courses }}</td>
+                        <td>{{ teacher.total_lessons }}</td>
+                        <td>
+                            <span class="status-badge {% if teacher.user.is_blocked %}blocked{% else %}active{% endif %}">
+                                {% if teacher.user.is_blocked %}{% trans "Blocked" %}{% else %}{% trans "Active" %}{% endif %}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                <a href="{% url 'panel:teacher_edit' teacher.user.pk %}" class="action-btn" data-admin-modal-url="{% url 'panel:teacher_edit' teacher.user.pk %}" data-admin-modal-title="{% blocktrans with name=teacher.user.full_name %}Edit {{ name }}{% endblocktrans %}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="{% url 'panel:course_list' %}?instructor={{ teacher.user.pk }}" class="action-btn success" title="{% trans 'View courses' %}">
+                                    <i class="bi bi-book"></i>
+                                </a>
+                                <form method="post" action="{% url 'panel:teacher_toggle_block' teacher.user.pk %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn {% if teacher.user.is_blocked %}success{% else %}warning{% endif %}">
+                                        <i class="bi {% if teacher.user.is_blocked %}bi-unlock{% else %}bi-slash-circle{% endif %}"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="action-btn danger" data-delete-url="{% url 'panel:teacher_delete' teacher.user.pk %}" data-delete-label="{{ teacher.user.full_name }}">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="admin-empty-state">
+                                <i class="bi bi-mortarboard"></i>
+                                <h3>{% trans "No teachers found" %}</h3>
+                                <p>{% trans "Create the first instructor account to unlock the teacher dashboard workflow." %}</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+
+<div class="modal fade" id="createTeacherModal" tabindex="-1" aria-labelledby="createTeacherModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content modal-glass">
+            <div class="modal-header border-bottom border-light-subtle">
+                <div>
+                    <span class="eyebrow d-block mb-1">{% trans "Teacher account" %}</span>
+                    <h2 class="modal-title h4 mb-0" id="createTeacherModalLabel">{% trans "Create teacher" %}</h2>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'panel:teacher_create' %}" enctype="multipart/form-data" class="row g-3 admin-modal-form">
+                    {% csrf_token %}
+                    {% for field in create_form %}
+                        <div class="{% if field.name == 'bio' or field.name == 'social_links' %}col-12{% elif field.field.widget.input_type == 'checkbox' %}col-sm-6 col-lg-4{% else %}col-md-6{% endif %}">
+                            {% if field.field.widget.input_type == 'checkbox' %}
+                                <div class="form-check form-switch admin-check">
+                                    {{ field }}
+                                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                </div>
+                            {% else %}
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {% if field.name == 'password1' or field.name == 'password2' %}
+                                    <div class="input-group input-group-premium">
+                                        {{ field }}
+                                        <button class="btn btn-outline-secondary" type="button" data-password-toggle data-password-target="{{ field.id_for_label }}">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <div class="form-text text-secondary">{{ field.help_text|safe }}</div>
+                                {% endif %}
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn gradient-btn rounded-pill px-4 text-white">{% trans "Create teacher" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
