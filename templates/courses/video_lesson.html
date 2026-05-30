@@ -24,7 +24,7 @@
                                             <span class="fw-semibold">{{ item.order_index }}. {{ item|translated_title }}</span>
                                         {% endif %}
                                         {% if item.section %}
-                                            <div class="small text-secondary mt-1">{{ item.section.title }}</div>
+                                            <div class="small text-secondary mt-1">{{ item.section|translated_title }}</div>
                                         {% endif %}
                                         <div class="small text-secondary mt-1">{{ item.duration_minutes|minutes_to_duration }}</div>
                                     </div>
@@ -50,7 +50,7 @@
             <div class="col-xl-8 order-xl-1">
                 <div class="card border-0 glass-card shadow-soft rounded-custom mb-4">
                     <div class="card-body p-4 p-lg-5">
-                        <span class="eyebrow mb-2">{% if lesson.section %}{{ lesson.section.title }}{% else %}{% trans "Video lesson" %}{% endif %}</span>
+                        <span class="eyebrow mb-2">{% if lesson.section %}{{ lesson.section|translated_title }}{% else %}{% trans "Video lesson" %}{% endif %}</span>
                         <h1 class="display-6 mb-2">{{ lesson|translated_title }}</h1>
                         <p class="text-secondary mb-4">
                             {% blocktrans with position=lesson_position total=course_total_lessons %}Lesson {{ position }} of {{ total }}{% endblocktrans %}
@@ -143,7 +143,7 @@
                                 <div class="small text-secondary mb-3">{% blocktrans with completed=course_completed_lessons total=course_total_lessons %}{{ completed }}/{{ total }} completed so far{% endblocktrans %}</div>
                                 <ul class="list-unstyled d-grid gap-2 mb-0">
                                     <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% blocktrans with position=lesson_position %}Current lesson position: {{ position }}{% endblocktrans %}</li>
-                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% if lesson.section %}{% blocktrans with section=lesson.section.title %}Section: {{ section }}{% endblocktrans %}{% else %}{% trans "Direct course lesson" %}{% endif %}</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% if lesson.section %}{% blocktrans with section=lesson.section.get_translated_title %}Section: {{ section }}{% endblocktrans %}{% else %}{% trans "Direct course lesson" %}{% endif %}</li>
                                     <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Comments enabled for enrolled learners" %}</li>
                                 </ul>
                             </div>

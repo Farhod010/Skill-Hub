@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n course_extras %}
 {% block title %}{% trans "Add Question" %} | EduMaster{% endblock %}
 {% block content %}
 <section class="auth-section">
     <div class="container">
         <div class="section-heading">
             <span class="eyebrow">{% trans "Teacher workspace" %}</span>
-            <h1>{% blocktrans with title=quiz.title %}Add question to {{ title }}{% endblocktrans %}</h1>
+            <h1>{% blocktrans with title=quiz.get_translated_title %}Add question to {{ title }}{% endblocktrans %}</h1>
         </div>
         <div class="panel-grid">
             <div class="content-card">

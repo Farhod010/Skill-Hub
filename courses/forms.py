@@ -41,6 +41,18 @@ class CategoryForm(StyledModelForm):
             "description_ru": forms.Textarea(attrs={"rows": 3}),
             "description_en": forms.Textarea(attrs={"rows": 3}),
         }
+        labels = {
+            "title": _("Default title"),
+            "name_uz": _("Title (Uzbek)"),
+            "name_ru": _("Title (Russian)"),
+            "name_en": _("Title (English)"),
+            "slug": _("Slug"),
+            "description": _("Default description"),
+            "description_uz": _("Description (Uzbek)"),
+            "description_ru": _("Description (Russian)"),
+            "description_en": _("Description (English)"),
+            "is_active": _("Active"),
+        }
 
 
 class CourseForm(StyledModelForm):
@@ -93,6 +105,32 @@ class CourseForm(StyledModelForm):
             "description_ru": forms.Textarea(attrs={"rows": 4}),
             "description_en": forms.Textarea(attrs={"rows": 4}),
         }
+        labels = {
+            "title": _("Default title"),
+            "title_uz": _("Title (Uzbek)"),
+            "title_ru": _("Title (Russian)"),
+            "title_en": _("Title (English)"),
+            "slug": _("Slug"),
+            "category": _("Category"),
+            "instructor": _("Instructor"),
+            "thumbnail": _("Thumbnail"),
+            "short_description": _("Default short description"),
+            "short_description_uz": _("Short description (Uzbek)"),
+            "short_description_ru": _("Short description (Russian)"),
+            "short_description_en": _("Short description (English)"),
+            "full_description": _("Default full description"),
+            "description_uz": _("Full description (Uzbek)"),
+            "description_ru": _("Full description (Russian)"),
+            "description_en": _("Full description (English)"),
+            "price": _("Price"),
+            "discount_percent": _("Discount percent"),
+            "level": _("Level"),
+            "language": _("Language"),
+            "status": _("Status"),
+            "is_published": _("Published"),
+            "is_featured": _("Featured"),
+            "certificate_enabled": _("Certificate enabled"),
+        }
 
     def clean_instructor(self):
         instructor = self.cleaned_data.get("instructor") or getattr(self, "actor", None)
@@ -109,9 +147,35 @@ class SectionForm(StyledModelForm):
 
     class Meta:
         model = Section
-        fields = ("course", "title", "description", "order_index")
+        fields = (
+            "course",
+            "title",
+            "title_uz",
+            "title_ru",
+            "title_en",
+            "description",
+            "description_uz",
+            "description_ru",
+            "description_en",
+            "order_index",
+        )
         widgets = {
             "description": forms.Textarea(attrs={"rows": 4}),
+            "description_uz": forms.Textarea(attrs={"rows": 3}),
+            "description_ru": forms.Textarea(attrs={"rows": 3}),
+            "description_en": forms.Textarea(attrs={"rows": 3}),
+        }
+        labels = {
+            "course": _("Course"),
+            "title": _("Default title"),
+            "title_uz": _("Title (Uzbek)"),
+            "title_ru": _("Title (Russian)"),
+            "title_en": _("Title (English)"),
+            "description": _("Default description"),
+            "description_uz": _("Description (Uzbek)"),
+            "description_ru": _("Description (Russian)"),
+            "description_en": _("Description (English)"),
+            "order_index": _("Order"),
         }
 
 
@@ -153,6 +217,23 @@ class LessonForm(StyledModelForm):
             "video_url": forms.Textarea(
                 attrs={"rows": 3, "placeholder": _("Paste a video URL or iframe embed code")}
             ),
+        }
+        labels = {
+            "course": _("Course"),
+            "section": _("Section"),
+            "title": _("Default title"),
+            "title_uz": _("Title (Uzbek)"),
+            "title_ru": _("Title (Russian)"),
+            "title_en": _("Title (English)"),
+            "description": _("Default description"),
+            "description_uz": _("Description (Uzbek)"),
+            "description_ru": _("Description (Russian)"),
+            "description_en": _("Description (English)"),
+            "video_file": _("Uploaded video"),
+            "video_url": _("External video URL or embed"),
+            "duration_minutes": _("Duration in minutes"),
+            "is_preview": _("Preview lesson"),
+            "order_index": _("Order"),
         }
 
     def clean(self):
@@ -199,9 +280,37 @@ class QuizForm(StyledModelForm):
 
     class Meta:
         model = Quiz
-        fields = ("course", "title", "description", "pass_percent", "is_active")
+        fields = (
+            "course",
+            "title",
+            "title_uz",
+            "title_ru",
+            "title_en",
+            "description",
+            "description_uz",
+            "description_ru",
+            "description_en",
+            "pass_percent",
+            "is_active",
+        )
         widgets = {
             "description": forms.Textarea(attrs={"rows": 4}),
+            "description_uz": forms.Textarea(attrs={"rows": 3}),
+            "description_ru": forms.Textarea(attrs={"rows": 3}),
+            "description_en": forms.Textarea(attrs={"rows": 3}),
+        }
+        labels = {
+            "course": _("Course"),
+            "title": _("Default title"),
+            "title_uz": _("Title (Uzbek)"),
+            "title_ru": _("Title (Russian)"),
+            "title_en": _("Title (English)"),
+            "description": _("Default description"),
+            "description_uz": _("Description (Uzbek)"),
+            "description_ru": _("Description (Russian)"),
+            "description_en": _("Description (English)"),
+            "pass_percent": _("Pass percent"),
+            "is_active": _("Active"),
         }
 
 
@@ -216,9 +325,20 @@ class QuestionForm(StyledModelForm):
 
     class Meta:
         model = Question
-        fields = ("quiz", "prompt", "order_index")
+        fields = ("quiz", "prompt", "prompt_uz", "prompt_ru", "prompt_en", "order_index")
         widgets = {
             "prompt": forms.Textarea(attrs={"rows": 4}),
+            "prompt_uz": forms.Textarea(attrs={"rows": 3}),
+            "prompt_ru": forms.Textarea(attrs={"rows": 3}),
+            "prompt_en": forms.Textarea(attrs={"rows": 3}),
+        }
+        labels = {
+            "quiz": _("Quiz"),
+            "prompt": _("Default prompt"),
+            "prompt_uz": _("Prompt (Uzbek)"),
+            "prompt_ru": _("Prompt (Russian)"),
+            "prompt_en": _("Prompt (English)"),
+            "order_index": _("Order"),
         }
 
 
@@ -232,4 +352,12 @@ class AnswerForm(StyledModelForm):
 
     class Meta:
         model = Answer
-        fields = ("question", "text", "is_correct")
+        fields = ("question", "text", "text_uz", "text_ru", "text_en", "is_correct")
+        labels = {
+            "question": _("Question"),
+            "text": _("Default answer"),
+            "text_uz": _("Answer (Uzbek)"),
+            "text_ru": _("Answer (Russian)"),
+            "text_en": _("Answer (English)"),
+            "is_correct": _("Correct answer"),
+        }

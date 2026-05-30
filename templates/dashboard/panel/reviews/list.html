@@ -1,50 +1,51 @@
 {% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n course_extras %}
 {% block panel_content %}
 <div class="panel-header">
     <div>
-        <span class="eyebrow">Review moderation</span>
-        <h1>Reviews</h1>
+        <span class="eyebrow">{% trans "Review moderation" %}</span>
+        <h1>{% trans "Reviews" %}</h1>
     </div>
 </div>
 <form method="get" class="panel-toolbar">
-    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search reviews">
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="{% trans 'Search reviews' %}">
     <select name="approval" class="input">
-        <option value="">All reviews</option>
-        <option value="approved" {% if approval == 'approved' %}selected{% endif %}>Approved</option>
-        <option value="pending" {% if approval == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="">{% trans "All reviews" %}</option>
+        <option value="approved" {% if approval == 'approved' %}selected{% endif %}>{% trans "Approved" %}</option>
+        <option value="pending" {% if approval == 'pending' %}selected{% endif %}>{% trans "Pending" %}</option>
     </select>
-    <button type="submit" class="btn btn-primary">Filter</button>
+    <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
 </form>
 <div class="table-card">
     <table class="data-table">
         <thead>
             <tr>
-                <th>Course</th>
-                <th>Student</th>
-                <th>Rating</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{% trans "Course" %}</th>
+                <th>{% trans "Student" %}</th>
+                <th>{% trans "Rating" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Actions" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for review in page_obj %}
                 <tr>
-                    <td>{{ review.course.title }}</td>
+                    <td>{{ review.course|translated_title }}</td>
                     <td>{{ review.student.email }}</td>
                     <td>{{ review.rating }}/5</td>
-                    <td>{% if review.is_approved %}Approved{% else %}Pending{% endif %}</td>
+                    <td>{% if review.is_approved %}{% trans "Approved" %}{% else %}{% trans "Pending" %}{% endif %}</td>
                     <td>
                         <div class="table-actions">
                             <form method="post" action="{% url 'panel:review_toggle' review.pk %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-ghost">{% if review.is_approved %}Unapprove{% else %}Approve{% endif %}</button>
+                                <button type="submit" class="btn btn-ghost">{% if review.is_approved %}{% trans "Unapprove" %}{% else %}{% trans "Approve" %}{% endif %}</button>
                             </form>
-                            <a href="{% url 'panel:review_delete' review.pk %}" class="btn btn-danger btn-soft">Delete</a>
+                            <a href="{% url 'panel:review_delete' review.pk %}" class="btn btn-danger btn-soft">{% trans "Delete" %}</a>
                         </div>
                     </td>
                 </tr>
             {% empty %}
-                <tr><td colspan="5">No reviews found.</td></tr>
+                <tr><td colspan="5">{% trans "No reviews found." %}</td></tr>
             {% endfor %}
         </tbody>
     </table>

@@ -655,7 +655,20 @@ def panel_section_list(request):
     query = request.GET.get("q", "").strip()
     sections = Section.objects.select_related("course").order_by("course__title", "order_index")
     if query:
-        sections = sections.filter(Q(title__icontains=query) | Q(course__title__icontains=query))
+        sections = sections.filter(
+            Q(title__icontains=query)
+            | Q(title_uz__icontains=query)
+            | Q(title_ru__icontains=query)
+            | Q(title_en__icontains=query)
+            | Q(description__icontains=query)
+            | Q(description_uz__icontains=query)
+            | Q(description_ru__icontains=query)
+            | Q(description_en__icontains=query)
+            | Q(course__title__icontains=query)
+            | Q(course__title_uz__icontains=query)
+            | Q(course__title_ru__icontains=query)
+            | Q(course__title_en__icontains=query)
+        )
     context = {"page_obj": paginate_queryset(request, sections), "search_query": query}
     return render(request, "dashboard/panel/sections/list.html", context)
 
@@ -685,7 +698,7 @@ def panel_section_edit(request, pk):
     return render(
         request,
         "dashboard/panel/sections/form.html",
-        {"form": form, "page_title": _("Edit %(title)s") % {"title": section.title}},
+        {"form": form, "page_title": _("Edit %(title)s") % {"title": section.get_translated_title()}},
     )
 
 
@@ -701,7 +714,7 @@ def panel_section_delete(request, pk):
         "dashboard/panel/confirm_delete.html",
         {
             "page_title": _("Delete section"),
-            "object_label": section.title,
+            "object_label": section.get_translated_title(),
             "cancel_url": "panel:section_list",
         },
     )
@@ -816,7 +829,20 @@ def panel_quiz_list(request):
     query = request.GET.get("q", "").strip()
     quizzes = Quiz.objects.select_related("course").order_by("course__title", "title")
     if query:
-        quizzes = quizzes.filter(Q(title__icontains=query) | Q(course__title__icontains=query))
+        quizzes = quizzes.filter(
+            Q(title__icontains=query)
+            | Q(title_uz__icontains=query)
+            | Q(title_ru__icontains=query)
+            | Q(title_en__icontains=query)
+            | Q(description__icontains=query)
+            | Q(description_uz__icontains=query)
+            | Q(description_ru__icontains=query)
+            | Q(description_en__icontains=query)
+            | Q(course__title__icontains=query)
+            | Q(course__title_uz__icontains=query)
+            | Q(course__title_ru__icontains=query)
+            | Q(course__title_en__icontains=query)
+        )
     return render(
         request,
         "dashboard/panel/quizzes/list.html",
@@ -849,7 +875,7 @@ def panel_quiz_edit(request, pk):
     return render(
         request,
         "dashboard/panel/quizzes/form.html",
-        {"form": form, "page_title": _("Edit %(title)s") % {"title": quiz.title}},
+        {"form": form, "page_title": _("Edit %(title)s") % {"title": quiz.get_translated_title()}},
     )
 
 
@@ -865,7 +891,7 @@ def panel_quiz_delete(request, pk):
         "dashboard/panel/confirm_delete.html",
         {
             "page_title": _("Delete quiz"),
-            "object_label": quiz.title,
+            "object_label": quiz.get_translated_title(),
             "cancel_url": "panel:quiz_list",
         },
     )
@@ -882,8 +908,17 @@ def panel_question_list(request):
     if query:
         questions = questions.filter(
             Q(prompt__icontains=query)
+            | Q(prompt_uz__icontains=query)
+            | Q(prompt_ru__icontains=query)
+            | Q(prompt_en__icontains=query)
             | Q(quiz__title__icontains=query)
+            | Q(quiz__title_uz__icontains=query)
+            | Q(quiz__title_ru__icontains=query)
+            | Q(quiz__title_en__icontains=query)
             | Q(quiz__course__title__icontains=query)
+            | Q(quiz__course__title_uz__icontains=query)
+            | Q(quiz__course__title_ru__icontains=query)
+            | Q(quiz__course__title_en__icontains=query)
         )
     return render(
         request,
@@ -933,7 +968,7 @@ def panel_question_delete(request, pk):
         "dashboard/panel/confirm_delete.html",
         {
             "page_title": _("Delete question"),
-            "object_label": question.prompt[:80],
+            "object_label": question.get_translated_prompt()[:80],
             "cancel_url": "panel:question_list",
         },
     )
@@ -951,8 +986,17 @@ def panel_answer_list(request):
     if query:
         answers = answers.filter(
             Q(text__icontains=query)
+            | Q(text_uz__icontains=query)
+            | Q(text_ru__icontains=query)
+            | Q(text_en__icontains=query)
             | Q(question__prompt__icontains=query)
+            | Q(question__prompt_uz__icontains=query)
+            | Q(question__prompt_ru__icontains=query)
+            | Q(question__prompt_en__icontains=query)
             | Q(question__quiz__title__icontains=query)
+            | Q(question__quiz__title_uz__icontains=query)
+            | Q(question__quiz__title_ru__icontains=query)
+            | Q(question__quiz__title_en__icontains=query)
         )
     return render(
         request,
@@ -1002,7 +1046,7 @@ def panel_answer_delete(request, pk):
         "dashboard/panel/confirm_delete.html",
         {
             "page_title": _("Delete answer"),
-            "object_label": answer.text,
+            "object_label": answer.get_translated_text(),
             "cancel_url": "panel:answer_list",
         },
     )
@@ -1016,7 +1060,13 @@ def panel_quiz_result_list(request):
         results = results.filter(
             Q(student__email__icontains=query)
             | Q(quiz__title__icontains=query)
+            | Q(quiz__title_uz__icontains=query)
+            | Q(quiz__title_ru__icontains=query)
+            | Q(quiz__title_en__icontains=query)
             | Q(quiz__course__title__icontains=query)
+            | Q(quiz__course__title_uz__icontains=query)
+            | Q(quiz__course__title_ru__icontains=query)
+            | Q(quiz__course__title_en__icontains=query)
         )
     return render(
         request,

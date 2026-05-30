@@ -7,7 +7,7 @@
         <div class="card border-0 glass-card shadow-soft rounded-custom overflow-hidden">
             <div class="card-body p-4 p-lg-5 text-center">
                 <span class="eyebrow mb-2">{% trans "Quiz result" %}</span>
-                <h1 class="display-6 mb-2">{{ result.quiz.title }}</h1>
+                <h1 class="display-6 mb-2">{{ result.quiz|translated_title }}</h1>
                 <p class="text-secondary mb-4">{{ course|translated_title }}</p>
                 <div class="mx-auto mb-4 d-inline-flex align-items-center justify-content-center rounded-circle border border-4 border-primary-subtle shadow-soft" style="width: 12rem; height: 12rem;">
                     <div>

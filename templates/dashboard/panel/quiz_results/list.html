@@ -1,25 +1,26 @@
 {% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n course_extras %}
 {% block panel_content %}
-<div class="panel-header"><div><span class="eyebrow">Quiz performance</span><h1>Quiz results</h1></div></div>
+<div class="panel-header"><div><span class="eyebrow">{% trans "Quiz performance" %}</span><h1>{% trans "Quiz results" %}</h1></div></div>
 <form method="get" class="panel-toolbar">
-    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search results">
-    <button type="submit" class="btn btn-primary">Search</button>
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="{% trans 'Search results' %}">
+    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
 </form>
 <div class="table-card">
     <table class="data-table">
-        <thead><tr><th>Student</th><th>Course</th><th>Quiz</th><th>Score</th><th>Status</th><th>Submitted</th></tr></thead>
+        <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Course" %}</th><th>{% trans "Quiz" %}</th><th>{% trans "Score" %}</th><th>{% trans "Status" %}</th><th>{% trans "Submitted" %}</th></tr></thead>
         <tbody>
             {% for result in page_obj %}
                 <tr>
                     <td>{{ result.student.email }}</td>
-                    <td>{{ result.quiz.course.title }}</td>
-                    <td>{{ result.quiz.title }}</td>
+                    <td>{{ result.quiz.course|translated_title }}</td>
+                    <td>{{ result.quiz|translated_title }}</td>
                     <td>{{ result.score }}/{{ result.total_questions }}</td>
-                    <td>{% if result.passed %}Passed{% else %}Failed{% endif %}</td>
+                    <td>{% if result.passed %}{% trans "Passed" %}{% else %}{% trans "Failed" %}{% endif %}</td>
                     <td>{{ result.submitted_at|date:"M d, Y H:i" }}</td>
                 </tr>
             {% empty %}
-                <tr><td colspan="6">No quiz results found.</td></tr>
+                <tr><td colspan="6">{% trans "No quiz results found." %}</td></tr>
             {% endfor %}
         </tbody>
     </table>

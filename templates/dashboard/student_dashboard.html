@@ -89,8 +89,8 @@
                         <div class="row align-items-center g-4">
                             <div class="col-lg-8">
                                 <span class="eyebrow text-white-50 mb-2">{% trans "Continue learning" %}</span>
-                                <h2 class="h1 mb-3">{{ featured_course.course.title }}</h2>
-                                <p class="text-white-50 mb-4">{{ featured_course.course.short_description }}</p>
+                                <h2 class="h1 mb-3">{{ featured_course.course|translated_title }}</h2>
+                                <p class="text-white-50 mb-4">{{ featured_course.course|translated_short_description }}</p>
                                 <div class="progress mb-2" style="height: .85rem;" data-progress>
                                     <div class="progress-bar progress-bar-premium" style="width: {{ featured_course.progress_percent }}%"></div>
                                 </div>
@@ -119,8 +119,8 @@
                                         <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div>
-                                                    <div class="fw-semibold">{{ entry.lesson.title }}</div>
-                                                    <div class="small text-secondary">{{ entry.lesson.section.course.title }}</div>
+                                                    <div class="fw-semibold">{{ entry.lesson|translated_title }}</div>
+                                                    <div class="small text-secondary">{{ entry.lesson.section.course|translated_title }}</div>
                                                 </div>
                                                 <span class="badge rounded-pill {% if entry.completed %}bg-success-subtle text-success{% else %}bg-primary-subtle text-primary{% endif %} px-3 py-2">
                                                     {% if entry.completed %}{% trans "Completed" %}{% else %}{{ entry.watched_seconds }} {% trans "sec" %}{% endif %}
@@ -144,8 +144,8 @@
                                         <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div>
-                                                    <div class="fw-semibold">{{ result.quiz.title }}</div>
-                                                    <div class="small text-secondary">{{ result.quiz.course.title }}</div>
+                                                    <div class="fw-semibold">{{ result.quiz|translated_title }}</div>
+                                                    <div class="small text-secondary">{{ result.quiz.course|translated_title }}</div>
                                                 </div>
                                                 <span class="badge rounded-pill {% if result.passed %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3 py-2">{{ result.score }}/{{ result.total_questions }}</span>
                                             </div>
@@ -211,7 +211,7 @@
                                         <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
                                             <div class="d-flex justify-content-between align-items-center gap-3">
                                                 <div>
-                                                    <div class="fw-semibold">{{ certificate.course.title }}</div>
+                                                    <div class="fw-semibold">{{ certificate.course|translated_title }}</div>
                                                     <div class="small text-secondary">{{ certificate.certificate_id }}</div>
                                                 </div>
                                                 <a href="{% url 'courses:certificate_detail' certificate.course.slug %}" class="btn btn-outline-secondary rounded-pill">{% trans "Open" %}</a>
@@ -241,7 +241,7 @@
                                         <tbody>
                                             {% for payment in payments %}
                                                 <tr>
-                                                    <td>{{ payment.course.title }}</td>
+                                                    <td>{{ payment.course|translated_title }}</td>
                                                     <td>{{ payment.reference }}</td>
                                                     <td>{{ payment.amount|money }} - {{ payment.provider|title }}</td>
                                                 </tr>

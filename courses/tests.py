@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.test import TestCase
 from django.urls import reverse
+from django.utils.translation import override
 
 from accounts.models import User
 from payments.models import Payment
@@ -261,3 +262,34 @@ class EnrollmentAndLessonAccessTests(TestCase):
         self.assertFalse(
             Review.objects.filter(course=self.free_course, student=self.student).exists()
         )
+
+    def test_quiz_and_curriculum_use_translated_database_content(self):
+        self.free_course.title_ru = "Бесплатный курс"
+        self.free_course.short_description_ru = "Короткое описание"
+        self.free_course.save()
+        self.free_lesson.section.title_ru = "Введение"
+        self.free_lesson.section.save()
+        self.free_quiz.title_ru = "Бесплатный тест"
+        self.free_quiz.description_ru = "Описание теста"
+        self.free_quiz.save()
+        question = self.correct_answer.question
+        question.prompt_ru = "Выберите правильный ответ"
+        question.save()
+        self.correct_answer.text_ru = "Правильно"
+        self.correct_answer.save()
+
+        Enrollment.objects.create(student=self.student, course=self.free_course, price_paid=0)
+        self.client.force_login(self.student)
+
+        with override("ru"):
+            detail_url = self.free_course.get_absolute_url()
+            quiz_url = reverse("courses:quiz_take", args=[self.free_course.slug, self.free_quiz.id])
+
+        detail_response = self.client.get(detail_url)
+        quiz_response = self.client.get(quiz_url)
+
+        self.assertContains(detail_response, "Введение")
+        self.assertContains(detail_response, "Бесплатный тест")
+        self.assertContains(quiz_response, "Бесплатный тест")
+        self.assertContains(quiz_response, "Выберите правильный ответ")
+        self.assertContains(quiz_response, "Правильно")

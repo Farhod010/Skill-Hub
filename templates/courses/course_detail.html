@@ -129,7 +129,7 @@
                                                 <span class="fw-semibold">{{ lesson.order_index }}. {{ lesson.get_translated_title }}</span>
                                             {% endif %}
                                             {% if lesson.section %}
-                                                <div class="small text-secondary mt-1">{{ lesson.section.title }}</div>
+                                                <div class="small text-secondary mt-1">{{ lesson.section|translated_title }}</div>
                                             {% endif %}
                                         </div>
                                         <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -167,7 +167,7 @@
                                 {% for quiz in quizzes %}
                                     <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
                                         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                                            <div><div class="fw-semibold">{{ quiz.title }}</div><div class="small text-secondary">{% blocktrans with count=quiz.question_count pass=quiz.pass_percent %}{{ count }} questions and {{ pass }}% pass mark{% endblocktrans %}</div></div>
+                                            <div><div class="fw-semibold">{{ quiz|translated_title }}</div><div class="small text-secondary">{% blocktrans with count=quiz.question_count pass=quiz.pass_percent %}{{ count }} questions and {{ pass }}% pass mark{% endblocktrans %}</div></div>
                                             {% if can_access_full_course %}
                                                 <a href="{% url 'courses:quiz_take' course.slug quiz.id %}" class="btn gradient-btn text-white rounded-pill px-4">{% trans "Testni boshlash" %}</a>
                                             {% else %}

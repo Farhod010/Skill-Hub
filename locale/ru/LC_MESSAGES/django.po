@@ -650,3 +650,318 @@ msgstr '?????'
 
 msgid 'Next'
 msgstr '?????'
+
+msgid "Default title"
+msgstr "Основной заголовок"
+
+msgid "Title (Uzbek)"
+msgstr "Название (узбекский)"
+
+msgid "Title (Russian)"
+msgstr "Название (русский)"
+
+msgid "Title (English)"
+msgstr "Название (английский)"
+
+msgid "Slug"
+msgstr "Слаг"
+
+msgid "Default description"
+msgstr "Основное описание"
+
+msgid "Description (Uzbek)"
+msgstr "Описание (узбекский)"
+
+msgid "Description (Russian)"
+msgstr "Описание (русский)"
+
+msgid "Description (English)"
+msgstr "Описание (английский)"
+
+msgid "Default short description"
+msgstr "Основное краткое описание"
+
+msgid "Short description (Uzbek)"
+msgstr "Краткое описание (узбекский)"
+
+msgid "Short description (Russian)"
+msgstr "Краткое описание (русский)"
+
+msgid "Short description (English)"
+msgstr "Краткое описание (английский)"
+
+msgid "Default full description"
+msgstr "Основное полное описание"
+
+msgid "Full description (Uzbek)"
+msgstr "Полное описание (узбекский)"
+
+msgid "Full description (Russian)"
+msgstr "Полное описание (русский)"
+
+msgid "Full description (English)"
+msgstr "Полное описание (английский)"
+
+msgid "Thumbnail"
+msgstr "Обложка"
+
+msgid "Discount percent"
+msgstr "Процент скидки"
+
+msgid "Published"
+msgstr "Опубликовано"
+
+msgid "Featured"
+msgstr "Рекомендуемый"
+
+msgid "Certificate enabled"
+msgstr "Сертификат включён"
+
+msgid "Section"
+msgstr "Раздел"
+
+msgid "Uploaded video"
+msgstr "Загруженное видео"
+
+msgid "External video URL or embed"
+msgstr "Внешний URL видео или embed"
+
+msgid "Duration in minutes"
+msgstr "Длительность в минутах"
+
+msgid "Preview lesson"
+msgstr "Пробный урок"
+
+msgid "Pass percent"
+msgstr "Проходной процент"
+
+msgid "Quiz"
+msgstr "Тест"
+
+msgid "Default prompt"
+msgstr "Основной текст вопроса"
+
+msgid "Prompt (Uzbek)"
+msgstr "Текст вопроса (узбекский)"
+
+msgid "Prompt (Russian)"
+msgstr "Текст вопроса (русский)"
+
+msgid "Prompt (English)"
+msgstr "Текст вопроса (английский)"
+
+msgid "Question"
+msgstr "Вопрос"
+
+msgid "Default answer"
+msgstr "Основной ответ"
+
+msgid "Answer (Uzbek)"
+msgstr "Ответ (узбекский)"
+
+msgid "Answer (Russian)"
+msgstr "Ответ (русский)"
+
+msgid "Answer (English)"
+msgstr "Ответ (английский)"
+
+msgid "Correct answer"
+msgstr "Правильный ответ"
+
+msgid "Category management"
+msgstr "Управление категориями"
+
+msgid "Save category"
+msgstr "Сохранить категорию"
+
+msgid "Updated"
+msgstr "Обновлено"
+
+msgid "Inactive"
+msgstr "Неактивный"
+
+msgid "Deactivate"
+msgstr "Деактивировать"
+
+msgid "Activate"
+msgstr "Активировать"
+
+msgid "No categories found."
+msgstr "Категории не найдены."
+
+msgid "Section management"
+msgstr "Управление разделами"
+
+msgid "Sections"
+msgstr "Разделы"
+
+msgid "Search sections"
+msgstr "Поиск разделов"
+
+msgid "Save section"
+msgstr "Сохранить раздел"
+
+msgid "No sections found."
+msgstr "Разделы не найдены."
+
+msgid "Quiz management"
+msgstr "Управление тестами"
+
+msgid "Search quizzes"
+msgstr "Поиск тестов"
+
+msgid "Save quiz"
+msgstr "Сохранить тест"
+
+msgid "No quizzes found."
+msgstr "Тесты не найдены."
+
+msgid "Question management"
+msgstr "Управление вопросами"
+
+msgid "Prompt"
+msgstr "Текст вопроса"
+
+msgid "Search questions"
+msgstr "Поиск вопросов"
+
+msgid "No questions found."
+msgstr "Вопросы не найдены."
+
+msgid "Answer management"
+msgstr "Управление ответами"
+
+msgid "Answers"
+msgstr "Ответы"
+
+msgid "Search answers"
+msgstr "Поиск ответов"
+
+msgid "Correct"
+msgstr "Верно"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "No"
+msgstr "Нет"
+
+msgid "Save answer"
+msgstr "Сохранить ответ"
+
+msgid "No answers found."
+msgstr "Ответы не найдены."
+
+msgid "Review moderation"
+msgstr "Модерация отзывов"
+
+msgid "Search reviews"
+msgstr "Поиск отзывов"
+
+msgid "All reviews"
+msgstr "Все отзывы"
+
+msgid "Student"
+msgstr "Студент"
+
+msgid "Unapprove"
+msgstr "Снять одобрение"
+
+msgid "Approve"
+msgstr "Одобрить"
+
+msgid "No reviews found."
+msgstr "Отзывы не найдены."
+
+msgid "Certificate registry"
+msgstr "Реестр сертификатов"
+
+msgid "Search certificates"
+msgstr "Поиск сертификатов"
+
+msgid "Issued"
+msgstr "Выдан"
+
+msgid "No certificates found."
+msgstr "Сертификаты не найдены."
+
+msgid "Quiz performance"
+msgstr "Результаты тестов"
+
+msgid "Search results"
+msgstr "Поиск результатов"
+
+msgid "Score"
+msgstr "Баллы"
+
+msgid "No quiz results found."
+msgstr "Результаты тестов не найдены."
+
+msgid "Platform branding"
+msgstr "Брендинг платформы"
+
+msgid "Save settings"
+msgstr "Сохранить настройки"
+
+msgid "No top course yet"
+msgstr "Пока нет топ-курса"
+
+msgid "Publish and grow your catalog to unlock ranking data here."
+msgstr "Опубликуйте и расширяйте каталог, чтобы здесь появились данные рейтинга."
+
+msgid "Add lesson depth to improve completion"
+msgstr "Добавьте глубину уроков, чтобы повысить завершаемость"
+
+msgid "Use quizzes to lift certificate conversion"
+msgstr "Используйте тесты, чтобы повысить конверсию в сертификаты"
+
+msgid "Watch reviews for curriculum improvements"
+msgstr "Следите за отзывами, чтобы улучшать программу"
+
+msgid "You have not created any courses yet."
+msgstr "Вы ещё не создали ни одного курса."
+
+msgid "Approved reviews will appear here."
+msgstr "Одобренные отзывы появятся здесь."
+
+msgid "New enrollments will appear here."
+msgstr "Новые записи появятся здесь."
+
+msgid "Retry"
+msgstr "Повторить"
+
+msgid "Quiz submissions will appear here."
+msgstr "Отправки тестов появятся здесь."
+
+msgid "Completed and demo payments will appear here."
+msgstr "Завершённые и demo-платежи появятся здесь."
+
+msgid "Are you sure you want to delete <strong>%(label)s</strong>?"
+msgstr "Вы уверены, что хотите удалить <strong>%(label)s</strong>?"
+
+msgid "Add question to %(title)s"
+msgstr "Добавить вопрос в %(title)s"
+
+msgid "Create category"
+msgstr "Создать категорию"
+
+msgid "Create section"
+msgstr "Создать раздел"
+
+msgid "Create quiz"
+msgstr "Создать тест"
+
+msgid "Create question"
+msgstr "Создать вопрос"
+
+msgid "Create answer"
+msgstr "Создать ответ"
+
+msgid "Search categories"
+msgstr "Поиск категорий"
+
+msgid "Save question"
+msgstr "Сохранить вопрос"
+
+msgid "Questions"
+msgstr "Вопросы"

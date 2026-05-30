@@ -42,7 +42,7 @@
             <div class="col-xl-4">
                 <div class="purchase-card sticky-top" style="top: 6rem;">
                     {% if course.thumbnail %}
-                        <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}" class="sidebar-image mb-4 rounded-4">
+                        <img src="{{ course.thumbnail.url }}" alt="{{ course|translated_title }}" class="sidebar-image mb-4 rounded-4">
                     {% endif %}
                     {% if course.discount_percent %}
                         <div class="d-flex gap-2 flex-wrap small text-secondary mb-2">

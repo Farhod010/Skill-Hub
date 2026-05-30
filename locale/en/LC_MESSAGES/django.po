@@ -476,3 +476,318 @@ msgstr 'All roles'
 
 msgid 'Add your first lesson or change the course filter to explore more content.'
 msgstr 'Add your first lesson or change the course filter to explore more content.'
+
+msgid "Default title"
+msgstr "Default title"
+
+msgid "Title (Uzbek)"
+msgstr "Title (Uzbek)"
+
+msgid "Title (Russian)"
+msgstr "Title (Russian)"
+
+msgid "Title (English)"
+msgstr "Title (English)"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Default description"
+msgstr "Default description"
+
+msgid "Description (Uzbek)"
+msgstr "Description (Uzbek)"
+
+msgid "Description (Russian)"
+msgstr "Description (Russian)"
+
+msgid "Description (English)"
+msgstr "Description (English)"
+
+msgid "Default short description"
+msgstr "Default short description"
+
+msgid "Short description (Uzbek)"
+msgstr "Short description (Uzbek)"
+
+msgid "Short description (Russian)"
+msgstr "Short description (Russian)"
+
+msgid "Short description (English)"
+msgstr "Short description (English)"
+
+msgid "Default full description"
+msgstr "Default full description"
+
+msgid "Full description (Uzbek)"
+msgstr "Full description (Uzbek)"
+
+msgid "Full description (Russian)"
+msgstr "Full description (Russian)"
+
+msgid "Full description (English)"
+msgstr "Full description (English)"
+
+msgid "Thumbnail"
+msgstr "Thumbnail"
+
+msgid "Discount percent"
+msgstr "Discount percent"
+
+msgid "Published"
+msgstr "Published"
+
+msgid "Featured"
+msgstr "Featured"
+
+msgid "Certificate enabled"
+msgstr "Certificate enabled"
+
+msgid "Section"
+msgstr "Section"
+
+msgid "Uploaded video"
+msgstr "Uploaded video"
+
+msgid "External video URL or embed"
+msgstr "External video URL or embed"
+
+msgid "Duration in minutes"
+msgstr "Duration in minutes"
+
+msgid "Preview lesson"
+msgstr "Preview lesson"
+
+msgid "Pass percent"
+msgstr "Pass percent"
+
+msgid "Quiz"
+msgstr "Quiz"
+
+msgid "Default prompt"
+msgstr "Default prompt"
+
+msgid "Prompt (Uzbek)"
+msgstr "Prompt (Uzbek)"
+
+msgid "Prompt (Russian)"
+msgstr "Prompt (Russian)"
+
+msgid "Prompt (English)"
+msgstr "Prompt (English)"
+
+msgid "Question"
+msgstr "Question"
+
+msgid "Default answer"
+msgstr "Default answer"
+
+msgid "Answer (Uzbek)"
+msgstr "Answer (Uzbek)"
+
+msgid "Answer (Russian)"
+msgstr "Answer (Russian)"
+
+msgid "Answer (English)"
+msgstr "Answer (English)"
+
+msgid "Correct answer"
+msgstr "Correct answer"
+
+msgid "Category management"
+msgstr "Category management"
+
+msgid "Save category"
+msgstr "Save category"
+
+msgid "Updated"
+msgstr "Updated"
+
+msgid "Inactive"
+msgstr "Inactive"
+
+msgid "Deactivate"
+msgstr "Deactivate"
+
+msgid "Activate"
+msgstr "Activate"
+
+msgid "No categories found."
+msgstr "No categories found."
+
+msgid "Section management"
+msgstr "Section management"
+
+msgid "Sections"
+msgstr "Sections"
+
+msgid "Search sections"
+msgstr "Search sections"
+
+msgid "Save section"
+msgstr "Save section"
+
+msgid "No sections found."
+msgstr "No sections found."
+
+msgid "Quiz management"
+msgstr "Quiz management"
+
+msgid "Search quizzes"
+msgstr "Search quizzes"
+
+msgid "Save quiz"
+msgstr "Save quiz"
+
+msgid "No quizzes found."
+msgstr "No quizzes found."
+
+msgid "Question management"
+msgstr "Question management"
+
+msgid "Prompt"
+msgstr "Prompt"
+
+msgid "Search questions"
+msgstr "Search questions"
+
+msgid "No questions found."
+msgstr "No questions found."
+
+msgid "Answer management"
+msgstr "Answer management"
+
+msgid "Answers"
+msgstr "Answers"
+
+msgid "Search answers"
+msgstr "Search answers"
+
+msgid "Correct"
+msgstr "Correct"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "Save answer"
+msgstr "Save answer"
+
+msgid "No answers found."
+msgstr "No answers found."
+
+msgid "Review moderation"
+msgstr "Review moderation"
+
+msgid "Search reviews"
+msgstr "Search reviews"
+
+msgid "All reviews"
+msgstr "All reviews"
+
+msgid "Student"
+msgstr "Student"
+
+msgid "Unapprove"
+msgstr "Unapprove"
+
+msgid "Approve"
+msgstr "Approve"
+
+msgid "No reviews found."
+msgstr "No reviews found."
+
+msgid "Certificate registry"
+msgstr "Certificate registry"
+
+msgid "Search certificates"
+msgstr "Search certificates"
+
+msgid "Issued"
+msgstr "Issued"
+
+msgid "No certificates found."
+msgstr "No certificates found."
+
+msgid "Quiz performance"
+msgstr "Quiz performance"
+
+msgid "Search results"
+msgstr "Search results"
+
+msgid "Score"
+msgstr "Score"
+
+msgid "No quiz results found."
+msgstr "No quiz results found."
+
+msgid "Platform branding"
+msgstr "Platform branding"
+
+msgid "Save settings"
+msgstr "Save settings"
+
+msgid "No top course yet"
+msgstr "No top course yet"
+
+msgid "Publish and grow your catalog to unlock ranking data here."
+msgstr "Publish and grow your catalog to unlock ranking data here."
+
+msgid "Add lesson depth to improve completion"
+msgstr "Add lesson depth to improve completion"
+
+msgid "Use quizzes to lift certificate conversion"
+msgstr "Use quizzes to lift certificate conversion"
+
+msgid "Watch reviews for curriculum improvements"
+msgstr "Watch reviews for curriculum improvements"
+
+msgid "You have not created any courses yet."
+msgstr "You have not created any courses yet."
+
+msgid "Approved reviews will appear here."
+msgstr "Approved reviews will appear here."
+
+msgid "New enrollments will appear here."
+msgstr "New enrollments will appear here."
+
+msgid "Retry"
+msgstr "Retry"
+
+msgid "Quiz submissions will appear here."
+msgstr "Quiz submissions will appear here."
+
+msgid "Completed and demo payments will appear here."
+msgstr "Completed and demo payments will appear here."
+
+msgid "Are you sure you want to delete <strong>%(label)s</strong>?"
+msgstr "Are you sure you want to delete <strong>%(label)s</strong>?"
+
+msgid "Add question to %(title)s"
+msgstr "Add question to %(title)s"
+
+msgid "Create category"
+msgstr "Create category"
+
+msgid "Create section"
+msgstr "Create section"
+
+msgid "Create quiz"
+msgstr "Create quiz"
+
+msgid "Create question"
+msgstr "Create question"
+
+msgid "Create answer"
+msgstr "Create answer"
+
+msgid "Search categories"
+msgstr "Search categories"
+
+msgid "Save question"
+msgstr "Save question"
+
+msgid "Questions"
+msgstr "Questions"

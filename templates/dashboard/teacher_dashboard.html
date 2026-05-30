@@ -81,12 +81,12 @@
                     <div class="col-lg-8">
                         <div class="hero-preview-card p-4 p-lg-5 h-100">
                             <span class="eyebrow text-white-50 mb-2">{% trans "Top performer" %}</span>
-                            <h2 class="h1 mb-3">{% if stats.top_course %}{{ stats.top_course.title }}{% else %}No top course yet{% endif %}</h2>
+                            <h2 class="h1 mb-3">{% if stats.top_course %}{{ stats.top_course|translated_title }}{% else %}{% trans "No top course yet" %}{% endif %}</h2>
                             <p class="text-white-50 mb-4">
                                 {% if stats.top_course %}
-                                    {{ stats.top_course.total_students }} students enrolled in your best-selling course.
+                                    {% blocktrans with count=stats.top_course.total_students %}{{ count }} students enrolled in your best-selling course.{% endblocktrans %}
                                 {% else %}
-                                    Publish and grow your catalog to unlock ranking data here.
+                                    {% trans "Publish and grow your catalog to unlock ranking data here." %}
                                 {% endif %}
                             </p>
                             <div class="row g-3">
@@ -99,7 +99,7 @@
                                 <div class="col-sm-6">
                                     <div class="glass-card p-3 h-100">
                                         <div class="small text-white-50">{% trans "Creator readiness" %}</div>
-                                        <div class="fs-3 fw-bold text-white">Active</div>
+                                        <div class="fs-3 fw-bold text-white">{% trans "Active" %}</div>
                                     </div>
                                 </div>
                             </div>
@@ -111,9 +111,9 @@
                                 <span class="eyebrow mb-2">{% trans "Creator notes" %}</span>
                                 <h2 class="h4 mb-3">{% trans "Next growth moves" %}</h2>
                                 <ul class="list-unstyled d-grid gap-3 mb-0">
-                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Add lesson depth to improve completion</li>
-                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Use quizzes to lift certificate conversion</li>
-                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Watch reviews for curriculum improvements</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Add lesson depth to improve completion" %}</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Use quizzes to lift certificate conversion" %}</li>
+                                    <li><i class="bi bi-check-circle-fill text-primary me-2"></i>{% trans "Watch reviews for curriculum improvements" %}</li>
                                 </ul>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
                             {% for course in teacher_courses %}
                                 <tr>
                                     <td>
-                                        <div class="fw-semibold">{{ course.title }}</div>
+                                        <div class="fw-semibold">{{ course|translated_title }}</div>
                                         <div class="small text-secondary">{{ course.category|translated_title }}</div>
                                     </td>
                                     <td><span class="badge rounded-pill {% if course.status == 'active' %}bg-success-subtle text-success{% elif course.status == 'pending' %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %} px-3 py-2">{{ course.status|title }}</span></td>
@@ -157,7 +157,7 @@
                                     </td>
                                 </tr>
                             {% empty %}
-                                <tr><td colspan="6">You have not created any courses yet.</td></tr>
+                                <tr><td colspan="6">{% trans "You have not created any courses yet." %}</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -174,14 +174,14 @@
                                         <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div>
-                                                    <div class="fw-semibold">{{ review.course.title }}</div>
+                                                    <div class="fw-semibold">{{ review.course|translated_title }}</div>
                                                     <div class="small text-secondary">{{ review.student.full_name }}</div>
                                                 </div>
                                                 <span class="badge bg-warning-subtle text-warning rounded-pill px-3 py-2">{{ review.rating }}/5</span>
                                             </div>
                                         </div>
                                     {% empty %}
-                                        <div class="alert alert-primary border-0 rounded-4 mb-0">Approved reviews will appear here.</div>
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Approved reviews will appear here." %}</div>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -198,13 +198,13 @@
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div>
                                                     <div class="fw-semibold">{{ enrollment.student.full_name }}</div>
-                                                    <div class="small text-secondary">{{ enrollment.course.title }}</div>
+                                                    <div class="small text-secondary">{{ enrollment.course|translated_title }}</div>
                                                 </div>
                                                 <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">{{ enrollment.enrolled_at|date:"M d" }}</span>
                                             </div>
                                         </div>
                                     {% empty %}
-                                        <div class="alert alert-primary border-0 rounded-4 mb-0">New enrollments will appear here.</div>
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "New enrollments will appear here." %}</div>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -224,13 +224,13 @@
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div>
                                                     <div class="fw-semibold">{{ result.student.full_name }}</div>
-                                                    <div class="small text-secondary">{{ result.quiz.title }} - {{ result.quiz.course.title }}</div>
+                                                    <div class="small text-secondary">{{ result.quiz|translated_title }} - {{ result.quiz.course|translated_title }}</div>
                                                 </div>
-                                                <span class="badge rounded-pill {% if result.passed %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3 py-2">{% if result.passed %}Passed{% else %}Retry{% endif %}</span>
+                                                <span class="badge rounded-pill {% if result.passed %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %} px-3 py-2">{% if result.passed %}{% trans "Passed" %}{% else %}{% trans "Retry" %}{% endif %}</span>
                                             </div>
                                         </div>
                                     {% empty %}
-                                        <div class="alert alert-primary border-0 rounded-4 mb-0">Quiz submissions will appear here.</div>
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Quiz submissions will appear here." %}</div>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -246,14 +246,14 @@
                                         <div class="list-group-item bg-transparent px-0 py-3 border-secondary-subtle">
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div>
-                                                    <div class="fw-semibold">{{ payment.course.title }}</div>
+                                                    <div class="fw-semibold">{{ payment.course|translated_title }}</div>
                                                     <div class="small text-secondary">{{ payment.user.full_name }} - {{ payment.provider|upper }}</div>
                                                 </div>
                                                 <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">{{ payment.amount|money }}</span>
                                             </div>
                                         </div>
                                     {% empty %}
-                                        <div class="alert alert-primary border-0 rounded-4 mb-0">Completed and demo payments will appear here.</div>
+                                        <div class="alert alert-primary border-0 rounded-4 mb-0">{% trans "Completed and demo payments will appear here." %}</div>
                                     {% endfor %}
                                 </div>
                             </div>

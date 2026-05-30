@@ -29,6 +29,17 @@ class CategoryAdmin(admin.ModelAdmin):
 class SectionInline(admin.TabularInline):
     model = Section
     extra = 0
+    fields = (
+        "title",
+        "title_uz",
+        "title_ru",
+        "title_en",
+        "description",
+        "description_uz",
+        "description_ru",
+        "description_en",
+        "order_index",
+    )
 
 
 class LessonInlineForm(forms.ModelForm):
@@ -36,7 +47,13 @@ class LessonInlineForm(forms.ModelForm):
         model = Lesson
         fields = (
             "title",
+            "title_uz",
+            "title_ru",
+            "title_en",
             "description",
+            "description_uz",
+            "description_ru",
+            "description_en",
             "video_file",
             "video_url",
             "order_index",
@@ -51,7 +68,13 @@ class LessonInline(admin.TabularInline):
     extra = 1
     fields = (
         "title",
+        "title_uz",
+        "title_ru",
+        "title_en",
         "description",
+        "description_uz",
+        "description_ru",
+        "description_en",
         "video_file",
         "video_url",
         "order_index",
@@ -65,6 +88,18 @@ class LessonInline(admin.TabularInline):
 class QuizInline(admin.TabularInline):
     model = Quiz
     extra = 0
+    fields = (
+        "title",
+        "title_uz",
+        "title_ru",
+        "title_en",
+        "description",
+        "description_uz",
+        "description_ru",
+        "description_en",
+        "pass_percent",
+        "is_active",
+    )
 
 
 @admin.register(Course)
@@ -113,7 +148,7 @@ class CourseAdmin(admin.ModelAdmin):
 class SectionAdmin(admin.ModelAdmin):
     list_display = ("title", "course", "order_index")
     list_filter = ("course",)
-    search_fields = ("title", "course__title")
+    search_fields = ("title", "title_uz", "title_ru", "title_en", "course__title", "course__title_uz", "course__title_ru", "course__title_en")
 
 
 @admin.register(Lesson)
@@ -180,21 +215,52 @@ class WatchProgressAdmin(admin.ModelAdmin):
 class QuizAdmin(admin.ModelAdmin):
     list_display = ("title", "course", "pass_percent", "is_active")
     list_filter = ("is_active", "course")
-    search_fields = ("title", "course__title")
+    search_fields = (
+        "title",
+        "title_uz",
+        "title_ru",
+        "title_en",
+        "description",
+        "description_uz",
+        "description_ru",
+        "description_en",
+        "course__title",
+        "course__title_uz",
+        "course__title_ru",
+        "course__title_en",
+    )
 
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ("quiz", "order_index")
     list_filter = ("quiz",)
-    search_fields = ("prompt", "quiz__title")
+    search_fields = (
+        "prompt",
+        "prompt_uz",
+        "prompt_ru",
+        "prompt_en",
+        "quiz__title",
+        "quiz__title_uz",
+        "quiz__title_ru",
+        "quiz__title_en",
+    )
 
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ("question", "text", "is_correct")
     list_filter = ("is_correct",)
-    search_fields = ("text", "question__prompt")
+    search_fields = (
+        "text",
+        "text_uz",
+        "text_ru",
+        "text_en",
+        "question__prompt",
+        "question__prompt_uz",
+        "question__prompt_ru",
+        "question__prompt_en",
+    )
 
 
 @admin.register(QuizResult)

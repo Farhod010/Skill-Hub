@@ -1,45 +1,46 @@
 {% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n course_extras %}
 {% block panel_content %}
 <div class="panel-header">
     <div>
-        <span class="eyebrow">Category management</span>
-        <h1>Categories</h1>
+        <span class="eyebrow">{% trans "Category management" %}</span>
+        <h1>{% trans "Categories" %}</h1>
     </div>
-    <a href="{% url 'panel:category_create' %}" class="btn btn-primary">Create category</a>
+    <a href="{% url 'panel:category_create' %}" class="btn btn-primary">{% trans "Create category" %}</a>
 </div>
 <form method="get" class="panel-toolbar">
-    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search categories">
-    <button type="submit" class="btn btn-primary">Search</button>
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="{% trans 'Search categories' %}">
+    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
 </form>
 <div class="table-card">
     <table class="data-table">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Updated</th>
-                <th>Actions</th>
+                <th>{% trans "Title" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Updated" %}</th>
+                <th>{% trans "Actions" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for category in page_obj %}
                 <tr>
-                    <td>{{ category.title }}</td>
-                    <td>{% if category.is_active %}Active{% else %}Inactive{% endif %}</td>
+                    <td>{{ category|translated_title }}</td>
+                    <td>{% if category.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}</td>
                     <td>{{ category.updated_at|date:"M d, Y" }}</td>
                     <td>
                         <div class="table-actions">
-                            <a href="{% url 'panel:category_edit' category.pk %}" class="btn btn-ghost">Edit</a>
+                            <a href="{% url 'panel:category_edit' category.pk %}" class="btn btn-ghost">{% trans "Edit" %}</a>
                             <form method="post" action="{% url 'panel:category_toggle' category.pk %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-ghost">{% if category.is_active %}Deactivate{% else %}Activate{% endif %}</button>
+                                <button type="submit" class="btn btn-ghost">{% if category.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</button>
                             </form>
-                            <a href="{% url 'panel:category_delete' category.pk %}" class="btn btn-danger btn-soft">Delete</a>
+                            <a href="{% url 'panel:category_delete' category.pk %}" class="btn btn-danger btn-soft">{% trans "Delete" %}</a>
                         </div>
                     </td>
                 </tr>
             {% empty %}
-                <tr><td colspan="4">No categories found.</td></tr>
+                <tr><td colspan="4">{% trans "No categories found." %}</td></tr>
             {% endfor %}
         </tbody>
     </table>

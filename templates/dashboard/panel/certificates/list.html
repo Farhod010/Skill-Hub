@@ -1,24 +1,25 @@
 {% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n course_extras %}
 {% block panel_content %}
-<div class="panel-header"><div><span class="eyebrow">Certificate registry</span><h1>Certificates</h1></div></div>
+<div class="panel-header"><div><span class="eyebrow">{% trans "Certificate registry" %}</span><h1>{% trans "Certificates" %}</h1></div></div>
 <form method="get" class="panel-toolbar">
-    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="Search certificates">
-    <button type="submit" class="btn btn-primary">Search</button>
+    <input type="text" name="q" class="input" value="{{ search_query }}" placeholder="{% trans 'Search certificates' %}">
+    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
 </form>
 <div class="table-card">
     <table class="data-table">
-        <thead><tr><th>Certificate ID</th><th>Student</th><th>Course</th><th>Issued</th><th>Actions</th></tr></thead>
+        <thead><tr><th>{% trans "Certificate ID" %}</th><th>{% trans "Student" %}</th><th>{% trans "Course" %}</th><th>{% trans "Issued" %}</th><th>{% trans "Actions" %}</th></tr></thead>
         <tbody>
             {% for certificate in page_obj %}
                 <tr>
                     <td>{{ certificate.certificate_id }}</td>
                     <td>{{ certificate.student.email }}</td>
-                    <td>{{ certificate.course.title }}</td>
+                    <td>{{ certificate.course|translated_title }}</td>
                     <td>{{ certificate.issued_at|date:"M d, Y" }}</td>
-                    <td><div class="table-actions"><a href="{% url 'panel:certificate_delete' certificate.pk %}" class="btn btn-danger btn-soft">Delete</a></div></td>
+                    <td><div class="table-actions"><a href="{% url 'panel:certificate_delete' certificate.pk %}" class="btn btn-danger btn-soft">{% trans "Delete" %}</a></div></td>
                 </tr>
             {% empty %}
-                <tr><td colspan="5">No certificates found.</td></tr>
+                <tr><td colspan="5">{% trans "No certificates found." %}</td></tr>
             {% endfor %}
         </tbody>
     </table>

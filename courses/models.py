@@ -239,7 +239,13 @@ class Section(models.Model):
         related_name="sections",
     )
     title = models.CharField(max_length=180)
+    title_uz = models.CharField(max_length=180, blank=True)
+    title_ru = models.CharField(max_length=180, blank=True)
+    title_en = models.CharField(max_length=180, blank=True)
     description = models.TextField(blank=True)
+    description_uz = models.TextField(blank=True)
+    description_ru = models.TextField(blank=True)
+    description_en = models.TextField(blank=True)
     order_index = models.PositiveIntegerField(default=1)
 
     class Meta:
@@ -253,6 +259,16 @@ class Section(models.Model):
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
+
+    def get_translated_title(self, language=None):
+        lang = (language or get_language() or "uz").split("-")[0]
+        value = getattr(self, f"title_{lang}", "")
+        return value or self.title
+
+    def get_translated_description(self, language=None):
+        lang = (language or get_language() or "uz").split("-")[0]
+        value = getattr(self, f"description_{lang}", "")
+        return value or self.description
 
 
 class Lesson(models.Model):
@@ -346,7 +362,13 @@ class Lesson(models.Model):
                 first_section = Section.objects.create(
                     course=self.course,
                     title="Main section",
+                    title_uz="Asosiy bo'lim",
+                    title_ru="Основной раздел",
+                    title_en="Main section",
                     description="Auto-created section for direct lesson uploads.",
+                    description_uz="To'g'ridan-to'g'ri yuklangan darslar uchun avtomatik yaratilgan bo'lim.",
+                    description_ru="Автоматически созданный раздел для уроков, загруженных напрямую.",
+                    description_en="Auto-created section for direct lesson uploads.",
                     order_index=1,
                 )
             self.section = first_section
@@ -537,7 +559,13 @@ class Quiz(models.Model):
         related_name="quizzes",
     )
     title = models.CharField(max_length=180)
+    title_uz = models.CharField(max_length=180, blank=True)
+    title_ru = models.CharField(max_length=180, blank=True)
+    title_en = models.CharField(max_length=180, blank=True)
     description = models.TextField(blank=True)
+    description_uz = models.TextField(blank=True)
+    description_ru = models.TextField(blank=True)
+    description_en = models.TextField(blank=True)
     pass_percent = models.PositiveSmallIntegerField(default=70)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -547,6 +575,16 @@ class Quiz(models.Model):
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
+
+    def get_translated_title(self, language=None):
+        lang = (language or get_language() or "uz").split("-")[0]
+        value = getattr(self, f"title_{lang}", "")
+        return value or self.title
+
+    def get_translated_description(self, language=None):
+        lang = (language or get_language() or "uz").split("-")[0]
+        value = getattr(self, f"description_{lang}", "")
+        return value or self.description
 
     @property
     def question_count(self):
@@ -560,6 +598,9 @@ class Question(models.Model):
         related_name="questions",
     )
     prompt = models.TextField()
+    prompt_uz = models.TextField(blank=True)
+    prompt_ru = models.TextField(blank=True)
+    prompt_en = models.TextField(blank=True)
     order_index = models.PositiveIntegerField(default=1)
 
     class Meta:
@@ -574,6 +615,11 @@ class Question(models.Model):
     def __str__(self):
         return f"{self.quiz.title} - Q{self.order_index}"
 
+    def get_translated_prompt(self, language=None):
+        lang = (language or get_language() or "uz").split("-")[0]
+        value = getattr(self, f"prompt_{lang}", "")
+        return value or self.prompt
+
 
 class Answer(models.Model):
     question = models.ForeignKey(
@@ -582,6 +628,9 @@ class Answer(models.Model):
         related_name="answers",
     )
     text = models.CharField(max_length=255)
+    text_uz = models.CharField(max_length=255, blank=True)
+    text_ru = models.CharField(max_length=255, blank=True)
+    text_en = models.CharField(max_length=255, blank=True)
     is_correct = models.BooleanField(default=False)
 
     class Meta:
@@ -589,6 +638,11 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.text
+
+    def get_translated_text(self, language=None):
+        lang = (language or get_language() or "uz").split("-")[0]
+        value = getattr(self, f"text_{lang}", "")
+        return value or self.text
 
 
 class QuizResult(models.Model):

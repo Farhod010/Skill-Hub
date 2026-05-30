@@ -1022,3 +1022,291 @@ msgstr 'Oldingi'
 
 msgid 'Next'
 msgstr 'Keyingi'
+
+msgid "Default title"
+msgstr "Asosiy nom"
+
+msgid "Title (Uzbek)"
+msgstr "Nom (o?zbekcha)"
+
+msgid "Title (Russian)"
+msgstr "Nom (ruscha)"
+
+msgid "Title (English)"
+msgstr "Nom (inglizcha)"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Default description"
+msgstr "Asosiy tavsif"
+
+msgid "Description (Uzbek)"
+msgstr "Tavsif (o?zbekcha)"
+
+msgid "Description (Russian)"
+msgstr "Tavsif (ruscha)"
+
+msgid "Description (English)"
+msgstr "Tavsif (inglizcha)"
+
+msgid "Default short description"
+msgstr "Asosiy qisqa tavsif"
+
+msgid "Short description (Uzbek)"
+msgstr "Qisqa tavsif (o?zbekcha)"
+
+msgid "Short description (Russian)"
+msgstr "Qisqa tavsif (ruscha)"
+
+msgid "Short description (English)"
+msgstr "Qisqa tavsif (inglizcha)"
+
+msgid "Default full description"
+msgstr "Asosiy to?liq tavsif"
+
+msgid "Full description (Uzbek)"
+msgstr "To?liq tavsif (o?zbekcha)"
+
+msgid "Full description (Russian)"
+msgstr "To?liq tavsif (ruscha)"
+
+msgid "Full description (English)"
+msgstr "To?liq tavsif (inglizcha)"
+
+msgid "Thumbnail"
+msgstr "Muqova rasmi"
+
+msgid "Discount percent"
+msgstr "Chegirma foizi"
+
+msgid "Certificate enabled"
+msgstr "Sertifikat yoqilgan"
+
+msgid "Section"
+msgstr "Bo?lim"
+
+msgid "Uploaded video"
+msgstr "Yuklangan video"
+
+msgid "External video URL or embed"
+msgstr "Tashqi video URL yoki embed"
+
+msgid "Duration in minutes"
+msgstr "Davomiyligi (daqiqada)"
+
+msgid "Preview lesson"
+msgstr "Preview dars"
+
+msgid "Pass percent"
+msgstr "O?tish foizi"
+
+msgid "Quiz"
+msgstr "Test"
+
+msgid "Default prompt"
+msgstr "Asosiy savol matni"
+
+msgid "Prompt (Uzbek)"
+msgstr "Savol matni (o?zbekcha)"
+
+msgid "Prompt (Russian)"
+msgstr "Savol matni (ruscha)"
+
+msgid "Prompt (English)"
+msgstr "Savol matni (inglizcha)"
+
+msgid "Question"
+msgstr "Savol"
+
+msgid "Default answer"
+msgstr "Asosiy javob"
+
+msgid "Answer (Uzbek)"
+msgstr "Javob (o?zbekcha)"
+
+msgid "Answer (Russian)"
+msgstr "Javob (ruscha)"
+
+msgid "Answer (English)"
+msgstr "Javob (inglizcha)"
+
+msgid "Correct answer"
+msgstr "To?g?ri javob"
+
+msgid "Category management"
+msgstr "Kategoriya boshqaruvi"
+
+msgid "Save category"
+msgstr "Kategoriyani saqlash"
+
+msgid "Updated"
+msgstr "Yangilangan"
+
+msgid "Inactive"
+msgstr "Nofaol"
+
+msgid "Deactivate"
+msgstr "Faolsizlantirish"
+
+msgid "Activate"
+msgstr "Faollashtirish"
+
+msgid "No categories found."
+msgstr "Kategoriyalar topilmadi."
+
+msgid "Section management"
+msgstr "Bo?lim boshqaruvi"
+
+msgid "Sections"
+msgstr "Bo?limlar"
+
+msgid "Search sections"
+msgstr "Bo?limlarni qidiring"
+
+msgid "Save section"
+msgstr "Bo?limni saqlash"
+
+msgid "No sections found."
+msgstr "Bo?limlar topilmadi."
+
+msgid "Quiz management"
+msgstr "Test boshqaruvi"
+
+msgid "Search quizzes"
+msgstr "Testlarni qidiring"
+
+msgid "Save quiz"
+msgstr "Testni saqlash"
+
+msgid "No quizzes found."
+msgstr "Testlar topilmadi."
+
+msgid "Question management"
+msgstr "Savol boshqaruvi"
+
+msgid "Prompt"
+msgstr "Savol matni"
+
+msgid "Search questions"
+msgstr "Savollarni qidiring"
+
+msgid "No questions found."
+msgstr "Savollar topilmadi."
+
+msgid "Answer management"
+msgstr "Javob boshqaruvi"
+
+msgid "Answers"
+msgstr "Javoblar"
+
+msgid "Search answers"
+msgstr "Javoblarni qidiring"
+
+msgid "Correct"
+msgstr "To?g?ri"
+
+msgid "Yes"
+msgstr "Ha"
+
+msgid "No"
+msgstr "Yo?q"
+
+msgid "Save answer"
+msgstr "Javobni saqlash"
+
+msgid "No answers found."
+msgstr "Javoblar topilmadi."
+
+msgid "Review moderation"
+msgstr "Sharh moderatsiyasi"
+
+msgid "Search reviews"
+msgstr "Sharhlarni qidiring"
+
+msgid "All reviews"
+msgstr "Barcha sharhlar"
+
+msgid "Student"
+msgstr "O?quvchi"
+
+msgid "Unapprove"
+msgstr "Tasdiqni bekor qilish"
+
+msgid "Approve"
+msgstr "Tasdiqlash"
+
+msgid "No reviews found."
+msgstr "Sharhlar topilmadi."
+
+msgid "Certificate registry"
+msgstr "Sertifikatlar reyestri"
+
+msgid "Search certificates"
+msgstr "Sertifikatlarni qidiring"
+
+msgid "Issued"
+msgstr "Berilgan"
+
+msgid "No certificates found."
+msgstr "Sertifikatlar topilmadi."
+
+msgid "Quiz performance"
+msgstr "Test natijalari"
+
+msgid "Search results"
+msgstr "Natijalarni qidiring"
+
+msgid "Score"
+msgstr "Ball"
+
+msgid "No quiz results found."
+msgstr "Test natijalari topilmadi."
+
+msgid "Platform branding"
+msgstr "Platforma brendingi"
+
+msgid "Save settings"
+msgstr "Sozlamalarni saqlash"
+
+msgid "No top course yet"
+msgstr "Hali top kurs yo?q"
+
+msgid "Publish and grow your catalog to unlock ranking data here."
+msgstr "Bu yerda reyting ma?lumotlarini ko?rish uchun katalogingizni nashr qiling va kengaytiring."
+
+msgid "Add lesson depth to improve completion"
+msgstr "Tugatish ko?rsatkichini oshirish uchun darslar chuqurligini kengaytiring"
+
+msgid "Use quizzes to lift certificate conversion"
+msgstr "Sertifikat olish ko?rsatkichini oshirish uchun testlardan foydalaning"
+
+msgid "Watch reviews for curriculum improvements"
+msgstr "Dastur yaxshilanishi uchun sharhlarni kuzating"
+
+msgid "You have not created any courses yet."
+msgstr "Siz hali kurs yaratmagansiz."
+
+msgid "Approved reviews will appear here."
+msgstr "Tasdiqlangan sharhlar shu yerda chiqadi."
+
+msgid "New enrollments will appear here."
+msgstr "Yangi yozilishlar shu yerda chiqadi."
+
+msgid "Retry"
+msgstr "Qayta urinish"
+
+msgid "Quiz submissions will appear here."
+msgstr "Test topshirishlar shu yerda chiqadi."
+
+msgid "Completed and demo payments will appear here."
+msgstr "Yakunlangan va demo to?lovlar shu yerda chiqadi."
+
+msgid "Are you sure you want to delete <strong>%(label)s</strong>?"
+msgstr "<strong>%(label)s</strong> ni o?chirishni tasdiqlaysizmi?"
+
+msgid "Add question to %(title)s"
+msgstr "%(title)s ga savol qo?shish"
+
+msgid "Search categories"
+msgstr "Kategoriyalarni qidiring"

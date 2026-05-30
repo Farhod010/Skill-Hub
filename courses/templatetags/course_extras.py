@@ -48,6 +48,20 @@ def translated_short_description(obj):
     return getattr(obj, "short_description", obj)
 
 
+@register.filter
+def translated_prompt(obj):
+    if hasattr(obj, "get_translated_prompt"):
+        return obj.get_translated_prompt()
+    return getattr(obj, "prompt", obj)
+
+
+@register.filter
+def translated_text(obj):
+    if hasattr(obj, "get_translated_text"):
+        return obj.get_translated_text()
+    return getattr(obj, "text", obj)
+
+
 @register.simple_tag(takes_context=True)
 def query_transform(context, **kwargs):
     request = context["request"]

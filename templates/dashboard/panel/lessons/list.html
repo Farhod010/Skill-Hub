@@ -128,7 +128,7 @@
                         <td>
                             <div class="fw-semibold text-light">{{ lesson|translated_title }}</div>
                             <div class="small text-secondary">
-                                {% if lesson.section %}{{ lesson.section.title }}{% else %}{% trans "No section" %}{% endif %}
+                                {% if lesson.section %}{{ lesson.section|translated_title }}{% else %}{% trans "No section" %}{% endif %}
                             </div>
                         </td>
                         <td>{{ lesson.course|translated_title }}</td>

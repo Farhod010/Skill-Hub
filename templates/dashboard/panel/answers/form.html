@@ -1,6 +1,7 @@
 {% extends 'dashboard/panel/base_panel.html' %}
+{% load i18n %}
 {% block panel_content %}
-<div class="panel-header"><div><span class="eyebrow">Answer management</span><h1>{{ page_title }}</h1></div></div>
+<div class="panel-header"><div><span class="eyebrow">{% trans "Answer management" %}</span><h1>{{ page_title }}</h1></div></div>
 <div class="content-card">
     <form method="post" class="panel-form">
         {% csrf_token %}
@@ -13,7 +14,7 @@
                 </div>
             {% endfor %}
         </div>
-        <button type="submit" class="btn btn-primary">Save answer</button>
+        <button type="submit" class="btn btn-primary">{% trans "Save answer" %}</button>
     </form>
 </div>
 {% endblock %}
